@@ -3,395 +3,384 @@ ob_start();
 require_once 'config.php';
 include 'includes/header.php';
 include 'includes/properties.php';
+
 $player_id = (int)($_GET['player_id'] ?? 0);
 $player = getPlayerById($player_id);
-if (!$player) {
-    ?>
+
+if (!$player) { ?>
     <div class="container py-5 text-center">
-        <div style="background:#2c3e50;padding:2.5rem;box-shadow:0 8px 28px rgba(0,0,0,0.4);border:1px solid #444;display:inline-block;color:#e0e0e0;">
-            <i class="bi bi-person-x" style="font-size:4.5rem;color:#e74c3c;"></i>
-            <h3 class="mt-3 text-danger">Player Not Found</h3>
-            <p class="text-muted mb-2">The player with ID <code><?= $player_id ?></code> does not exist.</p>
-            <a href="index.php" class="btn btn-outline-primary px-4">Back to Home</a>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:2.5rem;display:inline-block;">
+            <i class="bi bi-person-x" style="font-size:4rem;color:rgba(201,168,76,0.4);display:block;margin-bottom:1rem;"></i>
+            <h3 style="font-family:'Playfair Display',serif;color:#fdf8ef;">Player Not Found</h3>
+            <p style="color:rgba(255,255,255,0.45);margin-bottom:1.2rem;">The player with ID <code><?= $player_id ?></code> does not exist.</p>
+            <a href="index.php" class="btn" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:#c9a84c;border-radius:50px;padding:0.5rem 2rem;font-weight:600;">Back to Home</a>
         </div>
     </div>
-    <?php
+<?php
     include 'includes/footer.php';
     ob_end_flush();
     exit;
 }
-// Stats & Age
-$currentLeague = $pdo->query("SELECT id FROM competition_seasons WHERE is_current = 1 AND type = 'league' LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+
+$currentLeague  = $pdo->query("SELECT id FROM competition_seasons WHERE is_current = 1 AND type = 'league' LIMIT 1")->fetch(PDO::FETCH_ASSOC);
 $leagueSeasonId = $currentLeague['id'] ?? null;
-$leagueStats = getPlayerLeagueStats($player_id, $leagueSeasonId);
+$leagueStats    = getPlayerLeagueStats($player_id, $leagueSeasonId);
 $tournamentStats = getPlayerTournamentStatsByYear($player_id);
+
 $age = 'N/A';
 if (!empty($player['date_of_birth']) && $player['date_of_birth'] !== '0000-00-00' && $player['date_of_birth'] !== null) {
     try {
         $dob = new DateTime($player['date_of_birth']);
         $now = new DateTime();
         $age = $now->diff($dob)->y . ' years';
-    } catch (Exception $e) { }
+    } catch (Exception $e) {}
 }
-$displayPhoto = $player['photo']
+
+$displayPhoto    = $player['photo']
     ? "uploads/players/" . htmlspecialchars($player['photo'])
-    : "https://via.placeholder.com/500/2c3e50/white?text=" . substr($player['name'],0,2);
+    : "https://via.placeholder.com/500/1a1a2e/c9a84c?text=" . urlencode(substr($player['name'], 0, 2));
 $displayClubLogo = $player['club_logo']
     ? "uploads/clubs/" . htmlspecialchars($player['club_logo'])
-    : "https://via.placeholder.com/60/2c3e50/white?text=" . substr($player['club_name']??'FA',0,2);
+    : "https://via.placeholder.com/60/1a1a2e/c9a84c?text=" . urlencode(substr($player['club_name'] ?? 'FA', 0, 2));
 ?>
 <style>
-    /* DARK THEME - CONSISTENT WITH FIXTURES.PHP */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+    /* ── Design Tokens ── */
+    :root {
+        --ink:        #1a1a2e;
+        --gold:       #c9a84c;
+        --gold-light: #f0d080;
+        --cream:      #fdf8ef;
+        --muted:      rgba(255,255,255,0.45);
+        --border:     rgba(201,168,76,0.2);
+        --card-bg:    rgba(255,255,255,0.04);
+    }
+
     html, body {
-        background-color: #1e272e !important;
-        color: #e0e0e0;
+        background-color: #1a1a2e !important;
+        background-image:
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+        background-attachment: fixed;
+        color: #eee;
         overflow-x: hidden;
     }
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+    footer { flex-shrink: 0; }
 
+    /* ── Page Wrapper ── */
     .player-page-wrapper {
-        margin-top: -50px;
-        padding-top: 20px;
+        max-width: 100%;
+        margin: -38px auto 0;
+        padding: 6px 1.5rem 4rem;
+    }
+    @media (max-width: 767px) {
+        .player-page-wrapper { margin-top: 0; padding: 1rem 0 3rem; width: 100%; }
     }
 
-    /* Side-by-side layout */
+    /* ── Main Layout ── */
     .main-layout {
         display: flex;
         flex-wrap: wrap;
-        gap: 2.5rem;
-        margin-top: 2rem;
+        gap: 2rem;
         align-items: flex-start;
         justify-content: center;
     }
-
     .profile-section {
-        flex: 2 1 650px;
+        flex: 2 1 620px;
         min-width: 0;
         max-width: 100%;
     }
-
     .card-section {
-        flex: 1 1 400px;
+        flex: 1 1 380px;
         display: flex;
         flex-direction: column;
         align-items: center;
         max-width: 100%;
     }
+    @media (max-width: 992px) {
+        .main-layout { flex-direction: column; align-items: stretch; gap: 1.6rem; }
+        .profile-section, .card-section { max-width: none; width: 100%; }
+    }
 
-    /* Profile Card - Dark */
+    /* ── Profile Card ── */
     .player-profile-card {
-        background: #2c3e50;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 8px 28px rgba(0,0,0,0.4);
-        border: 1px solid #444;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
         width: 100%;
     }
 
-    /* Header */
+    /* ── Section Header ── */
     .section-header {
-        background: linear-gradient(135deg, #1a2530, #2c3e50);
-        color: #fff;
-        padding: 1.6rem 1.8rem;
+        background: linear-gradient(135deg, #16152b, #24224a);
+        border-bottom: 2px solid var(--gold);
+        padding: 1rem 1.6rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: 1rem;
+        gap: 0.8rem;
     }
-
     .section-header h1, .section-header h3 {
+        font-family: 'Playfair Display', serif;
         margin: 0;
-        font-size: 1.95rem;
-        font-weight: 700;
+        font-size: 1.7rem;
+        font-weight: 900;
+        color: var(--cream);
     }
-
+    .section-header h3 { font-size: 1.1rem; }
     .section-header .position {
-        font-size: 1.05rem;
-        opacity: 0.9;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--gold);
+        letter-spacing: 0.5px;
+        margin-top: 3px;
     }
-
     .jersey-number {
-        background: rgba(255,255,255,0.15);
-        padding: 8px 20px;
+        font-family: 'Playfair Display', serif;
+        background: rgba(201,168,76,0.12);
+        border: 1px solid rgba(201,168,76,0.35);
+        color: var(--gold);
+        padding: 6px 18px;
         border-radius: 50px;
-        font-size: 1.4rem;
-        font-weight: 800;
-        backdrop-filter: blur(10px);
+        font-size: 1.3rem;
+        font-weight: 900;
     }
 
-    /* Body */
+    /* ── Player Body ── */
     .player-body {
-        padding: 1.8rem 2rem 2rem;
+        padding: 1.8rem 2rem 2.2rem;
         text-align: center;
     }
+    @media (max-width: 576px) { .player-body { padding: 1.4rem 1rem; } }
 
+    /* ── Photo ── */
     .player-photo-wrapper {
-        width: 260px;
-        height: 260px;
-        margin: 0 auto 1.5rem auto;
+        width: 240px; height: 240px;
+        margin: 0 auto 1.6rem auto;
         border-radius: 50%;
         overflow: hidden;
-        box-shadow: 0 14px 38px rgba(0,0,0,0.4);
-        border: 8px solid #2c3e50;
-        background: #2c3e50;
+        box-shadow: 0 16px 44px rgba(0,0,0,0.45);
+        border: 4px solid var(--border);
+        background: rgba(0,0,0,0.2);
+        transition: border-color 0.3s;
+    }
+    .player-photo-wrapper:hover { border-color: var(--gold); }
+    .player-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
+    @media (max-width: 576px) {
+        .player-photo-wrapper { width: 190px; height: 190px; }
     }
 
-    .player-photo {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
+    /* ── Info Grid ── */
     .info-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        margin-bottom: 1.5rem;
+        gap: 0.9rem;
+        margin-bottom: 1.4rem;
+        text-align: left;
     }
+    @media (max-width: 576px) { .info-grid { grid-template-columns: 1fr; } }
 
     .info-item {
-        background: #34495e;
-        padding: 1rem;
-        border-left: 5px solid #3498db;
-        color: #ecf0f1;
+        background: rgba(0,0,0,0.2);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--gold);
+        border-radius: 8px;
+        padding: 0.9rem 1rem;
     }
-
     .info-item strong {
         display: block;
-        font-size: 0.82rem;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.9px;
-        color: #bdc3c7;
-        margin-bottom: 6px;
+        letter-spacing: 1px;
+        color: var(--gold);
+        margin-bottom: 5px;
     }
-
     .info-item span {
-        font-size: 1.1rem;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 1rem;
         font-weight: 600;
-        color: #ecf0f1;
+        color: var(--cream);
     }
 
+    /* ── Club Link ── */
     .club-link {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
-        padding: 8px 16px;
-        background: #3498db;
+        gap: 8px;
+        padding: 5px 12px;
+        background: rgba(201,168,76,0.1);
+        border: 1px solid rgba(201,168,76,0.3);
         border-radius: 50px;
+        font-family: 'DM Sans', sans-serif;
         font-weight: 600;
-        color: #fff;
+        font-size: 0.9rem;
+        color: var(--gold);
         text-decoration: none;
-        transition: all .3s;
+        transition: all 0.25s ease;
     }
-
     .club-link:hover {
-        background: #5ab6f0;
+        background: rgba(201,168,76,0.2);
+        border-color: var(--gold);
+        color: var(--gold-light);
         transform: translateY(-2px);
     }
+    .club-link img { width: 28px; height: 28px; object-fit: contain; border-radius: 50%; }
 
-    .club-link img {
-        width: 36px;
-        height: 36px;
-        object-fit: contain;
-        border-radius: 50%;
-    }
-
+    /* ── Stats Section ── */
     .stats-section {
-        margin-top: 1.5rem;
-        background: #34495e;
+        background: rgba(0,0,0,0.2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
         padding: 1.2rem;
-        border: 1px solid #444;
+        margin-top: 1.2rem;
+        text-align: left;
     }
-
     .stats-section h4 {
-        margin-bottom: 0.8rem;
-        color: #ecf0f1;
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
         font-weight: 700;
-        font-size: 1.15rem;
+        color: var(--cream);
+        margin-bottom: 0.9rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 1px solid var(--border);
     }
 
+    /* ── Stats Table ── */
     .stats-table {
-        font-size: 0.94rem;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.88rem;
         width: 100%;
         margin-bottom: 0;
-        background: #2c3e50;
     }
-
     .stats-table th {
-        background: #1a2530;
-        color: #ecf0f1;
-        padding: 0.6rem;
+        background: rgba(0,0,0,0.3) !important;
+        color: var(--gold) !important;
+        border-bottom: 1px solid var(--border) !important;
+        font-weight: 700;
+        font-size: 0.75rem;
         text-transform: uppercase;
-        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        padding: 0.6rem 0.7rem;
         text-align: center;
     }
-
     .stats-table td {
-        padding: 0.6rem;
+        background: transparent !important;
+        color: rgba(255,255,255,0.8) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+        padding: 0.6rem 0.7rem;
         text-align: center;
-        background: #34495e;
-        color: #ecf0f1;
     }
+    .stats-table tbody tr:hover { background: rgba(201,168,76,0.04) !important; }
+    .stats-table tbody tr:last-child td { border-bottom: none !important; }
 
-    /* Card Section - Dark */
+    /* Stat colours */
+    .text-success { color: #4ade80 !important; }
+    .text-info    { color: #67e8f9 !important; }
+    .text-warning { color: #fbbf24 !important; }
+    .text-danger  { color: #f87171 !important; }
+    .text-primary { color: var(--gold) !important; }
+    .text-muted   { color: var(--muted) !important; }
+
+    /* ── Official Card Container ── */
     .card-container {
         width: 100%;
         max-width: 460px;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-        background: #2c3e50;
-        border: 1px solid #444;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 14px;
         overflow: hidden;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.35);
     }
 
     #player-card-preview {
         width: 100%;
-        height: 620px;
+        height: 600px;
         border: none;
-        background: #34495e;
+        background: rgba(0,0,0,0.2);
         display: flex;
         align-items: center;
         justify-content: center;
     }
+    @media (max-width: 576px) { #player-card-preview { height: 480px; } }
 
-    /* Action buttons */
+    /* ── Action Buttons ── */
     .action-buttons {
-        margin-top: 2rem;
+        margin-top: 1.6rem;
         display: flex;
         flex-wrap: wrap;
-        gap: 1.8rem;
+        gap: 1.6rem;
         justify-content: center;
     }
-
     .action-btn {
         flex: 1 1 110px;
-        min-width: 110px;
-        max-width: 140px;
+        min-width: 100px;
+        max-width: 130px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.8rem;
+        gap: 0.7rem;
         text-decoration: none;
-        color: #bdc3c7;
+        color: var(--muted);
+        font-family: 'DM Sans', sans-serif;
         font-weight: 600;
-        font-size: 1rem;
-        transition: transform 0.3s;
+        font-size: 0.88rem;
+        transition: transform 0.3s ease, color 0.2s ease;
         background: none;
         border: none;
         cursor: pointer;
+        padding: 0;
     }
-
-    .action-btn:hover {
-        transform: translateY(-6px);
-        color: #ecf0f1;
-    }
-
+    .action-btn:hover { transform: translateY(-5px); color: var(--cream); }
     .action-btn i {
-        font-size: 3.2rem;
-        width: 90px;
-        height: 90px;
-        background: #34495e;
-        border-radius: 18px;
+        font-size: 2.8rem;
+        width: 82px; height: 82px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border);
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
     }
-
-    .action-btn span {
-        font-size: 0.95rem;
+    .action-btn:hover i {
+        background: rgba(201,168,76,0.1);
+        border-color: rgba(201,168,76,0.4);
+        box-shadow: 0 10px 28px rgba(201,168,76,0.15);
     }
 
     #share-fallback {
-        margin-top: 1.2rem;
+        margin-top: 1rem;
         text-align: center;
-        color: #95a5a6;
-        font-size: 0.9rem;
+        color: var(--muted);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.85rem;
         display: none;
     }
 
-    /* Responsive Adjustments */
-    @media (max-width: 992px) {
-        .main-layout {
-            flex-direction: column;
-            align-items: stretch; /* Stretch to full width */
-            gap: 2rem;
-        }
-        .profile-section, .card-section {
-            max-width: none;
-            width: 100%;
-        }
-        .info-grid {
-            grid-template-columns: 1fr;
-        }
-        .player-photo-wrapper {
-            width: 240px;
-            height: 240px;
-        }
-        .card-container {
-            max-width: none;
-        }
-    }
-
+    /* ── Mobile Overrides ── */
     @media (max-width: 576px) {
-        .container.player-page-wrapper {
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-        }
-        .player-profile-card,
-        .card-container {
-            border-left: none;
-            border-right: none;
-            border-radius: 0 !important;
-        }
-        .section-header {
-            padding: 1.2rem 1rem;
-            flex-direction: column;
-            text-align: center;
-            border-radius: 0 !important;
-        }
-        .section-header h1, .section-header h3 {
-            font-size: 1.6rem;
-        }
-        .player-body {
-            padding: 1.4rem 1rem;
-        }
-        .player-photo-wrapper {
-            width: 200px;
-            height: 200px;
-            border-width: 6px;
-        }
-        #player-card-preview {
-            height: 500px;
-        }
-        .action-btn i {
-            font-size: 2.8rem;
-            width: 80px;
-            height: 80px;
-        }
-        .action-buttons {
-            gap: 1.4rem;
-        }
-    }
-
-    @media (max-width: 400px) {
-        .action-btn {
-            flex: 1 1 100px;
-            min-width: 100px;
-        }
-        .action-btn i {
-            font-size: 2.5rem;
-            width: 70px;
-            height: 70px;
-        }
-        .action-btn span {
-            font-size: 0.9rem;
-        }
+        .player-profile-card, .card-container { border-radius: 0; border-left: none; border-right: none; }
+        .section-header { padding: 1rem; flex-direction: column; text-align: center; }
+        .section-header h1 { font-size: 1.5rem; }
+        .action-btn i { width: 72px; height: 72px; font-size: 2.4rem; }
     }
 </style>
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-<div class="container player-page-wrapper">
+
+<div class="player-page-wrapper container">
     <div class="main-layout">
-        <!-- Left: Player Profile -->
+
+        <!-- ── Left: Player Profile ── -->
         <div class="profile-section">
             <div class="player-profile-card">
                 <div class="section-header">
@@ -401,13 +390,15 @@ $displayClubLogo = $player['club_logo']
                     </div>
                     <div class="jersey-number">#<?= htmlspecialchars($player['jersey_number'] ?? '-') ?></div>
                 </div>
+
                 <div class="player-body">
                     <div class="player-photo-wrapper">
                         <img src="<?= $displayPhoto ?>"
                              alt="<?= htmlspecialchars($player['name']) ?>"
                              class="player-photo"
-                             onerror="this.src='https://via.placeholder.com/500/2c3e50/white?text=<?= substr(htmlspecialchars($player['name']),0,2) ?>'">
+                             onerror="this.src='https://via.placeholder.com/500/1a1a2e/c9a84c?text=<?= urlencode(substr($player['name'], 0, 2)) ?>'">
                     </div>
+
                     <div class="info-grid">
                         <div class="info-item">
                             <strong>Full Name</strong>
@@ -429,6 +420,8 @@ $displayClubLogo = $player['club_logo']
                             <?php endif; ?>
                         </div>
                     </div>
+
+                    <!-- League Stats -->
                     <div class="stats-section">
                         <h4>League Stats <?= date('Y') ?></h4>
                         <div class="table-responsive">
@@ -458,6 +451,8 @@ $displayClubLogo = $player['club_logo']
                             </table>
                         </div>
                     </div>
+
+                    <!-- Tournament Stats -->
                     <?php if (!empty($tournamentStats)): ?>
                         <div class="stats-section mt-3">
                             <h4>Tournament Stats</h4>
@@ -465,18 +460,13 @@ $displayClubLogo = $player['club_logo']
                                 <table class="table stats-table mb-0">
                                     <thead>
                                         <tr>
-                                            <th>Year</th>
-                                            <th>Goals</th>
-                                            <th>Assists</th>
-                                            <th>YC</th>
-                                            <th>RC</th>
-                                            <th>CS</th>
+                                            <th>Year</th><th>Goals</th><th>Assists</th><th>YC</th><th>RC</th><th>CS</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach ($tournamentStats as $stat): ?>
                                             <tr>
-                                                <td><strong><?= $stat['year'] ?></strong></td>
+                                                <td class="fw-bold" style="color:var(--gold);"><?= $stat['year'] ?></td>
                                                 <td class="text-success fw-bold"><?= (int)$stat['goals'] ?></td>
                                                 <td class="text-info fw-bold"><?= (int)$stat['assists'] ?></td>
                                                 <td class="text-warning fw-bold"><?= (int)$stat['yellow_cards'] ?></td>
@@ -492,70 +482,66 @@ $displayClubLogo = $player['club_logo']
                 </div>
             </div>
         </div>
-        <!-- Right: Official Player Card -->
+
+        <!-- ── Right: Official Player Card ── -->
         <div class="card-section">
             <div class="card-container">
                 <div class="section-header">
                     <h3>Official Player Card</h3>
                 </div>
                 <div id="player-card-preview">
-                    <p class="py-5 text-muted text-center">Loading card preview...</p>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:0.88rem;color:var(--muted);text-align:center;padding:3rem 1rem;">Loading card preview…</p>
                 </div>
             </div>
+
             <div class="action-buttons">
                 <a href="generate_card.php?player_id=<?= $player_id ?>&format=pdf"
-                   class="action-btn"
-                   target="_blank"
+                   class="action-btn" target="_blank"
                    download="04SL_Player_Card_<?= $player_id ?>.pdf">
-                    <i class="bi bi-file-earmark-pdf" style="color:#e74c3c;"></i>
+                    <i class="bi bi-file-earmark-pdf" style="color:#f87171;"></i>
+                    <span>PDF</span>
                 </a>
                 <a href="generate_card.php?player_id=<?= $player_id ?>&format=png"
-                   class="action-btn"
-                   target="_blank"
+                   class="action-btn" target="_blank"
                    download="04SL_Player_Card_<?= $player_id ?>.png">
-                    <i class="bi bi-image" style="color:#3498db;"></i>
+                    <i class="bi bi-image" style="color:#67e8f9;"></i>
+                    <span>PNG</span>
                 </a>
                 <button type="button" class="action-btn" id="share-general">
-                    <i class="bi bi-share-fill" style="color:#95a5a6;"></i>
+                    <i class="bi bi-share-fill" style="color:var(--gold);"></i>
+                    <span>Share</span>
                 </button>
             </div>
+
             <div id="share-fallback">
-                <p class="text-muted small text-center mt-3">Download PNG and share manually if needed.</p>
+                <p>Download PNG and share manually if needed.</p>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- PNG Preview + Sharing Script -->
+    </div><!-- /.main-layout -->
+</div><!-- /.player-page-wrapper -->
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const preview = document.getElementById('player-card-preview');
-    const pngUrl = 'generate_card.php?player_id=<?= $player_id ?>&format=png';
+    const pngUrl  = 'generate_card.php?player_id=<?= $player_id ?>&format=png';
     const img = document.createElement('img');
     img.src = pngUrl;
     img.alt = 'Official Player Card';
-    img.style.width = '100%';
-    img.style.height = '100%';
-    img.style.objectFit = 'contain';
-    img.style.background = '#34495e';
-    img.style.display = 'block';
-    img.onload = function() {
-        preview.innerHTML = '';
-        preview.appendChild(img);
-    };
-    img.onerror = function() {
-        preview.innerHTML = '<p class="text-danger text-center py-5 mb-0">Preview unavailable<br><small>Use download buttons below</small></p>';
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain;background:transparent;display:block;';
+    img.onload  = () => { preview.innerHTML = ''; preview.appendChild(img); };
+    img.onerror = () => {
+        preview.innerHTML = '<p style="color:#f87171;text-align:center;padding:3rem 1rem;font-family:\'DM Sans\',sans-serif;">Preview unavailable<br><small style="color:rgba(255,255,255,0.4);">Use the download buttons below</small></p>';
     };
 
-    // Sharing Functionality
-    const cardImageUrl = 'generate_card.php?player_id=<?= $player_id ?>&format=png&share=1';
     const playerName = "<?= addslashes(htmlspecialchars($player['name'])) ?>";
-    const clubName = "<?= addslashes(htmlspecialchars($player['club_name'] ?? 'Free Agent')) ?>";
-    const caption = `Official Player Card\n${playerName}\n${clubName}\nWWW.04SL.ONLINE`;
+    const clubName   = "<?= addslashes(htmlspecialchars($player['club_name'] ?? 'Free Agent')) ?>";
+    const caption    = `Official Player Card\n${playerName}\n${clubName}\nWWW.04SL.ONLINE`;
+    const cardImageUrl = `generate_card.php?player_id=<?= $player_id ?>&format=png&share=1`;
 
     async function getImageFile() {
         const res = await fetch(cardImageUrl);
-        if (!res.ok) throw new Error('Failed to fetch image');
+        if (!res.ok) throw new Error('Fetch failed');
         const blob = await res.blob();
         return new File([blob], `04SL_Player_Card_${playerName.replace(/[^a-zA-Z0-9]/g, '_')}.png`, { type: 'image/png' });
     }
@@ -563,26 +549,19 @@ document.addEventListener('DOMContentLoaded', function() {
     async function shareImage() {
         try {
             const file = await getImageFile();
-            const shareData = {
-                files: [file],
-                title: 'Player Card - ' + playerName,
-                text: caption
-            };
+            const shareData = { files: [file], title: 'Player Card - ' + playerName, text: caption };
             if (navigator.canShare && navigator.canShare(shareData)) {
                 await navigator.share(shareData);
                 return;
             }
-        } catch (err) {
-            console.log('Sharing failed:', err);
-        }
+        } catch (err) { console.log('Sharing failed:', err); }
         const fallback = document.getElementById('share-fallback');
         fallback.style.display = 'block';
-        setTimeout(() => {
-            fallback.style.display = 'none';
-        }, 5000);
+        setTimeout(() => { fallback.style.display = 'none'; }, 5000);
     }
 
     document.getElementById('share-general').onclick = shareImage;
 });
 </script>
+
 <?php include 'includes/footer.php'; ob_end_flush(); ?>

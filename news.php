@@ -23,73 +23,124 @@ $newsStmt->execute();
 $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <style>
-    /* DARKISH THEME - FULLY CONSISTENT */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+    /* ── Design Tokens ── */
+    :root {
+        --ink:        #1a1a2e;
+        --gold:       #c9a84c;
+        --gold-light: #f0d080;
+        --cream:      #fdf8ef;
+        --muted:      rgba(255,255,255,0.45);
+        --border:     rgba(201,168,76,0.2);
+        --card-bg:    rgba(255,255,255,0.04);
+    }
+
     html, body {
-        background-color: #1e272e !important;
-        color: #e0e0e0;
+        background-color: #1a1a2e !important;
+        background-image:
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+        background-attachment: fixed;
+        color: #eee;
+        overflow-x: hidden;
     }
     body { display: flex; flex-direction: column; min-height: 100vh; }
     .main-content { flex: 1 0 auto; }
     footer { flex-shrink: 0; }
 
-    .about-page-wrapper {
-        margin-top: -50px;
-        padding-top: 20px;
+    .news-page-wrapper {
+        max-width: 100%;
+        margin: -38px auto 0;
+        padding: 6px 1.5rem 4rem;
+    }
+    @media (max-width: 767px) {
+        .news-page-wrapper {
+            margin-top: 0;
+            padding: 1rem 0 3rem;
+            width: 100%;
+        }
     }
 
-    /* RED HEADER FOR NEWS PAGE */
-    .news-header {
-        position: relative;
-        background: linear-gradient(135deg, #c0392b, #e74c3c) !important;
-        color: white;
-        padding: 1.6rem 1.8rem;
-        font-size: 1.7rem;
-        font-weight: 800;
-        text-align: center;
-        letter-spacing: 0.5px;
-        text-shadow: 0 2px 8px rgba(0,0,0,0.4);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-    }
-    .news-header::after {
-        content: '';
-        position: absolute;
-        left: 0; right: 0; bottom: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #c82333, #e74c3c, #c82333);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
-
-    .about-card {
-        background: #2c3e50;
+    /* ── Outer Card ── */
+    .news-outer-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 8px 28px rgba(0,0,0,0.4);
-        border: 1px solid #444;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+    @media (max-width: 767px) {
+        .news-outer-card {
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+        }
     }
 
-    /* News Grid */
+    /* ── Page Header ── */
+    .news-page-header {
+        background: linear-gradient(135deg, #16152b, #24224a);
+        border-bottom: 2px solid var(--gold);
+        padding: 1rem 1.6rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    .news-page-header .page-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--cream);
+        margin: 0;
+    }
+    .news-page-header .article-count {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--gold);
+        background: rgba(201,168,76,0.12);
+        border: 1px solid rgba(201,168,76,0.3);
+        padding: 0.25rem 0.85rem;
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+
+    /* ── News Grid ── */
     .news-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 1.8rem;
         padding: 2rem;
     }
+    @media (min-width: 1400px) { .news-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 1199px) { .news-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 992px)  { .news-grid { grid-template-columns: repeat(2, 1fr); padding: 1.5rem; } }
+    @media (max-width: 576px)  { .news-grid { grid-template-columns: 1fr; padding: 1.2rem; gap: 1.2rem; } }
 
+    /* ── News Card ── */
     .news-card {
-        background: #34495e;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border);
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-        transition: all 0.35s ease;
-        border: 1px solid #444;
         display: flex;
         flex-direction: column;
         height: 100%;
-        border-radius: 12px;
+        transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.25);
     }
     .news-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 18px 36px rgba(0,0,0,0.6);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 44px rgba(0,0,0,0.45);
+        border-color: rgba(201,168,76,0.45);
     }
 
+    /* ── Card Image ── */
     .news-img-wrapper {
         position: relative;
         overflow: hidden;
@@ -102,122 +153,153 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
         object-fit: cover;
         transition: transform 0.5s ease;
     }
-    .news-card:hover .news-img {
-        transform: scale(1.1);
-    }
+    .news-card:hover .news-img { transform: scale(1.08); }
     .news-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 40%);
+        background: linear-gradient(to top, rgba(0,0,0,0.75), transparent 45%);
         pointer-events: none;
     }
+    .news-img-placeholder {
+        height: 200px;
+        background: rgba(255,255,255,0.04);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid var(--border);
+    }
+    .news-img-placeholder i { font-size: 2.5rem; color: rgba(201,168,76,0.25); }
 
+    /* ── Card Body ── */
     .news-card-body {
-        padding: 1.4rem;
+        padding: 1.3rem 1.4rem;
         display: flex;
         flex-direction: column;
         flex-grow: 1;
     }
     .news-title {
-        font-size: 1.18rem;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.08rem;
         font-weight: 700;
-        color: #ecf0f1;
-        margin-bottom: 0.8rem;
+        color: var(--cream);
+        margin-bottom: 0.75rem;
         line-height: 1.35;
     }
     .news-excerpt {
-        color: #bdc3c7;
-        font-size: 0.93rem;
-        line-height: 1.6;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.65;
         flex-grow: 1;
         margin-bottom: 1rem;
     }
+
+    /* ── Card Footer ── */
     .news-footer {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-top: auto;
-        padding-top: 1rem;
-        border-top: 1px dashed #555;
+        padding-top: 0.9rem;
+        border-top: 1px solid var(--border);
     }
     .news-date {
-        font-size: 0.85rem;
-        color: #95a5a6;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: rgba(201,168,76,0.7);
+        letter-spacing: 0.5px;
     }
     .read-more-btn {
-        background: linear-gradient(135deg, #c0392b, #e74c3c);
-        color: white;
-        font-size: 0.84rem;
-        font-weight: 600;
-        padding: 0.55rem 1.4rem;
-        border-radius: 2rem;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--gold);
+        background: rgba(201,168,76,0.1);
+        border: 1px solid rgba(201,168,76,0.3);
+        padding: 0.3rem 0.9rem;
+        border-radius: 20px;
         text-decoration: none;
-        transition: all 0.3s ease;
+        transition: all 0.25s ease;
+        white-space: nowrap;
     }
     .read-more-btn:hover {
-        background: #c82333;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(220,53,69,0.5);
-        color: white;
+        background: rgba(201,168,76,0.2);
+        border-color: var(--gold);
+        color: var(--gold-light);
+        transform: translateY(-1px);
     }
 
+    /* ── Empty State ── */
     .no-news {
         text-align: center;
         padding: 5rem 2rem;
-        color: #bdc3c7;
+        font-family: 'DM Sans', sans-serif;
         grid-column: 1 / -1;
     }
     .no-news i {
-        font-size: 4.5rem;
-        opacity: 0.3;
+        font-size: 3.5rem;
+        color: rgba(201,168,76,0.25);
+        display: block;
         margin-bottom: 1rem;
     }
+    .no-news h4 {
+        font-family: 'Playfair Display', serif;
+        color: var(--cream);
+        margin-bottom: 0.5rem;
+    }
+    .no-news p { color: var(--muted); margin: 0; }
 
+    /* ── Pagination ── */
     .pagination-wrapper {
-        padding: 2rem;
-        background: #2c3e50;
+        padding: 1.5rem 2rem;
+        background: rgba(0,0,0,0.2);
+        border-top: 1px solid var(--border);
     }
     .pagination .page-link {
-        background: #34495e;
-        border: 1px solid #555;
-        color: #ecf0f1;
-        border-radius: 0.5rem;
-        padding: 0.6rem 1rem;
-        font-weight: 500;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border);
+        color: var(--cream);
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 600;
+        font-size: 0.85rem;
+        border-radius: 6px !important;
+        padding: 0.5rem 0.95rem;
+        margin: 0 2px;
+        transition: all 0.2s ease;
     }
     .pagination .page-link:hover {
-        background: #3d566e;
-        color: white;
+        background: rgba(201,168,76,0.15);
+        border-color: rgba(201,168,76,0.5);
+        color: var(--gold-light);
     }
     .pagination .page-item.active .page-link {
-        background: #e74c3c;
-        border-color: #e74c3c;
-        color: white;
+        background: rgba(201,168,76,0.2);
+        border-color: var(--gold);
+        color: var(--gold);
     }
     .pagination .page-item.disabled .page-link {
-        background: #2c3e50;
-        color: #777;
-    }
-
-    /* Responsive */
-    @media (min-width: 1400px) { .news-grid { grid-template-columns: repeat(4, 1fr); } }
-    @media (max-width: 1199px) { .news-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 992px) { .news-grid { grid-template-columns: repeat(2, 1fr); padding: 1.8rem; } }
-    @media (max-width: 576px) {
-        .news-grid { grid-template-columns: 1fr; padding: 1.4rem; gap: 1.4rem; }
-        .news-card-body { padding: 1.2rem; }
-        .news-title { font-size: 1.1rem; }
-        .news-header { font-size: 1.5rem; padding: 1.4rem 1rem; }
+        background: transparent;
+        color: rgba(255,255,255,0.2);
+        border-color: rgba(255,255,255,0.08);
     }
 </style>
 
 <div class="main-content">
-    <div class="container about-page-wrapper">
-        <div class="about-card">
-            <!-- RED HEADER -->
-            <div class="news-header">Latest News</div>
+    <div class="news-page-wrapper">
+        <div class="news-outer-card">
 
-            <!-- NEWS GRID -->
+            <!-- ── Header ── -->
+            <div class="news-page-header">
+                <span class="page-title">Latest News</span>
+                <?php if (!empty($news)): ?>
+                    <span class="article-count"><?= $total ?> Article<?= $total !== 1 ? 's' : '' ?></span>
+                <?php endif; ?>
+            </div>
+
+            <!-- ── Grid ── -->
             <div class="news-grid">
                 <?php if (empty($news)): ?>
                     <div class="no-news">
@@ -233,13 +315,13 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
                                     <img src="uploads/news/<?= htmlspecialchars($n['image']) ?>"
                                          class="news-img"
                                          alt="<?= htmlspecialchars($n['title']) ?>"
-                                         onerror="this.src='https://via.placeholder.com/400x250/2c3e50/ffffff?text=News'">
+                                         onerror="this.src='https://via.placeholder.com/400x250/1a1a2e/c9a84c?text=News'">
+                                    <div class="news-overlay"></div>
                                 <?php else: ?>
-                                    <div class="d-flex align-items-center justify-content-center bg-dark text-muted" style="height:200px;">
-                                        <i class="bi bi-image fs-1"></i>
+                                    <div class="news-img-placeholder">
+                                        <i class="bi bi-image"></i>
                                     </div>
                                 <?php endif; ?>
-                                <div class="news-overlay"></div>
                             </div>
                             <div class="news-card-body">
                                 <h3 class="news-title"><?= htmlspecialchars($n['title']) ?></h3>
@@ -247,7 +329,7 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
                                     <?php
                                     $plain = strip_tags($n['content']);
                                     echo strlen($plain) > 140
-                                        ? htmlspecialchars(substr($plain, 0, 140)) . '...'
+                                        ? htmlspecialchars(substr($plain, 0, 140)) . '…'
                                         : htmlspecialchars($plain);
                                     ?>
                                 </p>
@@ -263,17 +345,17 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endif; ?>
             </div>
 
-            <!-- PAGINATION -->
+            <!-- ── Pagination ── -->
             <?php if ($pages > 1): ?>
                 <div class="pagination-wrapper">
                     <nav aria-label="News pagination">
                         <ul class="pagination justify-content-center mb-0">
                             <li class="page-item <?= $page == 1 ? 'disabled' : '' ?>">
-                                <a class="page-link" href="?page=<?= $page-1 ?>">Previous</a>
+                                <a class="page-link" href="?page=<?= $page - 1 ?>">← Prev</a>
                             </li>
                             <?php
                             $start = max(1, $page - 2);
-                            $end = min($pages, $page + 2);
+                            $end   = min($pages, $page + 2);
                             for ($i = $start; $i <= $end; $i++):
                             ?>
                                 <li class="page-item <?= $i == $page ? 'active' : '' ?>">
@@ -281,12 +363,13 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
                                 </li>
                             <?php endfor; ?>
                             <li class="page-item <?= $page == $pages ? 'disabled' : '' ?>">
-                                <a class="page-link" href="?page=<?= $page+1 ?>">Next</a>
+                                <a class="page-link" href="?page=<?= $page + 1 ?>">Next →</a>
                             </li>
                         </ul>
                     </nav>
                 </div>
             <?php endif; ?>
+
         </div>
     </div>
 </div>

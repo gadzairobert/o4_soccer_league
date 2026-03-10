@@ -6,31 +6,58 @@ include 'includes/gif_slideshow.php';
 echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important; object-fit: contain; }</style>';
 ?>
 <style>
-    /* LIGHT THEME WITH #defcfc BACKGROUND - CONSISTENT WITH OTHER PAGES */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+    /* ── Design Tokens ── */
+    :root {
+        --ink:        #1a1a2e;
+        --gold:       #c9a84c;
+        --gold-light: #f0d080;
+        --cream:      #fdf8ef;
+        --muted:      rgba(255,255,255,0.45);
+        --border:     rgba(201,168,76,0.2);
+        --card-bg:    rgba(255,255,255,0.04);
+    }
+
     html, body {
-        background-color: #defcfc !important;
-        color: #333333;
+        background-color: #1a1a2e !important;
+        background-image:
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+        background-attachment: fixed;
+        color: #eee;
         overflow-x: hidden;
     }
     body { display: flex; flex-direction: column; min-height: 100vh; }
     .main-content { flex: 1 0 auto; }
     footer { flex-shrink: 0; }
+
+    /* ── Page Wrapper ── */
     .tournament-page-wrapper {
-        margin-top: -50px;
-        padding-top: 20px;
+        max-width: 100%;
+        margin: -38px auto 0;
+        padding: 6px 1.5rem 4rem;
     }
-    /* Tournament Header */
+    @media (max-width: 767px) {
+        .tournament-page-wrapper { margin-top: 0; padding: 1rem 0 3rem; width: 100%; }
+    }
+
+    /* ── Tournament Header ── */
     .tournament-header {
-        background: linear-gradient(135deg, #1a2530, #2c3e50);
-        color: white;
-        padding: 1.6rem 1.8rem;
+        background: linear-gradient(135deg, #16152b, #24224a);
+        border-bottom: 2px solid var(--gold);
+        padding: 1.4rem 1.8rem;
         text-align: center;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        margin-bottom: 1.8rem;
+        border-radius: 14px 14px 0 0;
     }
     .tournament-header h1 {
+        font-family: 'Playfair Display', serif;
         margin: 0;
-        font-size: 2.4rem;
+        font-size: 2.1rem;
         font-weight: 900;
+        color: var(--cream);
         letter-spacing: 1px;
         text-shadow: 0 3px 10px rgba(0,0,0,0.5);
         display: flex;
@@ -39,77 +66,108 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
         gap: 1rem;
     }
     .tournament-header img {
-        width: 72px; height: 72px; object-fit: contain; background: white; padding: 10px;
-        border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); border: 4px solid rgba(255,255,255,0.3);
+        width: 66px; height: 66px; object-fit: contain;
+        background: rgba(255,255,255,0.06);
+        padding: 8px;
+        border-radius: 16px;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+        border: 2px solid var(--border);
     }
-    /* Section Cards */
+
+    /* ── Three-Column Grid ── */
+    .tournament-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.4rem;
+        margin-bottom: 2rem;
+    }
+    @media (max-width: 1100px) { .tournament-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 700px)  { .tournament-grid { grid-template-columns: 1fr; } }
+
+    /* ── Section Card ── */
     .section-card {
-        background: #ffffff;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 8px 28px rgba(0,0,0,0.08);
-        border: 1px solid #dee2e6;
-        height: 100%;
+        box-shadow: 0 12px 36px rgba(0,0,0,0.3);
         display: flex;
         flex-direction: column;
     }
-    /* Section Header */
+
+    /* ── Section Header ── */
     .section-header {
-        background: linear-gradient(135deg, #1a2530, #2c3e50);
-        color: white;
-        padding: 0.9rem 1.4rem;
-        font-size: 1.15rem;
-        font-weight: 600;
+        background: linear-gradient(135deg, #16152b, #24224a);
+        border-bottom: 1px solid var(--border);
+        padding: 0.85rem 1.4rem;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--cream);
     }
-    /* Tabs */
+
+    /* ── Tabs ── */
     .tab {
         overflow: hidden;
-        background: #1a2530;
+        background: rgba(0,0,0,0.25);
         display: flex;
         flex-wrap: nowrap;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        border-bottom: 1px solid var(--border);
     }
     .tab button {
         background: transparent;
         border: none;
-        color: #bdc3c7;
-        padding: 14px 20px;
-        font-size: 1.02rem;
+        color: var(--muted);
+        padding: 12px 18px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.88rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.25s ease;
         flex: 1;
         text-align: center;
         white-space: nowrap;
         position: relative;
+        letter-spacing: 0.4px;
     }
     .tab button:not(:last-child)::after {
-        content: ''; position: absolute; right: 0; top: 25%; height: 50%; width: 1px; background: rgba(255,255,255,0.2);
+        content: ''; position: absolute; right: 0; top: 25%; height: 50%;
+        width: 1px; background: var(--border);
     }
-    .tab button:hover { background: #34495e; color: white; }
-    .tab button.active { background: #0d6efd; color: white; box-shadow: inset 0 -5px 0 #0b5ed7; font-weight: 700; }
+    .tab button:hover { background: rgba(201,168,76,0.08); color: var(--gold-light); }
+    .tab button.active {
+        background: rgba(201,168,76,0.12);
+        color: var(--gold);
+        box-shadow: inset 0 -2px 0 var(--gold);
+        font-weight: 700;
+    }
+
+    /* ── Tab Content ── */
     .tabcontent {
         display: none;
-        padding: 1.2rem;
-        background: #ffffff;
         flex-grow: 1;
         overflow-y: auto;
     }
     .tabcontent.active { display: block; }
-    /* Match Items */
+
+    /* ── Match Item ── */
     .match-item {
-        background: #f8f9fa;
-        border-bottom: 1px solid #dee2e6;
-        transition: background 0.3s;
+        background: transparent;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        transition: background 0.2s ease;
     }
-    .match-item:hover { background: #e9ecef; }
+    .match-item:hover { background: rgba(201,168,76,0.04); }
     .match-item:last-child { border-bottom: none; }
+
     .match-row {
-        padding: 0.8rem 1.2rem;
+        padding: 0.75rem 1.2rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        min-height: 64px;
+        min-height: 68px;
     }
+
+    /* ── Teams Stack ── */
     .teams-stack {
         display: flex;
         flex-direction: column;
@@ -120,319 +178,330 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
     }
     .teams-stack::after {
         content: ''; position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-        width: 1px; height: 44px; background: #ccc;
+        width: 1px; height: 48px; background: rgba(255,255,255,0.12);
     }
-    .team-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
+    .team-item { display: flex; align-items: center; gap: 10px; }
+
     .team-logo {
-        width: 36px; height: 36px; object-fit: contain; background: white; padding: 3px;
-        border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.15); border: 1px solid #ccc;
+        width: 36px; height: 36px; object-fit: contain;
+        background: #fff; padding: 3px; border-radius: 50%;
+        border: 2px solid rgba(201,168,76,0.25);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        flex-shrink: 0; transition: border-color 0.2s;
     }
+    .match-item:hover .team-logo { border-color: rgba(201,168,76,0.5); }
+
     .team-name {
-        font-weight: 600; font-size: 0.95rem; color: #2c3e50;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 600; font-size: 0.9rem;
+        color: rgba(255,255,255,0.8);
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        text-decoration: none; transition: color 0.2s;
     }
-    .team-name:hover { color: #0d6efd; }
-    .winner { color: #27ae60 !important; font-weight: 700 !important; }
-    .fixture-info-stack, .score-stack {
+    .team-name:hover { color: var(--gold-light); }
+    .winner { color: #4ade80 !important; font-weight: 700 !important; }
+
+    /* ── Fixture Info ── */
+    .fixture-info-stack {
         text-align: right;
-        min-width: 100px;
-        font-size: 0.86rem;
-        color: #6c757d;
+        min-width: 80px;
+        flex-shrink: 0;
     }
-    .fixture-date { font-weight: 600; color: #2c3e50; }
+    .fixture-date {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--gold);
+        line-height: 1.3;
+    }
+
+    /* ── Score Stack ── */
     .score-stack {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        text-align: center;
+        padding-left: 14px;
+        text-align: right;
+        min-width: 56px;
+        flex-shrink: 0;
+        line-height: 1.1;
     }
     .home-score, .away-score {
-        font-size: 1.7rem;
-        font-weight: bold;
-        line-height: 1;
-        color: #2c3e50;
+        display: block;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.75rem;
+        font-weight: 900;
+        color: var(--cream);
     }
+
+    /* ── Match Toggle ── */
     .match-toggle {
-        padding: 0.55rem 1.2rem;
-        background: #f8f9fa;
-        border-top: 1px solid #dee2e6;
-        font-size: 0.86rem;
+        padding: 0.45rem 1.2rem;
+        background: rgba(0,0,0,0.2);
+        border-top: 1px solid rgba(255,255,255,0.06);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.8rem;
+        color: var(--muted);
         cursor: pointer;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        color: #6c757d;
+        transition: background 0.2s;
     }
-    .match-toggle:hover { background: #e9ecef; }
-    /* Events */
+    .match-toggle:hover { background: rgba(255,255,255,0.05); }
+    .match-toggle span { font-weight: 700; font-size: 0.84rem; color: var(--cream); }
+    .match-toggle i { color: rgba(201,168,76,0.6); transition: transform 0.25s; }
+    .match-toggle[aria-expanded="true"] i { transform: rotate(180deg); }
+
+    /* ── Event List ── */
     .event-list {
-        background: #f8f9fa;
-        padding: 0.8rem 1.2rem;
-        font-size: 0.84rem;
+        background: rgba(0,0,0,0.25);
+        padding: 0.7rem 1.2rem;
+        font-size: 0.82rem;
         max-height: 280px;
         overflow-y: auto;
-        border-top: 1px solid #dee2e6;
+        border-top: 1px solid rgba(255,255,255,0.06);
     }
     .event-row {
         display: flex;
         align-items: center;
-        margin-bottom: 6px;
-        padding: 4px 0;
-        color: #2c3e50;
+        gap: 8px;
+        margin-bottom: 5px;
+        padding: 2px 0;
     }
-    .event-team.home { justify-content: flex-start; }
-    .event-team.away { justify-content: flex-end; }
+    .event-team.away { justify-content: flex-end; flex-direction: row-reverse; }
     .event-icon {
-        width: 26px; height: 26px; border-radius: 50%;
+        width: 22px; height: 22px; border-radius: 50%;
         display: inline-flex; align-items: center; justify-content: center;
-        font-size: 11px; color: white; font-weight: bold; flex-shrink: 0;
+        font-size: 9px; font-weight: bold; color: white; flex-shrink: 0;
     }
-    .goal-icon { background: #0111c0; }
-    .assist-icon { background: #f39c12; color: #000; }
-    .yellow-icon { background: #f1c40f; color: #000; }
-    .red-icon { background: #c0392b; }
-    .cleansheet-icon { background: #27ae60; }
+    .goal-icon       { background: #2563eb; }
+    .assist-icon     { background: var(--gold); color: #000; }
+    .yellow-icon     { background: #eab308; color: #000; }
+    .red-icon        { background: #dc2626; }
+    .cleansheet-icon { background: #16a34a; }
     .event-detail {
+        font-family: 'DM Sans', sans-serif;
         font-weight: 600;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        color: rgba(255,255,255,0.75);
+    }
+
+    /* ── Tables ── */
+    .table {
+        color: rgba(255,255,255,0.82) !important;
+        margin: 0;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.87rem;
+    }
+    .table thead th {
+        background: rgba(0,0,0,0.35) !important;
+        color: var(--gold) !important;
+        border-bottom: 1px solid var(--border) !important;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        padding: 0.7rem 0.6rem;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin: 0 8px;
-        color: #2c3e50;
     }
-    /* TABLES */
-    .table,
-    .top-scorers-table {
-        background: #ffffff;
-        color: #333333;
+    .table tbody td {
+        color: rgba(255,255,255,0.8) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+        padding: 0.6rem 0.6rem;
+        vertical-align: middle;
     }
-    .table thead th,
-    .top-scorers-table thead th {
-        background: #1a2530 !important;
-        color: white !important;
-    }
-    .table tbody td,
-    .top-scorers-table tbody td {
-        color: #2c3e50 !important;
-    }
-    .table tbody tr,
-    .top-scorers-table tbody tr {
-        background: #f8f9fa !important;
-    }
-    .table tbody tr:hover,
-    .top-scorers-table tbody tr:hover {
-        background: #e9ecef !important;
-    }
-    .table a,
-    .top-scorers-table a {
-        color: #2c3e50 !important;
-    }
-    .table a:hover,
-    .top-scorers-table a:hover {
-        color: #0d6efd !important;
-    }
+    .table tbody tr { background: transparent !important; transition: background 0.2s; }
+    .table tbody tr:hover { background: rgba(201,168,76,0.05) !important; }
+    .table a { color: rgba(255,255,255,0.8) !important; text-decoration: none; transition: color 0.2s; }
+    .table a:hover { color: var(--gold-light) !important; }
+
     .player-thumb, .club-logo {
-        width: 32px; height: 32px; object-fit: cover; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        width: 30px; height: 30px; object-fit: cover;
+        border-radius: 50%; border: 2px solid var(--border);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
-    .club-logo { border-radius: 8px; }
-    /* Gallery */
+    .club-logo { border-radius: 6px; object-fit: contain; background: #fff; padding: 2px; }
+
+    /* Stat badges */
+    .text-success { color: #4ade80 !important; }
+    .text-info    { color: #67e8f9 !important; }
+    .text-warning { color: #fbbf24 !important; }
+    .text-danger  { color: #f87171 !important; }
+    .text-primary { color: var(--gold) !important; }
+
+    /* ── Gallery ── */
+    .gallery-section {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+        margin-top: 0.5rem;
+    }
     .gallery-header {
-        background: linear-gradient(135deg, #1a2530, #2c3e50);
-        color: white;
-        padding: 1.6rem;
-        text-align: center;
-        font-size: 1.9rem;
-        font-weight: 800;
-        letter-spacing: 1px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-        margin: 1.5rem 0 1rem 0;
+        background: linear-gradient(135deg, #16152b, #24224a);
+        border-bottom: 2px solid var(--gold);
+        padding: 0.9rem 1.6rem;
+    }
+    .gallery-header h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--cream);
+        margin: 0;
     }
     .tournament-gallery {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        gap: 1.2rem;
-        padding: 1rem 0;
+        gap: 1rem;
+        padding: 1.2rem;
     }
     .gallery-item {
         overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-        transition: all .4s ease;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        transition: all 0.35s ease;
         aspect-ratio: 1/1;
         cursor: pointer;
     }
     .gallery-item:hover {
-        transform: translateY(-10px) scale(1.04);
-        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 20px 44px rgba(0,0,0,0.45);
+        border-color: rgba(201,168,76,0.5);
     }
-    .gallery-item img {
-        width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease;
-    }
-    .gallery-item:hover img { transform: scale(1.15); }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .gallery-item:hover img { transform: scale(1.12); }
+
     /* Empty states */
-    .text-muted { color: #6c757d !important; }
-    /* Responsive */
-    @media (max-width: 992px) {
-        .row.g-4[style*="grid"] { grid-template-columns: 1fr 1fr !important; gap:1.2rem; }
-        .tournament-gallery { grid-template-columns: repeat(4, 1fr); }
-    }
-    @media (max-width: 768px) {
-        .row.g-4[style*="grid"] { grid-template-columns: 1fr !important; gap:1rem; }
-        .tournament-gallery { grid-template-columns: repeat(3, 1fr); }
-    }
+    .text-muted { color: var(--muted) !important; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; }
+
+    /* Modal */
+    .modal-content.bg-transparent { background: transparent !important; }
+
+    @media (max-width: 992px) { .tournament-gallery { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 768px)  { .tournament-gallery { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 576px) {
-        .tournament-header h1 { font-size: 1.9rem; flex-direction: column; gap: 0.8rem; }
-        .tournament-header img { width: 60px; height: 60px; }
-        .tab button { padding: 12px 10px; font-size: 0.95rem; }
-        .tournament-gallery { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-        .gallery-header { font-size: 1.6rem; padding: 1.2rem; }
+        .tournament-header h1 { font-size: 1.6rem; flex-direction: column; gap: 0.7rem; }
+        .tournament-header img { width: 56px; height: 56px; }
+        .tab button { padding: 10px 10px; font-size: 0.82rem; }
+        .tournament-grid { gap: 1rem; }
+        .tournament-gallery { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
     }
 </style>
+
 <div class="main-content">
-    <div class="container tournament-page-wrapper">
+    <div class="tournament-page-wrapper container">
+
 <?php
-// Get selected cup ID from URL
 $selectedCupId = isset($_GET['cup_id']) ? (int)$_GET['cup_id'] : null;
-// Fetch tournaments - either one or all active cups
 if ($selectedCupId) {
-    $stmt = $pdo->prepare("
-        SELECT id, name, short_name, competition_name, season, logo, is_current
-        FROM competition_seasons
-        WHERE id = ? AND type = 'cup'
-    ");
+    $stmt = $pdo->prepare("SELECT id, name, short_name, competition_name, season, logo, is_current FROM competition_seasons WHERE id = ? AND type = 'cup'");
     $stmt->execute([$selectedCupId]);
     $tournaments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if (empty($tournaments)) {
-        die('<div class="container py-5 text-center"><h3>Tournament not found or not active.</h3></div>');
-    }
+    if (empty($tournaments)) die('<div class="container py-5 text-center"><h3 style="color:var(--cream);">Tournament not found.</h3></div>');
 } else {
-    $stmt = $pdo->query("
-        SELECT id, name, short_name, competition_name, season, logo, is_current
-        FROM competition_seasons
-        WHERE type = 'cup'
-        ORDER BY is_current DESC, season DESC
-    ");
+    $stmt = $pdo->query("SELECT id, name, short_name, competition_name, season, logo, is_current FROM competition_seasons WHERE type = 'cup' ORDER BY is_current DESC, season DESC");
     $tournaments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 foreach ($tournaments as $cup):
-    $cupId = $cup['id'];
+    $cupId   = $cup['id'];
     $cupName = $cup['name'] ?: $cup['competition_name'] . ' ' . $cup['season'];
     $logoPath = $cup['logo'] ? 'uploads/competitions/' . $cup['logo'] : null;
-    // Skip if not current and we're in single mode
     if ($selectedCupId && !$cup['is_current']) continue;
 ?>
-<!-- Tournament Header -->
+
+<!-- ── Tournament Header ── -->
 <div class="tournament-header">
     <h1>
         <?php if ($logoPath): ?>
             <img src="<?= htmlspecialchars($logoPath) ?>" alt="<?= htmlspecialchars($cupName) ?>">
         <?php endif; ?>
         <?= htmlspecialchars($cupName) ?>
-        <?php if ($cup['is_current']): ?><?php endif; ?>
     </h1>
 </div>
-<!-- THREE COLUMN LAYOUT -->
-<div class="row g-4" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.6rem;">
+
+<!-- ── Three Columns ── -->
+<div class="tournament-grid">
+
     <!-- 1. Fixtures & Results -->
     <div class="section-card">
-        <div class="section-header"><span>Fixtures & Results</span></div>
+        <div class="section-header">Fixtures &amp; Results</div>
         <div class="tab">
             <button class="tablinks active" onclick="openMatchTab(event, 'upcoming-<?= $cupId ?>')">Upcoming</button>
             <button class="tablinks" onclick="openMatchTab(event, 'results-<?= $cupId ?>')">Results</button>
         </div>
+
         <div id="upcoming-<?= $cupId ?>" class="tabcontent active">
             <?php
             $stmt = $pdo->prepare("SELECT f.tournament_date, f.venue, h.name AS home_name, h.logo AS home_logo, h.id AS home_id, a.name AS away_name, a.logo AS away_logo, a.id AS away_id FROM tournament_fixtures f JOIN clubs h ON f.home_club_id = h.id JOIN clubs a ON f.away_club_id = a.id WHERE f.competition_season_id = ? AND f.status = 'scheduled' ORDER BY f.tournament_date ASC LIMIT 6");
             $stmt->execute([$cupId]); $fixtures = $stmt->fetchAll();
-            if (empty($fixtures)) echo '<p class="text-center text-muted py-4 small">No upcoming fixtures</p>';
+            if (empty($fixtures)) echo '<p class="text-center text-muted py-4">No upcoming fixtures</p>';
             else foreach ($fixtures as $f):
-                $homeLogo = $f['home_logo'] ? "uploads/clubs/".$f['home_logo'] : "https://via.placeholder.com/48/defcfc/333333?text=".substr($f['home_name'],0,2);
-                $awayLogo = $f['away_logo'] ? "uploads/clubs/".$f['away_logo'] : "https://via.placeholder.com/48/defcfc/333333?text=".substr($f['away_name'],0,2);
+                $homeLogo = $f['home_logo'] ? "uploads/clubs/".$f['home_logo'] : "https://via.placeholder.com/48/1a1a2e/c9a84c?text=".urlencode(substr($f['home_name'],0,2));
+                $awayLogo = $f['away_logo'] ? "uploads/clubs/".$f['away_logo'] : "https://via.placeholder.com/48/1a1a2e/c9a84c?text=".urlencode(substr($f['away_name'],0,2));
                 $dt = new DateTime($f['tournament_date']);
             ?>
             <div class="match-item">
                 <div class="match-row">
                     <div class="teams-stack">
-                        <div class="team-item"><img src="<?= $homeLogo ?>" class="team-logo"><div class="team-name"><?= htmlspecialchars($f['home_name']) ?></div></div>
-                        <div class="team-item"><img src="<?= $awayLogo ?>" class="team-logo"><div class="team-name"><?= htmlspecialchars($f['away_name']) ?></div></div>
+                        <div class="team-item"><img src="<?= $homeLogo ?>" class="team-logo"><span class="team-name"><?= htmlspecialchars($f['home_name']) ?></span></div>
+                        <div class="team-item"><img src="<?= $awayLogo ?>" class="team-logo"><span class="team-name"><?= htmlspecialchars($f['away_name']) ?></span></div>
                     </div>
                     <div class="fixture-info-stack">
-                        <div class="fixture-date"><?= $dt->format('j M') ?><br><small><?= $dt->format('H:i') ?></small></div>
+                        <div class="fixture-date"><?= $dt->format('j M') ?><br><small style="font-weight:500;color:var(--muted);"><?= $dt->format('H:i') ?></small></div>
                     </div>
                 </div>
             </div>
             <?php endforeach; ?>
         </div>
+
         <div id="results-<?= $cupId ?>" class="tabcontent">
             <?php
             $stmt = $pdo->prepare("SELECT tm.id AS match_id, tm.home_score, tm.away_score, tm.match_date, tf.home_club_id, tf.away_club_id, h.name AS home_name, h.logo AS home_logo, a.name AS away_name, a.logo AS away_logo FROM tournament_matches tm JOIN tournament_fixtures tf ON tm.fixture_id = tf.id JOIN clubs h ON tf.home_club_id = h.id JOIN clubs a ON tf.away_club_id = a.id WHERE tf.competition_season_id = ? ORDER BY tm.match_date DESC LIMIT 6");
             $stmt->execute([$cupId]); $results = $stmt->fetchAll();
-            if (empty($results)) echo '<p class="text-center text-muted py-4 small">No results yet</p>';
+            if (empty($results)) echo '<p class="text-center text-muted py-4">No results yet</p>';
             else foreach ($results as $r):
-                $homeWin = $r['home_score'] > $r['away_score'];
-                $awayWin = $r['away_score'] > $r['home_score'];
-                $homeLogo = $r['home_logo'] ? "uploads/clubs/".$r['home_logo'] : "https://via.placeholder.com/48/defcfc/333333?text=".substr($r['home_name'],0,2);
-                $awayLogo = $r['away_logo'] ? "uploads/clubs/".$r['away_logo'] : "https://via.placeholder.com/48/defcfc/333333?text=".substr($r['away_name'],0,2);
-                $dateStr = (new DateTime($r['match_date']))->format('j M');
-                $matchId = $r['match_id'];
-                $eventHtml = '';
-                $events = [];
-                // Goals & Assists
-                $gStmt = $pdo->prepare("SELECT g.minute, g.is_penalty, p.name AS scorer, p.club_id, ap.name AS assist
-                                        FROM tournament_goals g
-                                        JOIN players p ON g.player_id = p.id
-                                        LEFT JOIN tournament_assists ta ON g.id = ta.goal_id
-                                        LEFT JOIN players ap ON ta.player_id = ap.id
-                                        WHERE g.match_id = ? ORDER BY g.minute");
-                $gStmt->execute([$matchId]);
-                $goals = $gStmt->fetchAll();
+                $homeWin  = $r['home_score'] > $r['away_score'];
+                $awayWin  = $r['away_score'] > $r['home_score'];
+                $homeLogo = $r['home_logo'] ? "uploads/clubs/".$r['home_logo'] : "https://via.placeholder.com/48/1a1a2e/c9a84c?text=".urlencode(substr($r['home_name'],0,2));
+                $awayLogo = $r['away_logo'] ? "uploads/clubs/".$r['away_logo'] : "https://via.placeholder.com/48/1a1a2e/c9a84c?text=".urlencode(substr($r['away_name'],0,2));
+                $dateStr  = (new DateTime($r['match_date']))->format('j M');
+                $matchId  = $r['match_id'];
+                $eventHtml = ''; $events = [];
+                $gStmt = $pdo->prepare("SELECT g.minute, g.is_penalty, p.name AS scorer, p.club_id, ap.name AS assist FROM tournament_goals g JOIN players p ON g.player_id = p.id LEFT JOIN tournament_assists ta ON g.id = ta.goal_id LEFT JOIN players ap ON ta.player_id = ap.id WHERE g.match_id = ? ORDER BY g.minute");
+                $gStmt->execute([$matchId]); $goals = $gStmt->fetchAll();
                 foreach ($goals as $g) {
                     $team = $g['club_id'] == $r['home_club_id'] ? 'home' : 'away';
-                    $events[] = ['team' => $team, 'icon' => 'goal-icon', 'text' => 'G', 'detail' => htmlspecialchars($g['scorer']).($g['is_penalty'] ? ' (P)' : '')];
-                    if ($g['assist']) $events[] = ['team' => $team, 'icon' => 'assist-icon', 'text' => 'A', 'detail' => htmlspecialchars($g['assist'])];
+                    $events[] = ['team'=>$team,'icon'=>'goal-icon','text'=>'G','detail'=>htmlspecialchars($g['scorer']).($g['is_penalty']?' (P)':'')];
+                    if ($g['assist']) $events[] = ['team'=>$team,'icon'=>'assist-icon','text'=>'A','detail'=>htmlspecialchars($g['assist'])];
                 }
-                // Cards
                 $cStmt = $pdo->prepare("SELECT card_type, p.name, p.club_id FROM tournament_cards c JOIN players p ON c.player_id = p.id WHERE c.match_id = ?");
-                $cStmt->execute([$matchId]);
-                $cards = $cStmt->fetchAll();
+                $cStmt->execute([$matchId]); $cards = $cStmt->fetchAll();
                 foreach ($cards as $c) {
                     $team = $c['club_id'] == $r['home_club_id'] ? 'home' : 'away';
                     $icon = $c['card_type'] === 'yellow' ? 'yellow-icon' : 'red-icon';
-                    $text = $c['card_type'] === 'yellow' ? 'YC' : 'RC';
-                    $events[] = ['team' => $team, 'icon' => $icon, 'text' => $text, 'detail' => htmlspecialchars($c['name'])];
+                    $events[] = ['team'=>$team,'icon'=>$icon,'text'=>($c['card_type']==='yellow'?'YC':'RC'),'detail'=>htmlspecialchars($c['name'])];
                 }
-                // Clean Sheets
                 $csStmt = $pdo->prepare("SELECT p.name, p.club_id FROM tournament_clean_sheets tcs JOIN players p ON tcs.player_id = p.id WHERE tcs.match_id = ?");
-                $csStmt->execute([$matchId]);
-                $cleans = $csStmt->fetchAll();
+                $csStmt->execute([$matchId]); $cleans = $csStmt->fetchAll();
                 foreach ($cleans as $cs) {
                     $team = $cs['club_id'] == $r['home_club_id'] ? 'home' : 'away';
-                    $events[] = ['team' => $team, 'icon' => 'cleansheet-icon', 'text' => 'CS', 'detail' => '<strong>'.htmlspecialchars($cs['name']).'</strong>'];
+                    $events[] = ['team'=>$team,'icon'=>'cleansheet-icon','text'=>'CS','detail'=>'<strong>'.htmlspecialchars($cs['name']).'</strong>'];
                 }
                 foreach ($events as $e) {
                     if ($e['team'] === 'home') {
-                        $eventHtml .= "<div class='event-row event-team home'>
-                            <div class='event-icon {$e['icon']}'>{$e['text']}</div>
-                            <div class='event-detail'>{$e['detail']}</div>
-                        </div>";
+                        $eventHtml .= "<div class='event-row event-team home'><div class='event-icon {$e['icon']}'>{$e['text']}</div><div class='event-detail'>{$e['detail']}</div></div>";
                     } else {
-                        $eventHtml .= "<div class='event-row event-team away'>
-                            <div class='event-detail'>{$e['detail']}</div>
-                            <div class='event-icon {$e['icon']}'>{$e['text']}</div>
-                        </div>";
+                        $eventHtml .= "<div class='event-row event-team away'><div class='event-detail'>{$e['detail']}</div><div class='event-icon {$e['icon']}'>{$e['text']}</div></div>";
                     }
                 }
-                if (empty($eventHtml)) $eventHtml = '<div class="text-center text-muted small py-2">No events recorded</div>';
+                if (empty($eventHtml)) $eventHtml = '<div class="text-center text-muted py-2" style="font-size:0.8rem;">No events recorded</div>';
             ?>
             <div class="match-item">
                 <div class="match-row">
                     <div class="teams-stack">
-                        <div class="team-item"><img src="<?= $homeLogo ?>" class="team-logo"><div class="team-name <?= $homeWin ? 'winner' : '' ?>"><?= htmlspecialchars($r['home_name']) ?></div></div>
-                        <div class="team-item"><img src="<?= $awayLogo ?>" class="team-logo"><div class="team-name <?= $awayWin ? 'winner' : '' ?>"><?= htmlspecialchars($r['away_name']) ?></div></div>
+                        <div class="team-item"><img src="<?= $homeLogo ?>" class="team-logo"><span class="team-name <?= $homeWin ? 'winner' : '' ?>"><?= htmlspecialchars($r['home_name']) ?></span></div>
+                        <div class="team-item"><img src="<?= $awayLogo ?>" class="team-logo"><span class="team-name <?= $awayWin ? 'winner' : '' ?>"><?= htmlspecialchars($r['away_name']) ?></span></div>
                     </div>
                     <div class="score-stack">
                         <span class="home-score"><?= $r['home_score'] ?></span>
@@ -440,26 +509,23 @@ foreach ($tournaments as $cup):
                     </div>
                 </div>
                 <div class="match-toggle" data-bs-toggle="collapse" data-bs-target="#ev-<?= $matchId ?>">
-                    <span><?= $dateStr ?></span> <i class="bi bi-chevron-down"></i>
+                    <span><?= $dateStr ?></span><i class="bi bi-chevron-down"></i>
                 </div>
-                <div class="collapse event-list" id="ev-<?= $matchId ?>">
-                    <?= $eventHtml ?>
-                </div>
+                <div class="collapse event-list" id="ev-<?= $matchId ?>"><?= $eventHtml ?></div>
             </div>
             <?php endforeach; ?>
         </div>
     </div>
+
     <!-- 2. Top Performers -->
     <div class="section-card">
-        <div class="section-header"><span>Top Performers</span></div>
+        <div class="section-header">Top Performers</div>
         <div class="table-responsive" style="flex-grow:1;">
             <?php
             $stmt = $pdo->prepare("
                 SELECT p.id AS player_id, p.name, p.photo, c.name AS club_name,
-                       COALESCE(goals.g,0) AS goals,
-                       COALESCE(assists.a,0) AS assists,
-                       COALESCE(cards.yc,0) AS yellow_cards,
-                       COALESCE(cards.rc,0) AS red_cards,
+                       COALESCE(goals.g,0) AS goals, COALESCE(assists.a,0) AS assists,
+                       COALESCE(cards.yc,0) AS yellow_cards, COALESCE(cards.rc,0) AS red_cards,
                        COALESCE(cs.cs,0) AS clean_sheets
                 FROM players p
                 JOIN clubs c ON p.club_id = c.id
@@ -473,16 +539,25 @@ foreach ($tournaments as $cup):
             ");
             $stmt->execute([$cupId,$cupId,$cupId,$cupId,$cupId]);
             $topPlayers = $stmt->fetchAll();
-            if (empty($topPlayers)) echo '<p class="text-center text-muted py-5 small">No stats yet</p>';
+            if (empty($topPlayers)) echo '<p class="text-center text-muted py-5">No stats yet</p>';
             else { ?>
-            <table class="table table-hover mb-0 top-scorers-table">
+            <table class="table table-hover mb-0">
                 <thead><tr><th>#</th><th>Player</th><th>G</th><th>A</th><th>YC</th><th>RC</th><th>CS</th></tr></thead>
                 <tbody>
                     <?php foreach ($topPlayers as $i => $p):
-                        $photo = $p['photo'] ? "uploads/players/".$p['photo'] : "https://via.placeholder.com/60/defcfc/333333?text=".substr($p['name'],0,1); ?>
+                        $photo = $p['photo'] ? "uploads/players/".$p['photo'] : "https://via.placeholder.com/60/1a1a2e/c9a84c?text=".urlencode(substr($p['name'],0,1));
+                    ?>
                     <tr>
-                        <td class="text-center fw-bold"><?= $i+1 ?></td>
-                        <td><div class="d-flex align-items-center gap-2"><img src="<?= $photo ?>" class="player-thumb"><div><a href="player_profile.php?player_id=<?= $p['player_id'] ?>" class="text-decoration-none"><?= htmlspecialchars($p['name']) ?></a><div class="text-muted small"><?= htmlspecialchars($p['club_name']) ?></div></div></div></td>
+                        <td class="text-center fw-bold" style="color:var(--muted);"><?= $i+1 ?></td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <img src="<?= $photo ?>" class="player-thumb">
+                                <div>
+                                    <a href="player_profile.php?player_id=<?= $p['player_id'] ?>"><?= htmlspecialchars($p['name']) ?></a>
+                                    <div style="font-size:0.75rem;color:var(--muted);"><?= htmlspecialchars($p['club_name']) ?></div>
+                                </div>
+                            </div>
+                        </td>
                         <td class="text-center text-success fw-bold"><?= $p['goals'] ?></td>
                         <td class="text-center text-info fw-bold"><?= $p['assists'] ?></td>
                         <td class="text-center text-warning fw-bold"><?= $p['yellow_cards'] ?></td>
@@ -495,9 +570,10 @@ foreach ($tournaments as $cup):
             <?php } ?>
         </div>
     </div>
+
     <!-- 3. Tournament Table -->
     <div class="section-card">
-        <div class="section-header"><span>Table</span></div>
+        <div class="section-header">Table</div>
         <div class="table-responsive" style="flex-grow:1;">
             <?php
             $stmt = $pdo->prepare("
@@ -513,28 +589,33 @@ foreach ($tournaments as $cup):
                 FROM tournament_fixtures tf
                 JOIN clubs c ON c.id IN (tf.home_club_id, tf.away_club_id)
                 LEFT JOIN tournament_matches tm ON tm.fixture_id = tf.id
-                WHERE c.name NOT IN ('Loser 1','Loser 2','Winner 1', 'Winner 2') and tf.competition_season_id = ?
+                WHERE c.name NOT IN ('Loser 1','Loser 2','Winner 1','Winner 2') AND tf.competition_season_id = ?
                 GROUP BY c.id
                 ORDER BY points DESC, gd DESC, gf DESC, c.name ASC
             ");
             $stmt->execute([$cupId]);
             $standings = $stmt->fetchAll();
-            if (empty($standings)) echo '<p class="text-center text-muted py-5 small">No matches played</p>';
+            if (empty($standings)) echo '<p class="text-center text-muted py-5">No matches played</p>';
             else { ?>
             <table class="table table-hover mb-0">
                 <thead><tr><th>#</th><th>Club</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>PTS</th></tr></thead>
                 <tbody>
                     <?php foreach ($standings as $i => $row):
-                        $logo = $row['logo'] ? 'uploads/clubs/'.$row['logo'] : 'https://via.placeholder.com/40/defcfc/333333?text=C';
+                        $logo = $row['logo'] ? 'uploads/clubs/'.$row['logo'] : 'https://via.placeholder.com/40/1a1a2e/c9a84c?text=C';
                     ?>
                     <tr>
-                        <td class="fw-bold"><?= $i+1 ?></td>
-                        <td><div class="d-flex align-items-center gap-2"><img src="<?= $logo ?>" class="club-logo"><span><?= htmlspecialchars($row['club']) ?></span></div></td>
+                        <td class="fw-bold" style="color:var(--muted);"><?= $i+1 ?></td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <img src="<?= $logo ?>" class="club-logo">
+                                <span><?= htmlspecialchars($row['club']) ?></span>
+                            </div>
+                        </td>
                         <td><?= $row['played'] ?></td>
                         <td><?= $row['wins'] ?></td>
                         <td><?= $row['draws'] ?></td>
                         <td><?= $row['losses'] ?></td>
-                        <td class="<?= $row['gd'] >= 0 ? 'text-success' : 'text-danger' ?> fw-bold"><?= $row['gd'] >= 0 ? '+'.$row['gd'] : $row['gd'] ?></td>
+                        <td class="fw-bold <?= $row['gd'] >= 0 ? 'text-success' : 'text-danger' ?>"><?= $row['gd'] >= 0 ? '+'.$row['gd'] : $row['gd'] ?></td>
                         <td class="fw-bold text-primary"><?= $row['points'] ?></td>
                     </tr>
                     <?php endforeach; ?>
@@ -543,40 +624,50 @@ foreach ($tournaments as $cup):
             <?php } ?>
         </div>
     </div>
-</div>
+
+</div><!-- /.tournament-grid -->
 <?php endforeach; ?>
-<!-- GALLERY -->
+
+<!-- ── Gallery ── -->
 <?php
 $stmt = $pdo->query("SELECT image, caption FROM tournament_images ORDER BY id DESC");
 $allImages = $stmt->fetchAll();
 if (!empty($allImages)): ?>
-<div class="gallery-header">
-    <h3>Tournament Gallery</h3>
-</div>
-<div class="tournament-gallery">
-    <?php foreach ($allImages as $i => $img):
-        $path = 'uploads/tournaments/' . htmlspecialchars($img['image']);
-        $caption = htmlspecialchars($img['caption'] ?? '');
-    ?>
-    <div class="gallery-item" data-bs-toggle="modal" data-bs-target="#imgModal<?= $i ?>">
-        <img src="<?= $path ?>" alt="<?= $caption ?>" loading="lazy">
+<div class="gallery-section">
+    <div class="gallery-header">
+        <h3>Tournament Gallery</h3>
     </div>
-    <div class="modal fade" id="imgModal<?= $i ?>" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content bg-transparent border-0">
-                <div class="text-end p-3">
-                    <button type="button" class="btn-close btn-close-white shadow-lg" data-bs-dismiss="modal"></button>
+    <div class="tournament-gallery">
+        <?php foreach ($allImages as $i => $img):
+            $path    = 'uploads/tournaments/' . htmlspecialchars($img['image']);
+            $caption = htmlspecialchars($img['caption'] ?? '');
+        ?>
+        <div class="gallery-item" data-bs-toggle="modal" data-bs-target="#imgModal<?= $i ?>">
+            <img src="<?= $path ?>" alt="<?= $caption ?>" loading="lazy">
+        </div>
+        <div class="modal fade" id="imgModal<?= $i ?>" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content bg-transparent border-0">
+                    <div class="text-end p-3">
+                        <button type="button" class="btn-close btn-close-white shadow-lg" data-bs-dismiss="modal"></button>
+                    </div>
+                    <img src="<?= $path ?>" class="img-fluid shadow-lg rounded" alt="<?= $caption ?>">
+                    <?php if ($caption): ?>
+                        <div class="text-center mt-3">
+                            <p class="text-white d-inline-block px-4 py-2 rounded" style="background:rgba(0,0,0,0.7);"><?= $caption ?></p>
+                        </div>
+                    <?php endif; ?>
                 </div>
-                <img src="<?= $path ?>" class="img-fluid shadow-lg rounded" alt="<?= $caption ?>">
-                <?php if ($caption): ?><div class="text-center mt-3"><p class="text-white bg-dark bg-opacity-75 d-inline-block px-4 py-2 rounded"><?= $caption ?></p></div><?php endif; ?>
             </div>
         </div>
+        <?php endforeach; ?>
     </div>
-    <?php endforeach; ?>
 </div>
 <?php endif; ?>
-</div>
-</div>
+
+    </div><!-- /.tournament-page-wrapper -->
+</div><!-- /.main-content -->
+
 <script>
 function openMatchTab(evt, tabId) {
     const card = evt.currentTarget.closest('.section-card');

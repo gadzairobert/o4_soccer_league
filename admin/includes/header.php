@@ -212,6 +212,10 @@ body{ overflow-x:hidden; background:#f8f9fa; }
 
 <?php if($_SESSION['is_admin'] ?? false): ?>
 <li class="nav-item">
+<a class="nav-link <?= $page=='constitutions'?'active':'' ?>" href="?page=constitutions">
+    <span class="icon"><i class="bi bi-person-gear"></i></span>
+    <span class="text">04FC Constitution</span>
+</a>
 <a class="nav-link <?= $page=='users'?'active':'' ?>" href="?page=users">
     <span class="icon"><i class="bi bi-person-gear"></i></span>
     <span class="text">Manage Users</span>

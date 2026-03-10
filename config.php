@@ -5,8 +5,8 @@ session_start();
 
 // Database connection
 $host = 'localhost';
-$dbname = 'b04slom6h9u2_04sl';
-$username = 'b04slom6h9u2_04sl';
+$dbname = '04_sl';
+$username = 'root';
 $password = '';
 
 try {
