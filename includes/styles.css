@@ -1,0 +1,10 @@
+/* includes/styles.css */
+.club-logo {
+    border: none !important;
+    margin: 0 2px;  /* Reduced from default ~10px */
+    padding: 0;
+    vertical-align: middle;
+}
+.table img {
+    border-radius: 0;  /* No rounded borders */
+}

@@ -1,0 +1,54 @@
+[17-Dec-2025 15:37:59 UTC] PHP Warning:  include(../header.php): Failed to open stream: No such file or directory in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 35
+[17-Dec-2025 15:37:59 UTC] PHP Warning:  include(../header.php): Failed to open stream: No such file or directory in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 35
+[17-Dec-2025 15:37:59 UTC] PHP Warning:  include(): Failed opening '../header.php' for inclusion (include_path='.:/opt/cpanel/ea-php84/root/usr/share/pear') in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 35
+[17-Dec-2025 16:11:12 UTC] PHP Warning:  include(../header.php): Failed to open stream: No such file or directory in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 178
+[17-Dec-2025 16:11:12 UTC] PHP Warning:  include(../header.php): Failed to open stream: No such file or directory in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 178
+[17-Dec-2025 16:11:12 UTC] PHP Warning:  include(): Failed opening '../header.php' for inclusion (include_path='.:/opt/cpanel/ea-php84/root/usr/share/pear') in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 178
+[17-Dec-2025 16:13:55 UTC] PHP Warning:  require_once(config.php): Failed to open stream: No such file or directory in /home/b04slom6h9u2/public_html/includes/header.php on line 5
+[17-Dec-2025 16:13:55 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'config.php' (include_path='.:/opt/cpanel/ea-php84/root/usr/share/pear') in /home/b04slom6h9u2/public_html/includes/header.php:5
+Stack trace:
+#0 /home/b04slom6h9u2/public_html/user_portal/dashboard.php(179): include()
+#1 {main}
+  thrown in /home/b04slom6h9u2/public_html/includes/header.php on line 5
+[17-Dec-2025 16:15:14 UTC] PHP Warning:  require_once(config.php): Failed to open stream: No such file or directory in /home/b04slom6h9u2/public_html/includes/header.php on line 5
+[17-Dec-2025 16:15:14 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'config.php' (include_path='.:/opt/cpanel/ea-php84/root/usr/share/pear') in /home/b04slom6h9u2/public_html/includes/header.php:5
+Stack trace:
+#0 /home/b04slom6h9u2/public_html/user_portal/dashboard.php(183): include()
+#1 {main}
+  thrown in /home/b04slom6h9u2/public_html/includes/header.php on line 5
+[17-Dec-2025 16:16:08 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'config.php' (include_path='.:/opt/cpanel/ea-php84/root/usr/share/pear') in /home/b04slom6h9u2/public_html/includes/header.php:5
+Stack trace:
+#0 /home/b04slom6h9u2/public_html/user_portal/dashboard.php(185): include()
+#1 {main}
+  thrown in /home/b04slom6h9u2/public_html/includes/header.php on line 5
+[17-Dec-2025 16:18:37 UTC] PHP Warning:  require_once(config.php): Failed to open stream: No such file or directory in /home/b04slom6h9u2/public_html/includes/header.php on line 5
+[17-Dec-2025 16:18:37 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'config.php' (include_path='.:/opt/cpanel/ea-php84/root/usr/share/pear') in /home/b04slom6h9u2/public_html/includes/header.php:5
+Stack trace:
+#0 /home/b04slom6h9u2/public_html/user_portal/dashboard.php(183): include()
+#1 {main}
+  thrown in /home/b04slom6h9u2/public_html/includes/header.php on line 5
+[17-Dec-2025 16:18:46 UTC] PHP Warning:  include(../header.php): Failed to open stream: No such file or directory in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 178
+[17-Dec-2025 16:18:46 UTC] PHP Warning:  include(../header.php): Failed to open stream: No such file or directory in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 178
+[17-Dec-2025 16:18:46 UTC] PHP Warning:  include(): Failed opening '../header.php' for inclusion (include_path='.:/opt/cpanel/ea-php84/root/usr/share/pear') in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 178
+[17-Dec-2025 16:18:52 UTC] PHP Warning:  include(../header.php): Failed to open stream: No such file or directory in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 35
+[17-Dec-2025 16:18:52 UTC] PHP Warning:  include(../header.php): Failed to open stream: No such file or directory in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 35
+[17-Dec-2025 16:18:52 UTC] PHP Warning:  include(): Failed opening '../header.php' for inclusion (include_path='.:/opt/cpanel/ea-php84/root/usr/share/pear') in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 35
+[17-Dec-2025 16:23:42 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'u.first_name' in 'SELECT' in /home/b04slom6h9u2/public_html/user_portal/dashboard.php:33
+Stack trace:
+#0 /home/b04slom6h9u2/public_html/user_portal/dashboard.php(33): PDOStatement->execute(Array)
+#1 {main}
+  thrown in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 33
+[18-Dec-2025 18:59:58 UTC] PHP Fatal error:  Unparenthesized `a ? b : c ? d : e` is not supported. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 49
+[18-Dec-2025 19:00:59 UTC] PHP Fatal error:  Unparenthesized `a ? b : c ? d : e` is not supported. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 74
+[18-Dec-2025 19:01:01 UTC] PHP Fatal error:  Unparenthesized `a ? b : c ? d : e` is not supported. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 74
+[18-Dec-2025 19:01:02 UTC] PHP Fatal error:  Unparenthesized `a ? b : c ? d : e` is not supported. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 74
+[18-Dec-2025 19:01:04 UTC] PHP Fatal error:  Unparenthesized `a ? b : c ? d : e` is not supported. Use either `(a ? b : c) ? d : e` or `a ? b : (c ? d : e)` in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 74
+[06-Feb-2026 18:30:01 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in /home/b04slom6h9u2/public_html/user_portal/dashboard.php:444
+Stack trace:
+#0 /home/b04slom6h9u2/public_html/user_portal/dashboard.php(444): PDOStatement->execute(Array)
+#1 {main}
+  thrown in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 444
+[06-Feb-2026 20:01:01 UTC] PHP Warning:  Undefined variable $contrib_clause in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 341
+[06-Feb-2026 20:01:01 UTC] PHP Warning:  Undefined variable $expense_clause in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 354
+[06-Feb-2026 20:01:01 UTC] PHP Warning:  Undefined variable $all_transactions in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 362
+[06-Feb-2026 20:01:01 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/b04slom6h9u2/public_html/user_portal/dashboard.php on line 362
