@@ -9,24 +9,28 @@ $currentYear = date('Y');
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    /* ── Design Tokens ── */
     :root {
-        --ink:        #1a1a2e;
-        --gold:       #c9a84c;
-        --gold-light: #f0d080;
-        --cream:      #fdf8ef;
-        --muted:      rgba(255,255,255,0.45);
-        --border:     rgba(201,168,76,0.2);
-        --card-bg:    rgba(255,255,255,0.04);
+        --gold:        #c9a84c;
+        --gold-light:  #f0d080;
+        --gold-dark:   #9a6f1e;
+        --cream:       #fdf8ef;
+        --dark-panel:  #1a1a2e;
+        --dark-tab:    #16152b;
+        --dark-deeper: #0f0e22;
+        --border:      rgba(201,168,76,0.22);
+        --muted:       #6b7280;
+        --text-main:   #1a1a2e;
+        --text-soft:   #4b5563;
     }
 
+    /* ── PAGE BACKGROUND: LIGHT ── */
     html, body {
-        background-color: #1a1a2e !important;
+        background-color: #f0ede8 !important;
         background-image:
-            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(180,160,120,0.05) 0%, transparent 50%);
         background-attachment: fixed;
-        color: #eee;
+        color: var(--text-main);
         height: 100%;
         margin: 0;
         overflow-x: hidden;
@@ -35,26 +39,26 @@ $currentYear = date('Y');
     .main-content { flex: 1 0 auto; }
     footer { flex-shrink: 0; }
 
-    /* ── Page Wrapper — preserves original -50px / 20px spacing ── */
+    /* ── Page Wrapper ── */
     .about-page-wrapper {
         margin-top: -50px;
         padding-top: 20px;
     }
 
-    /* ── About Card ── */
+    /* ── About Card — LIGHT ── */
     .about-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
         display: flex;
         flex-direction: column;
     }
 
-    /* ── About Header ── */
+    /* ── About Header — DARK ── */
     .about-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         color: var(--cream);
         padding: 1rem 1.8rem;
@@ -64,16 +68,16 @@ $currentYear = date('Y');
         text-align: center;
     }
 
-    /* ── Panel Tabs ── */
+    /* ── Panel Tabs — DARK ── */
     .panel-tabs {
         display: flex;
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         flex-direction: column;
         border-bottom: none;
     }
     .panel-tabs a {
         padding: 16px 20px;
-        color: var(--muted);
+        color: rgba(255,255,255,0.45);
         font-family: 'DM Sans', sans-serif;
         font-weight: 600;
         text-decoration: none;
@@ -100,7 +104,7 @@ $currentYear = date('Y');
     }
     .tab-controls { display: flex; gap: 10px; flex-wrap: wrap; }
 
-    /* Selects inside tabs */
+    /* Selects inside tabs — dark background to match tab bar */
     .form-select {
         background: rgba(255,255,255,0.08);
         border: 1px solid rgba(201,168,76,0.3);
@@ -137,7 +141,7 @@ $currentYear = date('Y');
         }
     }
 
-    /* ── Three-Panel Layout — Desktop sizes UNCHANGED ── */
+    /* ── Three-Panel Layout ── */
     @media (min-width: 992px) {
         .stats-layout {
             display: grid;
@@ -147,13 +151,13 @@ $currentYear = date('Y');
         }
         .stats-table-container {
             overflow-y: auto;
-            border-right: 1px solid rgba(255,255,255,0.07);
-            background: rgba(255,255,255,0.02);
+            border-right: 1px solid #e5e7eb;
+            background: #ffffff;
         }
         #playerDetailPanel, #comparisonPanel {
-            background: rgba(255,255,255,0.03);
-            border-left: 1px solid rgba(255,255,255,0.07);
-            box-shadow: -6px 0 20px rgba(0,0,0,0.2);
+            background: #f9f7f2;
+            border-left: 1px solid #e5e7eb;
+            box-shadow: -4px 0 12px rgba(0,0,0,0.04);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -161,16 +165,16 @@ $currentYear = date('Y');
         #mobileComparisonPanel { display: none; }
     }
 
-    /* ── Mobile Layout — UNCHANGED ── */
+    /* ── Mobile Layout ── */
     @media (max-width: 991.98px) {
         .stats-layout { display: flex; flex-direction: column; }
         #comparisonPanel { display: none; }
         #mobileComparisonPanel {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
+            background: #f9f7f2;
+            border: 1px solid #e5e7eb;
             border-radius: 10px;
             margin: 1rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -180,10 +184,10 @@ $currentYear = date('Y');
             position: fixed; top: 0; right: 0;
             width: 100%; height: 100vh;
             z-index: 9999;
-            background: #1a1a2e;
+            background: #f0ede8;
             transform: translateY(100%);
             transition: transform 0.4s ease;
-            box-shadow: 0 -8px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 -8px 30px rgba(0,0,0,0.15);
         }
         #playerDetailPanel.open { transform: translateY(0); }
     }
@@ -191,9 +195,9 @@ $currentYear = date('Y');
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
-    /* ── Tournament Header ── */
+    /* ── Tournament Header — DARK ── */
     .tournament-result-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         color: var(--cream);
         padding: 0.9rem 1.4rem;
@@ -212,7 +216,7 @@ $currentYear = date('Y');
         object-fit: cover;
         border-radius: 50%;
         border: 2px solid rgba(201,168,76,0.35);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     .club-thumb {
         width: 32px; height: 32px;
@@ -221,12 +225,12 @@ $currentYear = date('Y');
         padding: 3px;
         border-radius: 50%;
         border: 1px solid rgba(201,168,76,0.25);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
     .pos-badge {
-        background: rgba(201,168,76,0.15);
+        background: rgba(201,168,76,0.12);
         border: 1px solid rgba(201,168,76,0.3);
-        color: var(--gold);
+        color: var(--gold-dark);
         padding: 3px 8px;
         border-radius: 6px;
         font-family: 'DM Sans', sans-serif;
@@ -236,9 +240,9 @@ $currentYear = date('Y');
         text-align: center;
     }
 
-    /* ── Panel Header ── */
+    /* ── Panel Header — DARK ── */
     .panel-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         color: var(--cream);
         padding: 1rem 1.6rem;
@@ -250,15 +254,15 @@ $currentYear = date('Y');
         font-weight: 600;
         flex-shrink: 0;
     }
-    .panel-header small { color: var(--muted); font-size: 0.8rem; display: block; }
+    .panel-header small { color: rgba(255,255,255,0.45); font-size: 0.8rem; display: block; }
     .close-panel {
         font-size: 1.9rem; cursor: pointer;
-        color: var(--muted); line-height: 1;
+        color: rgba(255,255,255,0.45); line-height: 1;
         transition: color 0.2s;
     }
     .close-panel:hover { color: var(--gold); }
 
-    /* ── Comparison Content ── */
+    /* ── Comparison Content — LIGHT ── */
     .comparison-content {
         display: flex;
         flex-direction: column;
@@ -267,7 +271,7 @@ $currentYear = date('Y');
         overflow-y: auto;
         overflow-x: hidden;
         padding: 1rem 1.2rem;
-        background: transparent;
+        background: #f9f7f2;
     }
     #mobileComparisonChart,
     #desktopComparisonChart {
@@ -276,56 +280,57 @@ $currentYear = date('Y');
         min-height: 350px;
         max-height: 350px;
         flex-shrink: 0;
-        background: rgba(255,255,255,0.03);
+        background: #ffffff;
         border-radius: 8px;
-        border: 1px solid var(--border);
+        border: 1px solid #e5e7eb;
     }
 
-    /* Player search */
+    /* Player search — LIGHT ── */
     .player-search-container { position: relative; margin-bottom: 12px; flex-shrink: 0; }
     .player-search-container input {
         width: 100%; padding: 10px;
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(201,168,76,0.25);
+        background: #ffffff;
+        border: 1px solid #d1d5db;
         border-radius: 6px;
         font-family: 'DM Sans', sans-serif;
         font-size: 0.9rem;
-        color: var(--cream);
+        color: var(--text-main);
         box-sizing: border-box;
     }
-    .player-search-container input::placeholder { color: var(--muted); }
+    .player-search-container input::placeholder { color: #9ca3af; }
     .player-search-container input:focus {
         outline: none; border-color: var(--gold);
-        background: rgba(255,255,255,0.08);
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
     }
     .player-search-dropdown {
         position: absolute; top: 100%; left: 0; right: 0;
-        background: #1e1c3a;
-        border: 1px solid var(--border);
+        background: #ffffff;
+        border: 1px solid #d1d5db;
         border-top: none;
         max-height: 200px; overflow-y: auto;
         z-index: 10; display: none;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
         border-radius: 0 0 6px 6px;
     }
     .player-search-dropdown div {
         padding: 10px 12px; cursor: pointer;
-        color: rgba(255,255,255,0.75);
+        color: var(--text-soft);
         font-family: 'DM Sans', sans-serif;
         font-size: 0.88rem;
         transition: background 0.15s;
     }
     .player-search-dropdown div:hover {
-        background: rgba(201,168,76,0.1);
-        color: var(--gold-light);
+        background: #fdf9f0;
+        color: var(--gold-dark);
     }
     .player-search-dropdown.active { display: block; }
 
     /* Compare button */
     .btn-primary {
-        background: rgba(201,168,76,0.18);
+        background: rgba(201,168,76,0.12);
         border: 1px solid rgba(201,168,76,0.4);
-        color: var(--gold);
+        color: var(--gold-dark);
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
         font-size: 0.88rem;
@@ -334,23 +339,23 @@ $currentYear = date('Y');
         transition: all 0.25s;
     }
     .btn-primary:hover {
-        background: rgba(201,168,76,0.3);
+        background: rgba(201,168,76,0.22);
         border-color: var(--gold);
-        color: var(--gold-light);
+        color: var(--gold-dark);
     }
 
-    /* ── Stats table styling (applied to AJAX-injected content) ── */
+    /* ── Stats table (AJAX-injected) — LIGHT ── */
     #leagueStatsContainer table,
     #tournamentStatsContainer table {
-        background: transparent !important;
-        color: rgba(255,255,255,0.8) !important;
+        background: #ffffff !important;
+        color: var(--text-main) !important;
         font-family: 'DM Sans', sans-serif;
         font-size: 0.88rem;
         width: 100%;
     }
     #leagueStatsContainer thead th,
     #tournamentStatsContainer thead th {
-        background: linear-gradient(135deg, #16152b, #24224a) !important;
+        background: linear-gradient(135deg, var(--dark-deeper), var(--dark-tab)) !important;
         color: var(--gold) !important;
         font-weight: 700;
         font-size: 0.72rem;
@@ -362,56 +367,56 @@ $currentYear = date('Y');
     }
     #leagueStatsContainer tbody td,
     #tournamentStatsContainer tbody td {
-        border-top: 1px solid rgba(255,255,255,0.05) !important;
+        border-top: 1px solid #f3f4f6 !important;
         border-bottom: none !important;
         vertical-align: middle;
         padding: 0.55rem 0.6rem;
-        color: rgba(255,255,255,0.8) !important;
+        color: var(--text-main) !important;
     }
-    /* Fix Bootstrap table-hover dark bg overriding text on dark theme */
     #leagueStatsContainer .table-hover > tbody > tr:hover > *,
     #tournamentStatsContainer .table-hover > tbody > tr:hover > * {
-        background-color: rgba(201,168,76,0.07) !important;
-        color: rgba(255,255,255,0.95) !important;
+        background-color: #fdf9f0 !important;
+        color: var(--text-main) !important;
         --bs-table-accent-bg: transparent;
     }
     #leagueStatsContainer a,
     #tournamentStatsContainer a {
-        color: rgba(255,255,255,0.8) !important;
+        color: var(--text-soft) !important;
         text-decoration: none;
         transition: color 0.2s;
     }
     #leagueStatsContainer a:hover,
-    #tournamentStatsContainer a:hover { color: var(--gold-light) !important; }
+    #tournamentStatsContainer a:hover { color: var(--gold-dark) !important; }
     #leagueStatsContainer .fw-semibold,
-    #tournamentStatsContainer .fw-semibold { color: var(--cream) !important; }
+    #tournamentStatsContainer .fw-semibold { color: var(--text-main) !important; }
 
-    /* Player detail panel */
+    /* Player detail panel — LIGHT ── */
     #panelContent {
         padding: 0 1.6rem 1.6rem;
         overflow-y: auto;
         flex: 1;
-        color: rgba(255,255,255,0.75);
+        color: var(--text-soft);
         font-family: 'DM Sans', sans-serif;
+        background: #f9f7f2;
     }
-    #panelContent table { color: rgba(255,255,255,0.8) !important; background: transparent !important; }
+    #panelContent table { color: var(--text-main) !important; background: #ffffff !important; }
     #panelContent thead th {
-        background: linear-gradient(135deg, #16152b, #24224a) !important;
+        background: linear-gradient(135deg, var(--dark-deeper), var(--dark-tab)) !important;
         color: var(--gold) !important; border: none !important;
     }
     #panelContent tbody td {
-        border-color: rgba(255,255,255,0.06) !important;
-        color: rgba(255,255,255,0.8) !important;
+        border-color: #f3f4f6 !important;
+        color: var(--text-main) !important;
     }
     #panelContent .table-hover > tbody > tr:hover > * {
-        background-color: rgba(201,168,76,0.07) !important;
-        color: rgba(255,255,255,0.95) !important;
+        background-color: #fdf9f0 !important;
+        color: var(--text-main) !important;
     }
 
     /* Helpers */
-    .text-danger  { color: #f87171 !important; }
+    .text-danger  { color: #dc2626 !important; }
     .text-muted   { color: var(--muted) !important; }
-    .text-primary { color: var(--gold) !important; }
+    .text-primary { color: var(--gold-dark) !important; }
     .spinner-border { color: var(--gold) !important; }
     .chartjs-tooltip { background: rgba(0,0,0,0.75) !important; color: white !important; }
 </style>
@@ -421,7 +426,7 @@ $currentYear = date('Y');
         <div class="about-card">
             <div class="about-header">Player Statistics</div>
 
-            <!-- Mobile: Player Comparison - ABOVE tabs -->
+            <!-- Mobile: Player Comparison -->
             <div id="mobileComparisonPanel">
                 <div class="panel-header">
                     <div>Player Comparison</div>
@@ -505,7 +510,7 @@ $currentYear = date('Y');
                     </div>
                 </div>
 
-                <!-- Middle: Player Detail Panel (Mobile slides up) -->
+                <!-- Middle: Player Detail Panel -->
                 <div id="playerDetailPanel">
                     <div class="panel-header">
                         <div>
@@ -659,7 +664,7 @@ function renderChart(players, canvasId, existingChart) {
                 backgroundColor: bgColors[i] || bgColors[0],
                 borderColor: colors[i] || colors[0],
                 borderWidth: 3,
-                pointBackgroundColor: '#1a1a2e',
+                pointBackgroundColor: '#f0ede8',
                 pointBorderColor: colors[i] || colors[0],
                 pointRadius: 5
             }))
@@ -671,35 +676,35 @@ function renderChart(players, canvasId, existingChart) {
                 r: {
                     beginAtZero: true,
                     max: maxVal + 3,
-                    ticks: { stepSize: Math.max(1, Math.ceil((maxVal + 3) / 6)), color: 'rgba(255,255,255,0.5)', backdropColor: 'transparent' },
-                    grid:        { color: 'rgba(255,255,255,0.08)' },
-                    angleLines:  { color: 'rgba(255,255,255,0.08)' },
-                    pointLabels: { color: 'rgba(255,255,255,0.7)', font: { size: 13 } }
+                    ticks: { stepSize: Math.max(1, Math.ceil((maxVal + 3) / 6)), color: '#6b7280', backdropColor: 'transparent' },
+                    grid:        { color: 'rgba(0,0,0,0.08)' },
+                    angleLines:  { color: 'rgba(0,0,0,0.08)' },
+                    pointLabels: { color: '#4b5563', font: { size: 13 } }
                 }
             },
             plugins: {
-                legend: { labels: { color: 'rgba(255,255,255,0.75)', font: { size: 13 } } },
-                title:  { display: true, text: 'Player Stats Comparison', color: '#c9a84c', font: { size: 16, weight: '700' } }
+                legend: { labels: { color: '#4b5563', font: { size: 13 } } },
+                title:  { display: true, text: 'Player Stats Comparison', color: '#9a6f1e', font: { size: 16, weight: '700' } }
             }
         }
     });
 }
 
 function loadLeagueStats(year) {
-    document.getElementById('leagueStatsContainer').innerHTML = '<div class="text-center py-5"><div class="spinner-border"></div><p style="color:rgba(255,255,255,0.4);font-family:\'DM Sans\',sans-serif;margin-top:0.5rem;">Loading...</p></div>';
+    document.getElementById('leagueStatsContainer').innerHTML = '<div class="text-center py-5"><div class="spinner-border"></div><p style="color:var(--muted);font-family:\'DM Sans\',sans-serif;margin-top:0.5rem;">Loading...</p></div>';
     fetch(`ajax_player_stats.php?type=league&year=${year}`).then(r => r.text()).then(html => { document.getElementById('leagueStatsContainer').innerHTML = html; loadPlayersForComparison(); });
 }
 function loadTournamentStats(year, cs_id = '') {
     const container = document.getElementById('tournamentStatsContainer');
     const header    = document.getElementById('tournamentHeaderText');
-    container.innerHTML = '<div class="text-center py-5"><div class="spinner-border"></div><p style="color:rgba(255,255,255,0.4);font-family:\'DM Sans\',sans-serif;margin-top:0.5rem;">Loading...</p></div>';
+    container.innerHTML = '<div class="text-center py-5"><div class="spinner-border"></div><p style="color:var(--muted);font-family:\'DM Sans\',sans-serif;margin-top:0.5rem;">Loading...</p></div>';
     header.textContent = cs_id ? document.querySelector(`#tournamentSelect option[value="${cs_id}"]`)?.dataset.name || 'Tournament' : `All Tournaments (${year})`;
     fetch(`ajax_player_stats.php?type=tournament&year=${year}${cs_id ? '&cs_id='+cs_id : ''}`).then(r => r.text()).then(html => { container.innerHTML = html; loadPlayersForComparison(); });
 }
 function openPlayerPanel(playerId, playerName, clubName, clubId, type, year, cs_id = null) {
     document.getElementById('panelPlayerName').textContent = playerName;
     document.getElementById('panelPlayerClub').textContent = clubName || 'No Club';
-    document.getElementById('panelContent').innerHTML = '<div class="text-center py-5"><div class="spinner-border"></div><p style="color:rgba(255,255,255,0.4);font-family:\'DM Sans\',sans-serif;margin-top:0.5rem;">Loading...</p></div>';
+    document.getElementById('panelContent').innerHTML = '<div class="text-center py-5"><div class="spinner-border"></div><p style="color:var(--muted);font-family:\'DM Sans\',sans-serif;margin-top:0.5rem;">Loading...</p></div>';
     document.getElementById('playerDetailPanel').classList.add('open');
     let url = `ajax_player_actions.php?player_id=${playerId}&player_club_id=${clubId}&type=${type}&year=${year}`;
     if (cs_id) url += `&cs_id=${cs_id}`;

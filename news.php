@@ -3,7 +3,6 @@ ob_start();
 require 'config.php';
 include 'includes/header.php';
 include 'includes/gif_slideshow.php';
-// ---- Pagination ----
 $perPage = 8;
 $page = max(1, (int)($_GET['page'] ?? 1));
 $offset = ($page - 1) * $perPage;
@@ -25,24 +24,28 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    /* ── Design Tokens ── */
     :root {
-        --ink:        #1a1a2e;
-        --gold:       #c9a84c;
-        --gold-light: #f0d080;
-        --cream:      #fdf8ef;
-        --muted:      rgba(255,255,255,0.45);
-        --border:     rgba(201,168,76,0.2);
-        --card-bg:    rgba(255,255,255,0.04);
+        --gold:        #c9a84c;
+        --gold-light:  #f0d080;
+        --gold-dark:   #9a6f1e;
+        --cream:       #fdf8ef;
+        --dark-panel:  #1a1a2e;
+        --dark-tab:    #16152b;
+        --dark-deeper: #0f0e22;
+        --border:      rgba(201,168,76,0.22);
+        --muted:       #6b7280;
+        --text-main:   #1a1a2e;
+        --text-soft:   #4b5563;
     }
 
+    /* ── PAGE BACKGROUND: LIGHT ── */
     html, body {
-        background-color: #1a1a2e !important;
+        background-color: #f0ede8 !important;
         background-image:
-            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(180,160,120,0.05) 0%, transparent 50%);
         background-attachment: fixed;
-        color: #eee;
+        color: var(--text-main);
         overflow-x: hidden;
     }
     body { display: flex; flex-direction: column; min-height: 100vh; }
@@ -62,13 +65,13 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
         }
     }
 
-    /* ── Outer Card ── */
+    /* ── Outer Card — LIGHT ── */
     .news-outer-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
     }
     @media (max-width: 767px) {
         .news-outer-card {
@@ -78,9 +81,9 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
         }
     }
 
-    /* ── Page Header ── */
+    /* ── Page Header — DARK ── */
     .news-page-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         padding: 1rem 1.6rem;
         display: flex;
@@ -122,21 +125,21 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
     @media (max-width: 992px)  { .news-grid { grid-template-columns: repeat(2, 1fr); padding: 1.5rem; } }
     @media (max-width: 576px)  { .news-grid { grid-template-columns: 1fr; padding: 1.2rem; gap: 1.2rem; } }
 
-    /* ── News Card ── */
+    /* ── News Card — LIGHT ── */
     .news-card {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid var(--border);
+        background: #f9f7f2;
+        border: 1px solid #e5e7eb;
         border-radius: 12px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
         height: 100%;
         transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
-        box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
     .news-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 20px 44px rgba(0,0,0,0.45);
+        box-shadow: 0 16px 36px rgba(0,0,0,0.12);
         border-color: rgba(201,168,76,0.45);
     }
 
@@ -157,57 +160,58 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
     .news-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.75), transparent 45%);
+        background: linear-gradient(to top, rgba(0,0,0,0.5), transparent 45%);
         pointer-events: none;
     }
     .news-img-placeholder {
         height: 200px;
-        background: rgba(255,255,255,0.04);
+        background: #f0ede8;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid #e5e7eb;
     }
-    .news-img-placeholder i { font-size: 2.5rem; color: rgba(201,168,76,0.25); }
+    .news-img-placeholder i { font-size: 2.5rem; color: rgba(154,111,30,0.3); }
 
-    /* ── Card Body ── */
+    /* ── Card Body — LIGHT ── */
     .news-card-body {
         padding: 1.3rem 1.4rem;
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+        background: #f9f7f2;
     }
     .news-title {
         font-family: 'Playfair Display', serif;
         font-size: 1.08rem;
         font-weight: 700;
-        color: var(--cream);
+        color: var(--text-main);
         margin-bottom: 0.75rem;
         line-height: 1.35;
     }
     .news-excerpt {
         font-family: 'DM Sans', sans-serif;
-        color: var(--muted);
+        color: var(--text-soft);
         font-size: 0.9rem;
         line-height: 1.65;
         flex-grow: 1;
         margin-bottom: 1rem;
     }
 
-    /* ── Card Footer ── */
+    /* ── Card Footer — LIGHT ── */
     .news-footer {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-top: auto;
         padding-top: 0.9rem;
-        border-top: 1px solid var(--border);
+        border-top: 1px solid #e5e7eb;
     }
     .news-date {
         font-family: 'DM Sans', sans-serif;
         font-size: 0.8rem;
         font-weight: 600;
-        color: rgba(201,168,76,0.7);
+        color: var(--gold-dark);
         letter-spacing: 0.5px;
     }
     .read-more-btn {
@@ -216,7 +220,7 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
         font-weight: 700;
         letter-spacing: 0.8px;
         text-transform: uppercase;
-        color: var(--gold);
+        color: var(--gold-dark);
         background: rgba(201,168,76,0.1);
         border: 1px solid rgba(201,168,76,0.3);
         padding: 0.3rem 0.9rem;
@@ -228,7 +232,7 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
     .read-more-btn:hover {
         background: rgba(201,168,76,0.2);
         border-color: var(--gold);
-        color: var(--gold-light);
+        color: var(--gold-dark);
         transform: translateY(-1px);
     }
 
@@ -241,26 +245,26 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
     }
     .no-news i {
         font-size: 3.5rem;
-        color: rgba(201,168,76,0.25);
+        color: rgba(154,111,30,0.3);
         display: block;
         margin-bottom: 1rem;
     }
     .no-news h4 {
         font-family: 'Playfair Display', serif;
-        color: var(--cream);
+        color: var(--text-main);
         margin-bottom: 0.5rem;
     }
     .no-news p { color: var(--muted); margin: 0; }
 
-    /* ── Pagination ── */
+    /* ── Pagination — DARK footer ── */
     .pagination-wrapper {
         padding: 1.5rem 2rem;
-        background: rgba(0,0,0,0.2);
-        border-top: 1px solid var(--border);
+        background: linear-gradient(135deg, var(--dark-deeper), var(--dark-tab));
+        border-top: 1px solid rgba(201,168,76,0.15);
     }
     .pagination .page-link {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(201,168,76,0.25);
         color: var(--cream);
         font-family: 'DM Sans', sans-serif;
         font-weight: 600;
@@ -315,7 +319,7 @@ $news = $newsStmt->fetchAll(PDO::FETCH_ASSOC);
                                     <img src="uploads/news/<?= htmlspecialchars($n['image']) ?>"
                                          class="news-img"
                                          alt="<?= htmlspecialchars($n['title']) ?>"
-                                         onerror="this.src='https://via.placeholder.com/400x250/1a1a2e/c9a84c?text=News'">
+                                         onerror="this.src='https://via.placeholder.com/400x250/f0ede8/9a6f1e?text=News'">
                                     <div class="news-overlay"></div>
                                 <?php else: ?>
                                     <div class="news-img-placeholder">

@@ -12,7 +12,6 @@ try {
 } catch (Exception $e) {}
 $shieldPath = $shield ? "uploads/admin/logos/" . htmlspecialchars($shield) : null;
 
-// Season year filter — defaults to current year
 $selectedYear = (int)($_GET['year'] ?? date('Y'));
 $years = [];
 try {
@@ -28,31 +27,35 @@ if (empty($years)) $years = [date('Y')];
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    /* ── Design Tokens ── */
     :root {
-        --ink:        #1a1a2e;
-        --gold:       #c9a84c;
-        --gold-light: #f0d080;
-        --cream:      #fdf8ef;
-        --muted:      rgba(255,255,255,0.45);
-        --border:     rgba(201,168,76,0.2);
-        --card-bg:    rgba(255,255,255,0.04);
+        --gold:        #c9a84c;
+        --gold-light:  #f0d080;
+        --gold-dark:   #9a6f1e;
+        --cream:       #fdf8ef;
+        --dark-panel:  #1a1a2e;
+        --dark-tab:    #16152b;
+        --dark-deeper: #0f0e22;
+        --border:      rgba(201,168,76,0.22);
+        --muted:       #6b7280;
+        --text-main:   #1a1a2e;
+        --text-soft:   #4b5563;
     }
 
+    /* ── PAGE BACKGROUND: LIGHT ── */
     html, body {
-        background-color: #1a1a2e !important;
+        background-color: #f0ede8 !important;
         background-image:
-            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(180,160,120,0.05) 0%, transparent 50%);
         background-attachment: fixed;
-        color: #eee;
+        color: var(--text-main);
         overflow-x: hidden;
     }
     body { display: flex; flex-direction: column; min-height: 100vh; }
     .main-content { flex: 1 0 auto; }
     footer { flex-shrink: 0; }
 
-    /* ── Page Wrapper ── matches original margin-top: -50px / padding-top: 20px ── */
+    /* ── Page Wrapper ── */
     .about-page-wrapper {
         max-width: 1400px;
         margin: -50px auto 0;
@@ -67,21 +70,21 @@ if (empty($years)) $years = [date('Y')];
         }
     }
 
-    /* ── About Card ── */
+    /* ── About Card — LIGHT ── */
     .about-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
     }
     @media (max-width: 767px) {
         .about-card { border-radius: 0; border-left: none; border-right: none; }
     }
 
-    /* ── About Header ── */
+    /* ── About Header — DARK ── */
     .about-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         color: var(--cream);
         padding: 1rem 1.8rem;
@@ -110,15 +113,15 @@ if (empty($years)) $years = [date('Y')];
         justify-content: center;
         align-items: center;
         padding: 1.5rem;
-        background: rgba(255,255,255,0.03);
-        border: 1px solid var(--border);
+        background: #f9f7f2;
+        border: 1px solid #e5e7eb;
         border-radius: 12px;
     }
     .league-shield-wrapper img {
         max-width: 100%;
         height: auto;
         border-radius: 10px;
-        box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         transition: transform 0.3s ease;
     }
     .league-shield-wrapper img:hover { transform: scale(1.04); }
@@ -131,18 +134,19 @@ if (empty($years)) $years = [date('Y')];
         font-size: 0.9rem;
     }
 
-    /* ── Table ── */
+    /* ── Table — LIGHT ── */
     .table {
         margin: 0;
         font-family: 'DM Sans', sans-serif;
         font-size: 0.92rem;
         border-collapse: collapse;
-        background: transparent;
-        color: rgba(255,255,255,0.8);
+        background: #ffffff;
+        color: var(--text-main);
         width: 100%;
     }
+    /* Table header — DARK */
     .table thead th {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-deeper), var(--dark-tab));
         color: var(--gold);
         font-weight: 700;
         font-size: 0.72rem;
@@ -154,23 +158,19 @@ if (empty($years)) $years = [date('Y')];
     }
     .table tbody td {
         vertical-align: middle;
-        border-top: 1px solid rgba(255,255,255,0.05);
+        border-top: 1px solid #f3f4f6;
         border-bottom: none;
         padding: 0.6rem 0.6rem;
-        /* Ensure text stays visible — override Bootstrap hover colour inheritance */
-        color: rgba(255,255,255,0.8);
+        color: var(--text-main);
     }
-    .table tbody tr {
-        transition: background 0.2s;
-    }
-    /* Override Bootstrap table-hover which sets --bs-table-hover-bg (dark) */
+    .table tbody tr { transition: background 0.2s; }
     .table-hover > tbody > tr:hover > * {
-        background-color: rgba(201,168,76,0.08) !important;
-        color: rgba(255,255,255,0.9) !important;
+        background-color: #fdf9f0 !important;
+        color: var(--text-main) !important;
         --bs-table-accent-bg: transparent;
     }
 
-    /* Season year dropdown */
+    /* Season year dropdown — dark to match header */
     .season-select {
         background: rgba(255,255,255,0.08);
         border: 1px solid rgba(201,168,76,0.3);
@@ -191,24 +191,23 @@ if (empty($years)) $years = [date('Y')];
     .season-select:focus { outline: none; border-color: var(--gold); }
     .season-select option { background: #1a1a2e; color: #eee; }
 
-    /* GD colours — must stay visible on hover too */
     .pos {
         font-family: 'Playfair Display', serif;
         font-weight: 700;
         font-size: 1.1rem;
         color: var(--muted);
     }
-    .pos.top { color: var(--gold); }
+    .pos.top { color: var(--gold-dark); }
 
     /* Club logo */
     .club-logo {
         width: 38px; height: 38px;
         object-fit: contain;
-        background: #ffffff;          /* solid white circle */
+        background: #ffffff;
         padding: 3px;
         border-radius: 50%;
         border: 2px solid rgba(201,168,76,0.25);
-        box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         flex-shrink: 0;
         transition: border-color 0.2s, transform 0.25s;
     }
@@ -220,24 +219,24 @@ if (empty($years)) $years = [date('Y')];
     /* Club name */
     .club-name {
         font-weight: 600;
-        color: rgba(255,255,255,0.85);
+        color: var(--text-soft);
         text-decoration: none;
         transition: color 0.2s;
         white-space: nowrap;
     }
-    .club-name:hover { color: var(--gold-light); }
+    .club-name:hover { color: var(--gold-dark); }
 
     /* Points */
     .points {
         font-family: 'Playfair Display', serif;
         font-size: 1.2rem;
         font-weight: 900;
-        color: var(--gold);
+        color: var(--gold-dark);
     }
 
     /* GD colours */
-    .gd-positive { color: #4ade80 !important; font-weight: 700; }
-    .gd-negative { color: #f87171 !important; font-weight: 700; }
+    .gd-positive { color: #15803d !important; font-weight: 700; }
+    .gd-negative { color: #dc2626 !important; font-weight: 700; }
     .gd-zero     { color: var(--muted); font-weight: 600; }
 
     /* Form guide */
@@ -247,10 +246,10 @@ if (empty($years)) $years = [date('Y')];
         gap: 6px;
         font-size: 1.05rem;
     }
-    .form-w    { color: #4ade80; }
-    .form-l    { color: #f87171; }
-    .form-d    { color: rgba(255,255,255,0.35); }
-    .form-none { color: rgba(255,255,255,0.15); }
+    .form-w    { color: #15803d; }
+    .form-l    { color: #dc2626; }
+    .form-d    { color: #9ca3af; }
+    .form-none { color: #d1d5db; }
 
     /* Mobile */
     @media (max-width: 992px) {
@@ -373,7 +372,7 @@ if (empty($years)) $years = [date('Y')];
                                         endforeach;
                                     }
                                 } catch (Exception $e) {
-                                    echo '<tr><td colspan="11" class="text-center py-4" style="color:#f87171;font-family:\'DM Sans\',sans-serif;">Error loading league table.</td></tr>';
+                                    echo '<tr><td colspan="11" class="text-center py-4" style="color:#dc2626;font-family:\'DM Sans\',sans-serif;">Error loading league table.</td></tr>';
                                 }
                                 ?>
                             </tbody>

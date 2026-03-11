@@ -3,22 +3,12 @@ ob_start();
 header('Content-Type: text/html; charset=UTF-8');
 require 'config.php';
 
-// ======================================================
-// RESOLVE WHICH CONSTITUTION TO SHOW
-// Strategy (most → least specific):
-//  1. ?nav_id=X  → match nav item by id, then find constitution by title
-//  2. ?name=X    → match nav item by name, then find constitution by title
-//  3. No params  → just load the first active constitution from DB directly
-//  4. Last resort → load ANY constitution from DB (newest first)
-// This means the page always shows something if a PDF exists.
-// ======================================================
 $nav_id   = (int)($_GET['nav_id'] ?? 0);
 $nav_name = trim($_GET['name']    ?? '');
 
 $constitution = null;
 $nav_item     = null;
 
-// --- Fetch all child nav items under a parent named "Constitutions" ---
 $constitutionsNavStmt = $pdo->prepare("
     SELECT ni.*
     FROM nav_items ni
@@ -31,12 +21,10 @@ $constitutionsNavStmt = $pdo->prepare("
 $constitutionsNavStmt->execute();
 $constitutionNavItems = $constitutionsNavStmt->fetchAll(PDO::FETCH_ASSOC);
 
-// --- Try to pin a nav_item from URL params ---
 if ($nav_id > 0) {
     foreach ($constitutionNavItems as $ni) {
         if ((int)$ni['id'] === $nav_id) { $nav_item = $ni; break; }
     }
-    // Also try direct DB lookup for nav item in case it's not under Constitutions parent
     if (!$nav_item) {
         $s = $pdo->prepare("SELECT * FROM nav_items WHERE id = ? AND is_active = 1 LIMIT 1");
         $s->execute([$nav_id]);
@@ -50,9 +38,7 @@ if ($nav_id > 0) {
     $nav_item = $constitutionNavItems[0] ?? null;
 }
 
-// --- Fetch constitution: try nav title match first, then fall back broadly ---
 if ($nav_item) {
-    // Try exact title match (active first)
     $s = $pdo->prepare("
         SELECT * FROM club_constitutions
         WHERE LOWER(TRIM(title)) = LOWER(TRIM(?))
@@ -63,7 +49,6 @@ if ($nav_item) {
     $constitution = $s->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
-// Fallback 1: no nav match or title match → first active constitution in DB
 if (!$constitution) {
     $constitution = $pdo->query("
         SELECT * FROM club_constitutions
@@ -73,7 +58,6 @@ if (!$constitution) {
     ")->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
-// Fallback 2: no active one at all → any constitution
 if (!$constitution) {
     $constitution = $pdo->query("
         SELECT * FROM club_constitutions
@@ -82,12 +66,10 @@ if (!$constitution) {
     ")->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
-// If we got a constitution but no nav_item label, use constitution title as label
 if ($constitution && !$nav_item) {
     $nav_item = ['name' => $constitution['title']];
 }
 
-// --- All constitutions for sidebar ---
 $allConstitutions = $pdo->query("
     SELECT * FROM club_constitutions
     ORDER BY is_active DESC, effective_date DESC
@@ -99,36 +81,35 @@ include 'includes/header.php';
 ?>
 
 <style>
-    /* =============================================
-       CONSTITUTION PAGE — EDITORIAL / REFINED DARK
-       ============================================= */
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
     :root {
-        --ink:       #1a1a2e;
-        --ink-light: #2c3e50;
-        --gold:      #c9a84c;
-        --gold-light:#f0d080;
-        --cream:     #fdf8ef;
-        --pale:      #f5f0e8;
-        --muted:     #7a7a8a;
-        --border:    #ddd6c8;
-        --accent:    #7b2d8b;
-        --page-bg:   #e8e0d5;
-        --shadow-book: 0 30px 80px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.2);
+        --gold:        #c9a84c;
+        --gold-light:  #f0d080;
+        --gold-dark:   #9a6f1e;
+        --cream:       #fdf8ef;
+        --dark-panel:  #1a1a2e;
+        --dark-tab:    #16152b;
+        --dark-deeper: #0f0e22;
+        --border:      rgba(201,168,76,0.22);
+        --muted:       #6b7280;
+        --text-main:   #1a1a2e;
+        --text-soft:   #4b5563;
+        /* book page colours stay as-is — they are the document itself */
+        --pale:        #f5f0e8;
+        --page-border: #ddd6c8;
+        --shadow-book: 0 30px 80px rgba(0,0,0,0.25), 0 8px 24px rgba(0,0,0,0.15);
     }
 
+    /* ── PAGE BACKGROUND: LIGHT ── */
     html, body {
-        background-color: #1a1a2e !important;
-        color: #333;
-        margin: 0; padding: 0;
-    }
-
-    body {
+        background-color: #f0ede8 !important;
         background-image:
-            radial-gradient(ellipse at 20% 20%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 80%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(180,160,120,0.05) 0%, transparent 50%);
         background-attachment: fixed;
+        color: var(--text-main);
+        margin: 0; padding: 0;
     }
 
     .constitution-wrapper {
@@ -137,9 +118,7 @@ include 'includes/header.php';
         padding: 2rem 1rem 4rem;
     }
     @media (min-width: 992px) {
-        .constitution-wrapper {
-            padding-top: 4.5rem;
-        }
+        .constitution-wrapper { padding-top: 4.5rem; }
     }
 
     /* ── Page Header ── */
@@ -160,14 +139,13 @@ include 'includes/header.php';
         font-family: 'Playfair Display', serif;
         font-size: clamp(1.6rem, 4vw, 2.8rem);
         font-weight: 900;
-        color: var(--cream);
+        color: var(--text-main);
         letter-spacing: -0.5px;
         margin: 0 0 0.5rem;
-        text-shadow: 0 2px 20px rgba(0,0,0,0.4);
     }
     .constitution-page-header p {
         font-family: 'DM Sans', sans-serif;
-        color: rgba(255,255,255,0.5);
+        color: var(--muted);
         font-size: 0.95rem;
         margin: 0;
     }
@@ -192,25 +170,26 @@ include 'includes/header.php';
         .constitution-layout { grid-template-columns: 1fr; }
     }
 
-    /* ── Sidebar ── */
+    /* ── Sidebar — LIGHT ── */
     .constitution-sidebar {
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(201,168,76,0.2);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         padding: 1.4rem;
         position: sticky;
         top: 130px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
     .sidebar-title {
         font-family: 'Playfair Display', serif;
-        color: var(--gold);
+        color: var(--gold-dark);
         font-size: 0.78rem;
         font-weight: 700;
         letter-spacing: 2px;
         text-transform: uppercase;
         margin-bottom: 1rem;
         padding-bottom: 0.7rem;
-        border-bottom: 1px solid rgba(201,168,76,0.2);
+        border-bottom: 1px solid #e5e7eb;
     }
     .sidebar-item {
         display: flex;
@@ -219,7 +198,7 @@ include 'includes/header.php';
         padding: 0.75rem 0.8rem;
         border-radius: 8px;
         text-decoration: none;
-        color: rgba(255,255,255,0.6);
+        color: var(--text-soft);
         font-family: 'DM Sans', sans-serif;
         font-size: 0.85rem;
         transition: all 0.25s;
@@ -227,39 +206,40 @@ include 'includes/header.php';
         line-height: 1.3;
     }
     .sidebar-item:hover {
-        background: rgba(201,168,76,0.1);
-        color: var(--gold-light);
+        background: #fdf9f0;
+        color: var(--gold-dark);
         transform: translateX(3px);
     }
     .sidebar-item.active {
-        background: rgba(201,168,76,0.15);
-        color: var(--gold);
+        background: rgba(201,168,76,0.1);
+        color: var(--gold-dark);
         font-weight: 600;
         border-left: 3px solid var(--gold);
     }
     .sidebar-item .si-icon {
         width: 28px; height: 28px;
-        background: rgba(201,168,76,0.15);
+        background: rgba(201,168,76,0.1);
         border-radius: 6px;
         display: flex; align-items: center; justify-content: center;
-        font-size: 0.85rem; flex-shrink: 0; color: var(--gold);
+        font-size: 0.85rem; flex-shrink: 0; color: var(--gold-dark);
     }
     .sidebar-item .si-info { flex: 1; min-width: 0; }
-    .sidebar-item .si-name { display: block; font-weight: 500; }
-    .sidebar-item .si-meta { display: block; font-size: 0.72rem; color: rgba(255,255,255,0.35); margin-top: 2px; }
-    .sidebar-item.active .si-meta { color: rgba(201,168,76,0.6); }
+    .sidebar-item .si-name { display: block; font-weight: 500; color: var(--text-main); }
+    .sidebar-item .si-meta { display: block; font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+    .sidebar-item.active .si-meta { color: var(--gold-dark); }
 
-    /* ── Main Viewer Card ── */
+    /* ── Main Viewer Card — LIGHT ── */
     .constitution-viewer-card {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(201,168,76,0.15);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 16px;
         overflow: hidden;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
     }
 
-    /* ── Viewer Header ── */
+    /* ── Viewer Header — DARK ── */
     .viewer-header {
-        background: linear-gradient(135deg, var(--ink-light), var(--ink));
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         padding: 1.2rem 1.8rem;
         display: flex;
@@ -292,7 +272,6 @@ include 'includes/header.php';
     .viewer-actions {
         display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0;
     }
-    /* Mobile: stack title+meta above actions, each full-width */
     @media (max-width: 767px) {
         .viewer-header {
             flex-direction: column;
@@ -309,10 +288,7 @@ include 'includes/header.php';
             margin-top: 4px;
         }
         .viewer-doc-meta span { margin-right: 10px; line-height: 1.8; }
-        .viewer-actions {
-            width: 100%;
-            justify-content: flex-start;
-        }
+        .viewer-actions { width: 100%; justify-content: flex-start; }
     }
     .btn-viewer {
         font-family: 'DM Sans', sans-serif;
@@ -326,13 +302,13 @@ include 'includes/header.php';
     }
     .btn-viewer-gold {
         background: var(--gold);
-        color: var(--ink);
+        color: var(--dark-panel);
     }
     .btn-viewer-gold:hover {
         background: var(--gold-light);
-        color: var(--ink);
+        color: var(--dark-panel);
         transform: translateY(-1px);
-        box-shadow: 0 4px 16px rgba(201,168,76,0.4);
+        box-shadow: 0 4px 16px rgba(201,168,76,0.35);
     }
     .btn-viewer-outline {
         background: rgba(255,255,255,0.07);
@@ -344,9 +320,9 @@ include 'includes/header.php';
         color: #fff;
     }
 
-    /* ── Flipbook Stage ── */
+    /* ── Flipbook Stage — slightly darker than page bg to frame the book ── */
     .flipbook-stage {
-        background: #0f0f1a;
+        background: #e4dfd8;
         padding: 2.5rem 1.5rem 1.5rem;
         display: flex;
         flex-direction: column;
@@ -359,8 +335,7 @@ include 'includes/header.php';
         content: '';
         position: absolute;
         inset: 0;
-        background:
-            radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 60%);
+        background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 60%);
         pointer-events: none;
     }
 
@@ -371,8 +346,6 @@ include 'includes/header.php';
         max-width: 900px;
         perspective: 2000px;
     }
-
-    /* Desktop: two-page spread */
     .book-spread {
         display: flex;
         gap: 0;
@@ -381,7 +354,6 @@ include 'includes/header.php';
         filter: drop-shadow(var(--shadow-book));
         position: relative;
     }
-
     .page-wrapper {
         position: relative;
         flex: 0 0 50%;
@@ -390,30 +362,22 @@ include 'includes/header.php';
     .page-wrapper.left  { transform-origin: right center; }
     .page-wrapper.right { transform-origin: left center; }
 
-    /* Page animation classes */
-    .page-wrapper.flip-out-left {
-        animation: flipOutLeft 0.45s ease-in forwards;
-    }
-    .page-wrapper.flip-in-left {
-        animation: flipInLeft 0.45s ease-out forwards;
-    }
-    .page-wrapper.flip-out-right {
-        animation: flipOutRight 0.45s ease-in forwards;
-    }
-    .page-wrapper.flip-in-right {
-        animation: flipInRight 0.45s ease-out forwards;
-    }
+    .page-wrapper.flip-out-left  { animation: flipOutLeft  0.45s ease-in  forwards; }
+    .page-wrapper.flip-in-left   { animation: flipInLeft   0.45s ease-out forwards; }
+    .page-wrapper.flip-out-right { animation: flipOutRight 0.45s ease-in  forwards; }
+    .page-wrapper.flip-in-right  { animation: flipInRight  0.45s ease-out forwards; }
 
-    @keyframes flipOutLeft  { from { transform: rotateY(0); opacity:1; } to { transform: rotateY(-90deg); opacity:0; } }
-    @keyframes flipInLeft   { from { transform: rotateY(90deg); opacity:0; } to { transform: rotateY(0); opacity:1; } }
-    @keyframes flipOutRight { from { transform: rotateY(0); opacity:1; } to { transform: rotateY(90deg); opacity:0; } }
-    @keyframes flipInRight  { from { transform: rotateY(-90deg); opacity:0; } to { transform: rotateY(0); opacity:1; } }
+    @keyframes flipOutLeft  { from { transform: rotateY(0);     opacity:1; } to { transform: rotateY(-90deg); opacity:0; } }
+    @keyframes flipInLeft   { from { transform: rotateY(90deg); opacity:0; } to { transform: rotateY(0);      opacity:1; } }
+    @keyframes flipOutRight { from { transform: rotateY(0);     opacity:1; } to { transform: rotateY(90deg);  opacity:0; } }
+    @keyframes flipInRight  { from { transform: rotateY(-90deg);opacity:0; } to { transform: rotateY(0);      opacity:1; } }
 
+    /* Book page — cream paper colour unchanged (it IS the document) */
     .book-page {
         width: 100%;
         aspect-ratio: 3/4;
-        background: var(--cream);
-        border: 1px solid var(--border);
+        background: var(--pale);
+        border: 1px solid var(--page-border);
         position: relative;
         overflow: hidden;
     }
@@ -427,8 +391,6 @@ include 'includes/header.php';
         border-radius: 0 4px 4px 0;
         box-shadow: inset 8px 0 20px rgba(0,0,0,0.06);
     }
-
-    /* Page spine shadow line */
     .book-page::before {
         content: '';
         position: absolute;
@@ -446,15 +408,13 @@ include 'includes/header.php';
         right: 0; left: auto;
         background: linear-gradient(to left, rgba(0,0,0,0.08), transparent);
     }
-
-    /* Canvas inside each page */
     .book-page canvas {
         display: block;
         width: 100% !important;
         height: 100% !important;
     }
 
-    /* Cover page styling */
+    /* Cover page — intentionally kept dark (it's a decorative element) */
     .cover-page {
         display: flex;
         flex-direction: column;
@@ -512,7 +472,7 @@ include 'includes/header.php';
         content: '';
         display: block;
         width: 60px; height: 60px;
-        border: 1px solid var(--border);
+        border: 1px solid var(--page-border);
         border-radius: 50%;
         opacity: 0.4;
     }
@@ -529,7 +489,7 @@ include 'includes/header.php';
     .page-wrapper.left  .page-number-strip { left: 16px; }
     .page-wrapper.right .page-number-strip { right: 16px; }
 
-    /* Loading overlay */
+    /* Loading overlay — light */
     .page-loading {
         position: absolute;
         inset: 0;
@@ -540,7 +500,7 @@ include 'includes/header.php';
     }
     .loading-spinner {
         width: 36px; height: 36px;
-        border: 3px solid var(--border);
+        border: 3px solid #e5e7eb;
         border-top-color: var(--gold);
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
@@ -553,7 +513,7 @@ include 'includes/header.php';
         color: var(--muted);
     }
 
-    /* ── Controls ── */
+    /* ── Controls — keep on dark stage ── */
     .flipbook-controls {
         display: flex;
         align-items: center;
@@ -565,9 +525,9 @@ include 'includes/header.php';
     .ctrl-btn {
         width: 52px; height: 52px;
         border-radius: 50%;
-        background: rgba(255,255,255,0.07);
+        background: rgba(255,255,255,0.15);
         border: 1px solid rgba(201,168,76,0.3);
-        color: var(--gold);
+        color: var(--gold-dark);
         font-size: 1.2rem;
         display: flex; align-items: center; justify-content: center;
         cursor: pointer;
@@ -575,35 +535,28 @@ include 'includes/header.php';
         flex-shrink: 0;
     }
     .ctrl-btn:hover:not(:disabled) {
-        background: rgba(201,168,76,0.15);
+        background: rgba(201,168,76,0.2);
         border-color: var(--gold);
         transform: scale(1.1);
-        box-shadow: 0 4px 20px rgba(201,168,76,0.25);
+        box-shadow: 0 4px 20px rgba(201,168,76,0.2);
     }
-    .ctrl-btn:disabled {
-        opacity: 0.25; cursor: not-allowed; transform: none;
-    }
+    .ctrl-btn:disabled { opacity: 0.25; cursor: not-allowed; transform: none; }
     .ctrl-page-info {
         font-family: 'DM Sans', sans-serif;
         font-size: 0.9rem;
-        color: rgba(255,255,255,0.5);
+        color: var(--text-soft);
         text-align: center;
         min-width: 120px;
     }
-    .ctrl-page-info strong {
-        color: var(--gold);
-        font-size: 1.1rem;
-    }
+    .ctrl-page-info strong { color: var(--gold-dark); font-size: 1.1rem; }
 
     /* Page jump input */
-    .ctrl-jump {
-        display: flex; align-items: center; gap: 8px;
-    }
+    .ctrl-jump { display: flex; align-items: center; gap: 8px; }
     .ctrl-jump input {
         width: 60px;
-        background: rgba(255,255,255,0.07);
+        background: rgba(255,255,255,0.6);
         border: 1px solid rgba(201,168,76,0.3);
-        color: var(--gold);
+        color: var(--text-main);
         border-radius: 8px;
         padding: 0.4rem 0.6rem;
         font-family: 'DM Sans', sans-serif;
@@ -616,7 +569,7 @@ include 'includes/header.php';
     .ctrl-jump button {
         background: rgba(201,168,76,0.15);
         border: 1px solid rgba(201,168,76,0.3);
-        color: var(--gold);
+        color: var(--gold-dark);
         border-radius: 8px;
         padding: 0.4rem 0.8rem;
         font-size: 0.8rem;
@@ -624,21 +577,13 @@ include 'includes/header.php';
         transition: all 0.2s;
         font-family: 'DM Sans', sans-serif;
     }
-    .ctrl-jump button:hover {
-        background: rgba(201,168,76,0.25);
-    }
+    .ctrl-jump button:hover { background: rgba(201,168,76,0.25); }
 
-    /* Mobile: single page mode */
+    /* Mobile */
     @media (max-width: 768px) {
-        .page-wrapper {
-            flex: 0 0 100%;
-            max-width: 100%;
-        }
+        .page-wrapper { flex: 0 0 100%; max-width: 100%; }
         .book-spread { gap: 0; }
-        /* Hide right page on small screens — single page mode */
-        .page-wrapper.right.desktop-only-page {
-            display: none;
-        }
+        .page-wrapper.right.desktop-only-page { display: none; }
         .flipbook-stage { padding: 1.5rem 0.75rem 1rem; }
         .book-container { max-width: 420px; }
         .ctrl-btn { width: 44px; height: 44px; font-size: 1rem; }
@@ -652,26 +597,40 @@ include 'includes/header.php';
     }
     .constitution-not-found .nf-icon {
         font-size: 4rem;
-        color: rgba(201,168,76,0.3);
+        color: rgba(154,111,30,0.35);
         margin-bottom: 1rem;
     }
     .constitution-not-found h3 {
         font-family: 'Playfair Display', serif;
-        color: var(--cream);
+        color: var(--text-main);
         font-size: 1.5rem;
         margin-bottom: 0.5rem;
     }
     .constitution-not-found p {
-        color: rgba(255,255,255,0.4);
+        color: var(--muted);
         font-family: 'DM Sans', sans-serif;
         font-size: 0.9rem;
+    }
+
+    /* ── Description footer — LIGHT ── */
+    .viewer-description-footer {
+        padding: 1.2rem 1.8rem;
+        border-top: 1px solid #e5e7eb;
+        background: #f9f7f2;
+    }
+    .viewer-description-footer p {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.88rem;
+        color: var(--muted);
+        margin: 0;
+        line-height: 1.6;
     }
 
     /* ── Swipe hint ── */
     .swipe-hint {
         font-family: 'DM Sans', sans-serif;
         font-size: 0.75rem;
-        color: rgba(255,255,255,0.25);
+        color: var(--muted);
         text-align: center;
         margin-top: 0.8rem;
         display: none;
@@ -680,23 +639,14 @@ include 'includes/header.php';
 </style>
 
 <?php
-// ── Determine PDF path ──────────────────────────────────────────────
-// pdf_path stored in DB is always relative from site root, e.g. uploads/constitutions/file.pdf
-// Normalise slashes so it works on both Windows (localhost) and Linux (cPanel).
 $pdfRelPath = $constitution ? ltrim(str_replace('\\', '/', $constitution['pdf_path']), '/') : null;
-
-// Absolute disk path — __DIR__ is this file's directory (site root).
-// str_replace handles Windows __DIR__ backslashes.
 $siteRoot   = rtrim(str_replace('\\', '/', __DIR__), '/');
 $pdfAbsPath = $pdfRelPath ? $siteRoot . '/' . $pdfRelPath : null;
 $pdfExists  = $pdfAbsPath && file_exists($pdfAbsPath);
 
-// Build a fully-qualified URL so PDF.js (running in browser) can fetch the file.
-// Works on localhost, cPanel subdirectory, or any domain.
 if ($pdfExists) {
     $scheme  = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host    = $_SERVER['HTTP_HOST'];
-    // SCRIPT_NAME is e.g. /04sl/club_constitutions.php  → base = /04sl
     $base    = rtrim(dirname(str_replace('\\', '/', $_SERVER['SCRIPT_NAME'])), '/');
     $pdfUrl  = $scheme . '://' . $host . $base . '/' . $pdfRelPath;
 } else {
@@ -706,7 +656,6 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
 ?>
 
 <div class="constitution-wrapper">
-    <!-- Page Header -->
     <div class="constitution-page-header">
         <h1><?= htmlspecialchars($nav_item['name'] ?? 'Club Constitution') ?></h1>
         <p>Official Documents &amp; Governance</p>
@@ -718,14 +667,13 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
         <aside class="constitution-sidebar">
             <div class="sidebar-title">Documents</div>
             <?php if (empty($allConstitutions)): ?>
-                <p style="color:rgba(255,255,255,0.3);font-size:0.82rem;text-align:center;padding:1rem 0;">
+                <p style="color:var(--muted);font-size:0.82rem;text-align:center;padding:1rem 0;">
                     No documents uploaded yet.
                 </p>
             <?php else: ?>
                 <?php foreach ($allConstitutions as $c):
                     $isActive   = $constitution && $c['id'] === $constitution['id'];
                     $linkParams = [];
-                    // Match back to nav item by title
                     foreach ($constitutionNavItems as $ni) {
                         if (strtolower($ni['name']) === strtolower($c['title'])) {
                             $linkParams = ['nav_id' => $ni['id']];
@@ -742,7 +690,7 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
                             v<?= htmlspecialchars($c['version']) ?>
                             &bull;
                             <?= date('M Y', strtotime($c['effective_date'])) ?>
-                            <?= $c['is_active'] ? ' &bull; <span style="color:var(--gold)">Active</span>' : '' ?>
+                            <?= $c['is_active'] ? ' &bull; <span style="color:var(--gold-dark)">Active</span>' : '' ?>
                         </span>
                     </div>
                 </a>
@@ -756,7 +704,6 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
 
                 <?php if ($constitution && $pdfExists): ?>
 
-                <!-- Viewer Header -->
                 <div class="viewer-header">
                     <div class="viewer-title-group">
                         <div class="viewer-doc-title">
@@ -780,12 +727,10 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
                     </div>
                 </div>
 
-                <!-- Flipbook Stage -->
                 <div class="flipbook-stage">
                     <div class="book-container" id="bookContainer">
                         <div class="book-spread" id="bookSpread">
 
-                            <!-- LEFT PAGE -->
                             <div class="page-wrapper left" id="leftPageWrapper">
                                 <div class="book-page" id="leftPage">
                                     <div class="page-loading" id="leftLoading">
@@ -797,7 +742,6 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
                                 </div>
                             </div>
 
-                            <!-- RIGHT PAGE (desktop only in two-page spread) -->
                             <div class="page-wrapper right desktop-only-page" id="rightPageWrapper">
                                 <div class="book-page" id="rightPage">
                                     <div class="page-loading" id="rightLoading">
@@ -809,10 +753,9 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
                                 </div>
                             </div>
 
-                        </div><!-- /.book-spread -->
-                    </div><!-- /.book-container -->
+                        </div>
+                    </div>
 
-                    <!-- Controls -->
                     <div class="flipbook-controls">
                         <button class="ctrl-btn" id="btnFirst" title="First page">
                             <i class="bi bi-skip-backward-fill"></i>
@@ -838,10 +781,9 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
                     <div class="swipe-hint">← Swipe or use arrows →</div>
                 </div>
 
-                <!-- Description -->
                 <?php if ($constitution['description']): ?>
-                <div style="padding:1.2rem 1.8rem;border-top:1px solid rgba(255,255,255,0.06);">
-                    <p style="font-family:'DM Sans',sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.4);margin:0;line-height:1.6;">
+                <div class="viewer-description-footer">
+                    <p>
                         <i class="bi bi-info-circle me-1" style="color:var(--gold);"></i>
                         <?= htmlspecialchars($constitution['description']) ?>
                     </p>
@@ -849,7 +791,6 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
                 <?php endif; ?>
 
                 <?php elseif ($constitution && !$pdfExists): ?>
-                <!-- File missing -->
                 <div class="constitution-not-found">
                     <div class="nf-icon"><i class="bi bi-file-earmark-x"></i></div>
                     <h3>PDF File Not Found</h3>
@@ -858,7 +799,6 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
                 </div>
 
                 <?php else: ?>
-                <!-- No constitution matched -->
                 <div class="constitution-not-found">
                     <div class="nf-icon"><i class="bi bi-journal-bookmark"></i></div>
                     <h3><?= htmlspecialchars($nav_item['name'] ?? 'Constitution Not Found') ?></h3>
@@ -867,77 +807,61 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
                 </div>
                 <?php endif; ?>
 
-            </div><!-- /.constitution-viewer-card -->
+            </div>
         </main>
 
-    </div><!-- /.constitution-layout -->
-</div><!-- /.constitution-wrapper -->
+    </div>
+</div>
 
 <?php if ($pdfExists && $pdfUrl): ?>
-<!-- PDF.js CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 (function () {
     'use strict';
 
-    // ── Config ────────────────────────────────────────
-    const PDF_URL       = <?= json_encode($pdfUrl) ?>;  // absolute URL, works on any host
-    const WORKER_SRC    = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const PDF_URL    = <?= json_encode($pdfUrl) ?>;
+    const WORKER_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_SRC;
 
-    // ── DOM refs ──────────────────────────────────────
-    const leftCanvas       = document.getElementById('leftCanvas');
-    const rightCanvas      = document.getElementById('rightCanvas');
-    const leftCtx          = leftCanvas.getContext('2d');
-    const rightCtx         = rightCanvas.getContext('2d');
-    const leftLoading      = document.getElementById('leftLoading');
-    const rightLoading     = document.getElementById('rightLoading');
-    const leftPageNum      = document.getElementById('leftPageNum');
-    const rightPageNum     = document.getElementById('rightPageNum');
-    const leftWrapper      = document.getElementById('leftPageWrapper');
-    const rightWrapper     = document.getElementById('rightPageWrapper');
-    const currentDisplay   = document.getElementById('currentPageDisplay');
-    const totalDisplay     = document.getElementById('totalPageDisplay');
-    const btnFirst         = document.getElementById('btnFirst');
-    const btnPrev          = document.getElementById('btnPrev');
-    const btnNext          = document.getElementById('btnNext');
-    const btnLast          = document.getElementById('btnLast');
-    const jumpInput        = document.getElementById('jumpInput');
-    const btnJump          = document.getElementById('btnJump');
-    const bookSpread       = document.getElementById('bookSpread');
+    const leftCanvas     = document.getElementById('leftCanvas');
+    const rightCanvas    = document.getElementById('rightCanvas');
+    const leftCtx        = leftCanvas.getContext('2d');
+    const rightCtx       = rightCanvas.getContext('2d');
+    const leftLoading    = document.getElementById('leftLoading');
+    const rightLoading   = document.getElementById('rightLoading');
+    const leftPageNum    = document.getElementById('leftPageNum');
+    const rightPageNum   = document.getElementById('rightPageNum');
+    const leftWrapper    = document.getElementById('leftPageWrapper');
+    const rightWrapper   = document.getElementById('rightPageWrapper');
+    const currentDisplay = document.getElementById('currentPageDisplay');
+    const totalDisplay   = document.getElementById('totalPageDisplay');
+    const btnFirst       = document.getElementById('btnFirst');
+    const btnPrev        = document.getElementById('btnPrev');
+    const btnNext        = document.getElementById('btnNext');
+    const btnLast        = document.getElementById('btnLast');
+    const jumpInput      = document.getElementById('jumpInput');
+    const btnJump        = document.getElementById('btnJump');
+    const bookSpread     = document.getElementById('bookSpread');
 
-    // ── State ─────────────────────────────────────────
     let pdfDoc       = null;
     let totalPages   = 0;
-    let currentSpread = 0;   // 0-indexed spread (pair of pages)
+    let currentSpread = 0;
     let isAnimating  = false;
     let isMobile     = window.innerWidth < 769;
 
-    // Spread 0 = cover (page 1) + blank OR page 1 mobile
-    // Spread N covers pages: leftPage = 2N+1, rightPage = 2N+2
-
-    // ── Helpers ───────────────────────────────────────
     function spreadToPages(spreadIndex) {
-        if (isMobile) {
-            return { left: spreadIndex + 1, right: null };
-        }
-        if (spreadIndex === 0) {
-            return { left: 1, right: 2 };
-        }
-        const left  = spreadIndex * 2 + 1;
-        const right = left + 1;
-        return { left, right };
+        if (isMobile) return { left: spreadIndex + 1, right: null };
+        if (spreadIndex === 0) return { left: 1, right: 2 };
+        const left = spreadIndex * 2 + 1;
+        return { left, right: left + 1 };
     }
 
     function maxSpread() {
-        if (isMobile) return totalPages - 1;
-        return Math.ceil(totalPages / 2) - 1;
+        return isMobile ? totalPages - 1 : Math.ceil(totalPages / 2) - 1;
     }
 
-    // ── Render a single page to a canvas ─────────────
     async function renderPageToCanvas(pageNum, canvas, ctx, loadingEl, numEl) {
         if (pageNum < 1 || pageNum > totalPages) {
-            // blank page
             loadingEl.style.display = 'none';
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             canvas.style.display = 'none';
@@ -946,50 +870,38 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
         }
         loadingEl.style.display = 'flex';
         canvas.style.display = 'none';
-
         try {
             const page     = await pdfDoc.getPage(pageNum);
             const viewport = page.getViewport({ scale: window.devicePixelRatio >= 2 ? 2.5 : 1.8 });
-
             canvas.width  = viewport.width;
             canvas.height = viewport.height;
-
             await page.render({ canvasContext: ctx, viewport }).promise;
-
             loadingEl.style.display = 'none';
             canvas.style.display    = 'block';
             numEl.textContent        = pageNum;
         } catch (err) {
-            loadingEl.innerHTML = '<div style="font-size:0.8rem;color:#c0392b;text-align:center;padding:1rem;">Failed to render page.</div>';
+            loadingEl.innerHTML = '<div style="font-size:0.8rem;color:#dc2626;text-align:center;padding:1rem;">Failed to render page.</div>';
             console.error('PDF render error:', err);
         }
     }
 
-    // ── Render current spread ─────────────────────────
     async function renderSpread(spreadIndex) {
         const { left, right } = spreadToPages(spreadIndex);
-
-        // Update UI info
         if (isMobile) {
             currentDisplay.textContent = 'Page ' + left;
             totalDisplay.textContent   = 'of ' + totalPages;
-            jumpInput.max              = totalPages;
         } else {
             const rLabel = right <= totalPages ? '–' + right : '';
             currentDisplay.textContent = left + (rLabel || '');
             totalDisplay.textContent   = 'of ' + totalPages + ' pages';
-            jumpInput.max              = totalPages;
         }
-
-        // Control states
+        jumpInput.max = totalPages;
         btnFirst.disabled = spreadIndex === 0;
         btnPrev.disabled  = spreadIndex === 0;
         btnNext.disabled  = spreadIndex >= maxSpread();
         btnLast.disabled  = spreadIndex >= maxSpread();
-
-        // Render pages
         await Promise.all([
-            renderPageToCanvas(left,  leftCanvas,  leftCtx,  leftLoading,  leftPageNum),
+            renderPageToCanvas(left, leftCanvas, leftCtx, leftLoading, leftPageNum),
             right
                 ? renderPageToCanvas(right, rightCanvas, rightCtx, rightLoading, rightPageNum)
                 : (() => {
@@ -1001,32 +913,21 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
         ]);
     }
 
-    // ── Flip animation ────────────────────────────────
     function flipTo(newSpread, direction) {
         if (isAnimating || newSpread === currentSpread) return;
         if (newSpread < 0 || newSpread > maxSpread()) return;
         isAnimating = true;
-
-        const outClass = direction === 'next' ? 'flip-out-left' : 'flip-out-right';
-        const inClass  = direction === 'next' ? 'flip-in-right' : 'flip-in-left';
-
-        // Apply out animation
+        const outClass = direction === 'next' ? 'flip-out-left'  : 'flip-out-right';
+        const inClass  = direction === 'next' ? 'flip-in-right'  : 'flip-in-left';
         leftWrapper.classList.add(outClass);
         if (!isMobile) rightWrapper.classList.add(outClass);
-
         setTimeout(async () => {
-            // Remove out animation
             leftWrapper.classList.remove(outClass);
             if (!isMobile) rightWrapper.classList.remove(outClass);
-
-            // Update spread and render
             currentSpread = newSpread;
             await renderSpread(currentSpread);
-
-            // Apply in animation
             leftWrapper.classList.add(inClass);
             if (!isMobile) rightWrapper.classList.add(inClass);
-
             setTimeout(() => {
                 leftWrapper.classList.remove(inClass);
                 if (!isMobile) rightWrapper.classList.remove(inClass);
@@ -1035,7 +936,6 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
         }, 450);
     }
 
-    // ── Control bindings ──────────────────────────────
     btnFirst.addEventListener('click', () => flipTo(0, 'prev'));
     btnPrev.addEventListener('click',  () => flipTo(currentSpread - 1, 'prev'));
     btnNext.addEventListener('click',  () => flipTo(currentSpread + 1, 'next'));
@@ -1045,19 +945,16 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
         const pg = parseInt(jumpInput.value, 10);
         if (!pg || pg < 1 || pg > totalPages) return;
         let targetSpread = isMobile ? pg - 1 : Math.floor((pg - 1) / 2);
-        const dir = targetSpread > currentSpread ? 'next' : 'prev';
-        flipTo(targetSpread, dir);
+        flipTo(targetSpread, targetSpread > currentSpread ? 'next' : 'prev');
         jumpInput.value = '';
     });
     jumpInput.addEventListener('keydown', e => { if (e.key === 'Enter') btnJump.click(); });
 
-    // Keyboard navigation
     document.addEventListener('keydown', e => {
-        if (['ArrowLeft', 'ArrowUp'].includes(e.key))  flipTo(currentSpread - 1, 'prev');
+        if (['ArrowLeft', 'ArrowUp'].includes(e.key))    flipTo(currentSpread - 1, 'prev');
         if (['ArrowRight', 'ArrowDown'].includes(e.key)) flipTo(currentSpread + 1, 'next');
     });
 
-    // ── Touch/Swipe ───────────────────────────────────
     let touchStartX = 0;
     bookSpread.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
     bookSpread.addEventListener('touchend', e => {
@@ -1067,7 +964,6 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
         }
     });
 
-    // ── Responsive handler ────────────────────────────
     let resizeTimeout;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
@@ -1075,31 +971,23 @@ $pdfUrlHtml = $pdfUrl ? htmlspecialchars($pdfUrl) : null;
             const wasMobile = isMobile;
             isMobile = window.innerWidth < 769;
             rightWrapper.style.display = isMobile ? 'none' : '';
-            if (wasMobile !== isMobile) {
-                // Recalculate spread to not lose position too much
-                currentSpread = 0;
-                renderSpread(0);
-            }
+            if (wasMobile !== isMobile) { currentSpread = 0; renderSpread(0); }
         }, 200);
     });
 
-    // ── Init ──────────────────────────────────────────
     (async function init() {
         try {
-            // Initial mobile check for right panel
             if (isMobile) rightWrapper.style.display = 'none';
-
             const loadingTask = pdfjsLib.getDocument(PDF_URL);
-            pdfDoc       = await loadingTask.promise;
-            totalPages   = pdfDoc.numPages;
+            pdfDoc      = await loadingTask.promise;
+            totalPages  = pdfDoc.numPages;
             jumpInput.max = totalPages;
-
             await renderSpread(0);
         } catch (err) {
             leftLoading.innerHTML = `
                 <div style="text-align:center;padding:2rem;font-family:'DM Sans',sans-serif;">
-                    <i class="bi bi-exclamation-triangle" style="font-size:2rem;color:#c0392b;display:block;margin-bottom:0.5rem;"></i>
-                    <div style="color:#c0392b;font-size:0.85rem;">Could not load PDF.<br>Try downloading directly.</div>
+                    <i class="bi bi-exclamation-triangle" style="font-size:2rem;color:#dc2626;display:block;margin-bottom:0.5rem;"></i>
+                    <div style="color:#dc2626;font-size:0.85rem;">Could not load PDF.<br>Try downloading directly.</div>
                 </div>`;
             rightLoading.style.display = 'none';
             console.error('PDF load error:', err);

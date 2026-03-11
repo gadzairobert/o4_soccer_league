@@ -34,25 +34,24 @@ if ($club_id === 0) {
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
     :root {
-        --ink:        #1a1a2e;
-        --ink-light:  #2c3e50;
         --gold:       #c9a84c;
         --gold-light: #f0d080;
         --cream:      #fdf8ef;
-        --pale:       #f5f0e8;
-        --muted:      #7a7a8a;
-        --border:     rgba(201,168,76,0.2);
-        --card-bg:    rgba(255,255,255,0.04);
-        --card-hover: rgba(255,255,255,0.08);
+        --dark-panel: #1a1a2e;
+        --dark-tab:   #16152b;
+        --border:     rgba(201,168,76,0.25);
+        --muted:      #6b7280;
+        --card-bg:    #ffffff;
+        --card-hover: #f9f7f2;
     }
 
     html, body {
-        background-color: #1a1a2e !important;
+        background-color: #f0ede8 !important;
         background-image:
-            radial-gradient(ellipse at 20% 20%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 80%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 20%, rgba(201,168,76,0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 80%, rgba(180,160,120,0.06) 0%, transparent 50%);
         background-attachment: fixed;
-        color: #333;
+        color: #1a1a2e;
         margin: 0; padding: 0;
     }
 
@@ -60,23 +59,19 @@ if ($club_id === 0) {
     .main-content { flex: 1 0 auto; }
     footer { flex-shrink: 0; }
 
-    /* ── Wrapper ── */
     .clubs-page-wrapper {
         max-width: 1400px;
         margin: 0 auto;
         padding: 2rem 1.5rem 4rem;
     }
-    @media (min-width: 992px) {
-        .clubs-page-wrapper { padding-top: 4.5rem; }
-    }
-    @media (max-width: 767px) {
-        .clubs-page-wrapper { padding: 1.5rem 0.75rem 3rem; }
-    }
+    @media (min-width: 992px) { .clubs-page-wrapper { padding-top: 4.5rem; } }
+    @media (max-width: 767px) { .clubs-page-wrapper { padding: 1.5rem 0.75rem 3rem; } }
     @media (max-width: 480px) {
         .clubs-page-wrapper { padding: 1rem 0 3rem; }
         .clubs-page-header  { padding: 0 0.75rem 0; }
         .all-clubs-grid     { padding: 0 0.5rem; }
     }
+
     .clubs-page-header {
         text-align: center;
         margin-bottom: 2.5rem;
@@ -94,14 +89,13 @@ if ($club_id === 0) {
         font-family: 'Playfair Display', serif;
         font-size: clamp(1.6rem, 4vw, 2.8rem);
         font-weight: 900;
-        color: var(--cream);
+        color: #1a1a2e;
         letter-spacing: -0.5px;
         margin: 0 0 0.5rem;
-        text-shadow: 0 2px 20px rgba(0,0,0,0.4);
     }
     .clubs-page-header p {
         font-family: 'DM Sans', sans-serif;
-        color: rgba(255,255,255,0.5);
+        color: var(--muted);
         font-size: 0.95rem;
         margin: 0;
     }
@@ -115,17 +109,15 @@ if ($club_id === 0) {
         border-radius: 2px;
     }
 
-    /* ── Grid ── */
     .all-clubs-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 1.6rem;
     }
 
-    /* ── Club Card ── */
     .club-card-big {
         background: var(--card-bg);
-        border: 1px solid var(--border);
+        border: 1px solid rgba(201,168,76,0.2);
         border-radius: 14px;
         text-align: center;
         padding: 2rem 1rem 1.5rem;
@@ -134,64 +126,53 @@ if ($club_id === 0) {
         display: block;
         position: relative;
         overflow: hidden;
-    }
-    .club-card-big::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
-        opacity: 0;
-        transition: opacity 0.3s;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.07);
     }
     .club-card-big:hover {
         transform: translateY(-6px);
         border-color: rgba(201,168,76,0.5);
         background: var(--card-hover);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.2);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.13);
     }
-    .club-card-big:hover::before { opacity: 1; }
 
     .club-logo-ring {
         width: 120px; height: 120px;
         border-radius: 50%;
-        background: #ffffff;           /* solid white — no transparency */
+        background: #ffffff;
         border: 3px solid rgba(201,168,76,0.35);
         padding: 10px;
         margin: 0 auto 1.2rem;
         display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         transition: border-color 0.3s, box-shadow 0.3s;
         overflow: hidden;
         flex-shrink: 0;
     }
     .club-card-big:hover .club-logo-ring {
         border-color: var(--gold);
-        box-shadow: 0 8px 28px rgba(201,168,76,0.25);
+        box-shadow: 0 8px 24px rgba(201,168,76,0.2);
     }
     .club-logo-ring img {
         width: 100%; height: 100%;
         object-fit: contain;
         border-radius: 50%;
         display: block;
-        background: #ffffff;           /* belt-and-braces: image bg also white */
+        background: #ffffff;
     }
     .club-card-name {
         font-family: 'DM Sans', sans-serif;
         font-size: 0.92rem;
         font-weight: 600;
-        color: var(--cream);
+        color: #1a1a2e;
         margin: 0;
         line-height: 1.3;
     }
-    .club-card-big:hover .club-card-name { color: var(--gold-light); }
+    .club-card-big:hover .club-card-name { color: #9a6f1e; }
 
-    /* Mobile: full-width edge-to-edge */
     @media (max-width: 767px) {
         .clubs-page-wrapper {
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-            max-width: 100% !important;
-            width: 100% !important;
+            padding-left: 0 !important; padding-right: 0 !important;
+            max-width: 100% !important; width: 100% !important;
         }
         .clubs-page-header { padding: 0 1rem; }
         .all-clubs-grid    { padding: 0 0.75rem; }
@@ -200,9 +181,7 @@ if ($club_id === 0) {
         .all-clubs-grid { grid-template-columns: 1fr 1fr; gap: 0.85rem; }
         .club-logo-ring { width: 88px; height: 88px; padding: 8px; }
     }
-    @media (max-width: 360px) {
-        .all-clubs-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 360px) { .all-clubs-grid { grid-template-columns: 1fr; } }
 </style>
 
 <div class="main-content">
@@ -266,7 +245,6 @@ $logo_url = $club['logo']
     ? 'uploads/clubs/' . htmlspecialchars($club['logo'])
     : 'https://via.placeholder.com/280/1a1a2e/c9a84c?text=' . urlencode(substr($club['name'], 0, 2));
 
-// Fetch management staff
 $management_stmt = $pdo->prepare("
     SELECT id, full_name, role, date_of_birth, photo
     FROM management
@@ -282,27 +260,28 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    /* ── Design Tokens ── */
     :root {
-        --ink:        #1a1a2e;
-        --ink-light:  #2c3e50;
-        --gold:       #c9a84c;
-        --gold-light: #f0d080;
-        --cream:      #fdf8ef;
-        --pale:       #f5f0e8;
-        --muted:      rgba(255,255,255,0.45);
-        --border:     rgba(201,168,76,0.2);
-        --card-bg:    rgba(255,255,255,0.04);
-        --panel-head: linear-gradient(135deg,#1a1a2e,#2c2c4a);
+        --gold:        #c9a84c;
+        --gold-light:  #f0d080;
+        --gold-dark:   #9a6f1e;
+        --cream:       #fdf8ef;
+        --dark-panel:  #1a1a2e;
+        --dark-tab:    #16152b;
+        --dark-deeper: #0f0e22;
+        --border:      rgba(201,168,76,0.22);
+        --muted:       #6b7280;
+        --text-main:   #1a1a2e;
+        --text-soft:   #4b5563;
     }
 
+    /* ── PAGE BACKGROUND: LIGHT ── */
     html, body {
-        background-color: #1a1a2e !important;
+        background-color: #f0ede8 !important;
         background-image:
-            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(180,160,120,0.05) 0%, transparent 50%);
         background-attachment: fixed;
-        color: #eee;
+        color: var(--text-main);
         margin: 0; padding: 0;
     }
     body { display: flex; flex-direction: column; min-height: 100vh; }
@@ -315,15 +294,11 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         margin: 0 auto;
         padding: 2rem 1.5rem 4rem;
     }
-    @media (min-width: 992px) {
-        .clubs-page-wrapper { padding-top: 4.5rem; }
-    }
+    @media (min-width: 992px) { .clubs-page-wrapper { padding-top: 4.5rem; } }
     @media (max-width: 767.98px) {
         .clubs-page-wrapper {
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-            max-width: 100% !important;
-            width: 100% !important;
+            padding-left: 0 !important; padding-right: 0 !important;
+            max-width: 100% !important; width: 100% !important;
         }
         .club-content-row { padding: 0 0.75rem; gap: 1rem; margin-top: 1rem; }
     }
@@ -332,21 +307,17 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
     .club-overview-compact {
         display: flex;
         flex-direction: column;
-        background: var(--card-bg);
+        background: #ffffff;
         border: 1px solid var(--border);
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.09);
         margin-bottom: 2rem;
     }
-    @media (min-width: 768px) {
-        .club-overview-compact { flex-direction: row; min-height: 240px; }
-    }
-    @media (max-width: 767.98px) {
-        .club-overview-compact { border-radius: 0; border-left: none; border-right: none; }
-    }
+    @media (min-width: 768px) { .club-overview-compact { flex-direction: row; min-height: 240px; } }
+    @media (max-width: 767.98px) { .club-overview-compact { border-radius: 0; border-left: none; border-right: none; } }
 
-    /* Left: logo panel */
+    /* Left: logo panel — DARK */
     .club-logo-left {
         background: linear-gradient(160deg, #0f0f1e 0%, #1e1a40 100%);
         display: flex; align-items: center; justify-content: center;
@@ -363,7 +334,7 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
 
     .club-logo-circle {
         width: 160px; height: 160px;
-        background: #ffffff;           /* solid white circle */
+        background: #ffffff;
         border: 3px solid rgba(201,168,76,0.4);
         border-radius: 50%;
         padding: 12px;
@@ -373,18 +344,14 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         overflow: hidden;
     }
     @media (min-width: 768px) { .club-logo-circle { width: 190px; height: 190px; } }
-    .club-logo-circle img {
-        width: 100%; height: 100%;
-        object-fit: contain;
-        border-radius: 50%;
-        background: #ffffff;           /* ensure image bg also white */
-    }
+    .club-logo-circle img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; background: #ffffff; }
 
-    /* Right: info panel */
-    .club-info-right { flex: 1; display: flex; flex-direction: column; }
+    /* Right: info panel — LIGHT */
+    .club-info-right { flex: 1; display: flex; flex-direction: column; background: #ffffff; }
 
+    /* Club name header — DARK */
     .club-header-compact {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         padding: 1.4rem 1.8rem;
         text-align: center;
@@ -403,7 +370,7 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         gap: 0.5rem 1rem;
         font-family: 'DM Sans', sans-serif;
         font-size: 0.88rem;
-        color: var(--muted);
+        color: rgba(255,255,255,0.55);
         margin-top: 0.3rem;
     }
     .badge-pos {
@@ -417,19 +384,20 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         letter-spacing: 0.5px;
     }
 
-    /* Stats strip */
+    /* Stats strip — LIGHT background */
     .club-stats-compact {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         margin-top: auto;
-        border-top: 1px solid var(--border);
+        border-top: 1px solid #e5e7eb;
+        background: #f9f7f2;
     }
     @media (max-width: 480px) { .club-stats-compact { grid-template-columns: 1fr 1fr; } }
 
     .stat-item-compact {
         text-align: center;
         padding: 1.1rem 0.5rem;
-        border-right: 1px solid var(--border);
+        border-right: 1px solid #e5e7eb;
         position: relative;
     }
     .stat-item-compact:last-child { border-right: none; }
@@ -437,12 +405,12 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         font-family: 'Playfair Display', serif;
         font-size: 2rem;
         font-weight: 900;
-        color: var(--cream);
+        color: var(--text-main);
         line-height: 1;
     }
-    .stat-value-compact.pts { color: var(--gold); }
-    .gd-positive { color: #27ae60 !important; }
-    .gd-negative { color: #e74c3c !important; }
+    .stat-value-compact.pts { color: var(--gold-dark); }
+    .gd-positive { color: #16a34a !important; }
+    .gd-negative { color: #dc2626 !important; }
     .stat-label-compact {
         font-family: 'DM Sans', sans-serif;
         font-size: 0.7rem;
@@ -455,54 +423,44 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
     /* ── Content Layout ── */
     .club-content-row {
         display: flex;
-        flex-direction: column;   /* stack vertically by default (mobile) */
+        flex-direction: column;
         gap: 1.6rem;
         margin-top: 1.6rem;
     }
     @media (min-width: 992px) {
-        .club-content-row {
-            flex-direction: row;  /* side by side only on large screens */
-            flex-wrap: nowrap;
-        }
+        .club-content-row { flex-direction: row; flex-wrap: nowrap; }
         .club-panel-league  { flex: 0 0 calc(70% - 0.8rem); max-width: calc(70% - 0.8rem); }
         .club-panel-players { flex: 0 0 calc(30% - 0.8rem); max-width: calc(30% - 0.8rem); }
     }
     @media (max-width: 991.98px) {
         .club-content-row { gap: 1rem; margin-top: 1rem; }
-        /* Every panel takes full width on mobile */
-        .club-panel,
-        .club-panel-league,
-        .club-panel-players { flex: 0 0 100%; max-width: 100%; width: 100%; }
+        .club-panel, .club-panel-league, .club-panel-players { flex: 0 0 100%; max-width: 100%; width: 100%; }
     }
     @media (max-width: 767.98px) {
         .club-content-row { gap: 0.75rem; margin-top: 0.75rem; padding: 0 0.5rem; }
     }
 
-    /* ── Panel Card ── */
+    /* ── Panel Card — LIGHT body ── */
     .club-panel {
-        flex: 1;
-        min-width: 0;             /* no minimum — let flex-direction control layout */
-        width: 100%;
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        flex: 1; min-width: 0; width: 100%;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
     }
-    @media (max-width: 767.98px) {
-        .club-panel { border-radius: 10px; }
-    }
+    @media (max-width: 767.98px) { .club-panel { border-radius: 10px; } }
 
-    /* Panel tab bar */
+    /* Panel tab bar — DARK */
     .panel-tabs {
         display: flex;
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-deeper), var(--dark-tab));
         border-bottom: 2px solid var(--border);
     }
     .panel-tabs a {
         flex: 1; text-align: center;
         padding: 0.9rem 1rem;
-        color: var(--muted);
+        color: rgba(255,255,255,0.5);
         text-decoration: none;
         font-family: 'DM Sans', sans-serif;
         font-weight: 600;
@@ -515,23 +473,22 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
     .panel-tabs a.active {
         color: var(--gold);
         border-bottom-color: var(--gold);
-        background: rgba(201,168,76,0.06);
+        background: rgba(201,168,76,0.07);
     }
     .panel-tabs a:hover:not(.active) {
-        color: var(--cream);
-        background: rgba(255,255,255,0.05);
+        color: #ffffff;
+        background: rgba(255,255,255,0.06);
     }
 
-    /* Season selector inside tab */
+    /* Season selector — dark to match tab bar */
     .season-select {
         background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(201,168,76,0.3);
+        border: 1px solid rgba(201,168,76,0.35);
         color: var(--gold);
         padding: 0.3rem 2rem 0.3rem 0.7rem;
         font-size: 0.82rem;
         border-radius: 6px;
-        -webkit-appearance: none;
-        appearance: none;
+        -webkit-appearance: none; appearance: none;
         background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c9a84c'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
         background-repeat: no-repeat;
         background-position: right 0.5rem center;
@@ -541,8 +498,9 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         font-weight: 600;
     }
     .season-select:focus { outline: none; border-color: var(--gold); }
+    .season-select option { background: #1a1a2e; color: var(--gold); }
 
-    /* Panel header (tournament sections) */
+    /* Panel header (tournament) — DARK */
     .panel-header {
         background: linear-gradient(135deg, #3a1a5c, #6a1b9a);
         border-bottom: 2px solid rgba(201,168,76,0.3);
@@ -554,31 +512,30 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         text-align: center;
     }
 
-    .panel-body { padding: 0.75rem; }
+    /* Panel body — LIGHT */
+    .panel-body { padding: 0.75rem; background: #ffffff; }
 
-    /* ── Match Items ── */
+    /* ── Match Items — LIGHT ── */
     .matches-grid {
         display: grid;
         grid-template-columns: 1fr;
         gap: 0.85rem;
     }
-    @media (min-width: 992px) {
-        .matches-grid { grid-template-columns: 1fr 1fr; }
-    }
+    @media (min-width: 992px) { .matches-grid { grid-template-columns: 1fr 1fr; } }
 
     .match-item {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.08);
+        background: #f9f8f5;
+        border: 1px solid #e5e7eb;
         border-radius: 10px;
         overflow: hidden;
         display: flex; flex-direction: column;
         transition: all 0.25s ease;
     }
     .match-item:hover {
-        border-color: rgba(201,168,76,0.3);
-        background: rgba(255,255,255,0.06);
+        border-color: rgba(201,168,76,0.4);
+        background: #fdf9f0;
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
     }
 
     .match-row {
@@ -586,6 +543,7 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         display: flex; align-items: center;
         justify-content: space-between;
         min-height: 72px;
+        background: #f9f8f5;
     }
 
     .teams-stack {
@@ -599,7 +557,7 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         position: absolute; right: 0; top: 50%;
         transform: translateY(-50%);
         width: 1px; height: 46px;
-        background: rgba(255,255,255,0.12);
+        background: #d1d5db;
     }
 
     .team-item { display: flex; align-items: center; gap: 9px; min-width: 0; }
@@ -607,10 +565,10 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
     .team-logo {
         width: 34px; height: 34px;
         object-fit: contain;
-        background: rgba(255,255,255,0.06);
+        background: #ffffff;
         padding: 3px;
         border-radius: 8px;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid #e5e7eb;
         flex-shrink: 0;
     }
 
@@ -618,14 +576,14 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         font-family: 'DM Sans', sans-serif;
         font-weight: 500;
         font-size: 0.88rem;
-        color: var(--muted);
+        color: var(--text-soft);
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         text-decoration: none;
         transition: color 0.2s;
     }
-    .team-name:hover { color: var(--gold-light); }
-    .team-name.bold  { font-weight: 700; color: var(--cream); }
-    .winner { color: #4ade80 !important; font-weight: 700 !important; }
+    .team-name:hover { color: var(--gold-dark); }
+    .team-name.bold  { font-weight: 700; color: var(--text-main); }
+    .winner { color: #15803d !important; font-weight: 700 !important; }
 
     .score-stack {
         text-align: center;
@@ -638,7 +596,7 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         font-family: 'Playfair Display', serif;
         font-size: 1.5rem;
         font-weight: 700;
-        color: var(--cream);
+        color: var(--text-main);
     }
 
     .fixture-info {
@@ -650,32 +608,32 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         color: var(--muted);
         line-height: 1.5;
     }
-    .fixture-info .date { font-weight: 600; color: rgba(255,255,255,0.6); font-size: 0.82rem; }
+    .fixture-info .date { font-weight: 600; color: var(--text-soft); font-size: 0.82rem; }
 
-    /* Match toggle footer */
+    /* Match toggle footer — DARK */
     .match-toggle {
         padding: 0.38rem 1rem;
-        background: rgba(0,0,0,0.2);
-        border-top: 1px solid rgba(255,255,255,0.06);
+        background: linear-gradient(135deg, var(--dark-deeper), var(--dark-tab));
+        border-top: 1px solid rgba(201,168,76,0.15);
         font-family: 'DM Sans', sans-serif;
         font-size: 0.78rem;
-        color: var(--muted);
+        color: rgba(255,255,255,0.5);
         cursor: pointer;
         display: flex; justify-content: space-between; align-items: center;
         transition: background 0.2s;
     }
-    .match-toggle:hover { background: rgba(255,255,255,0.05); }
-    .match-toggle i { font-size: 0.85rem; color: rgba(201,168,76,0.6); transition: transform 0.25s; }
+    .match-toggle:hover { background: linear-gradient(135deg, #1a1830, #2a2650); }
+    .match-toggle i { font-size: 0.85rem; color: rgba(201,168,76,0.7); transition: transform 0.25s; }
     .match-toggle[aria-expanded="true"] i { transform: rotate(180deg); }
 
-    /* Event list */
+    /* Event list — slightly off-white */
     .event-list {
-        background: rgba(0,0,0,0.25);
+        background: #f3f1ec;
         padding: 0.6rem 1rem;
         font-size: 0.8rem;
         max-height: 260px;
         overflow-y: auto;
-        border-top: 1px solid rgba(255,255,255,0.06);
+        border-top: 1px solid #e5e7eb;
     }
     .event-row {
         display: flex; align-items: flex-start;
@@ -685,7 +643,7 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
     .event-team.away { justify-content: flex-end; text-align: right; flex-direction: row-reverse; }
     .event-minutes {
         font-family: 'DM Sans', sans-serif;
-        font-weight: 700; color: var(--cream);
+        font-weight: 700; color: var(--text-main);
         min-width: 34px; font-size: 0.8em;
     }
     .event-icon {
@@ -702,18 +660,19 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         font-family: 'DM Sans', sans-serif;
         font-weight: 600; display: block;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        color: rgba(255,255,255,0.75);
+        color: var(--text-soft);
     }
 
-    /* ── Players & Management Table ── */
+    /* ── Tables — LIGHT ── */
     .table {
-        background: transparent;
-        color: rgba(255,255,255,0.8);
+        background: #ffffff;
+        color: var(--text-main);
         font-family: 'DM Sans', sans-serif;
         margin: 0;
     }
+    /* Table header — DARK */
     .table thead th {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-deeper), var(--dark-tab));
         color: var(--gold);
         font-size: 0.72rem;
         font-weight: 700;
@@ -723,14 +682,14 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         padding: 0.65rem 0.6rem;
     }
     .table tbody tr {
-        background: transparent;
-        border-color: rgba(255,255,255,0.05);
+        background: #ffffff;
+        border-color: #f3f4f6;
         transition: background 0.2s;
     }
-    .table tbody tr:hover { background: rgba(201,168,76,0.05); }
-    .table td { border-color: rgba(255,255,255,0.05); vertical-align: middle; padding: 0.55rem 0.6rem; }
-    .table a { color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.2s; }
-    .table a:hover { color: var(--gold-light); }
+    .table tbody tr:hover { background: #fdf9f0; }
+    .table td { border-color: #f3f4f6; vertical-align: middle; padding: 0.55rem 0.6rem; }
+    .table a { color: var(--text-soft); text-decoration: none; transition: color 0.2s; }
+    .table a:hover { color: var(--gold-dark); }
 
     /* Status badges */
     .badge-status {
@@ -739,23 +698,23 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         letter-spacing: 0.3px;
     }
 
-    /* Role badge in management */
+    /* Role badge */
     .badge-role {
-        background: rgba(201,168,76,0.15);
-        border: 1px solid rgba(201,168,76,0.3);
-        color: var(--gold);
+        background: rgba(201,168,76,0.12);
+        border: 1px solid rgba(201,168,76,0.35);
+        color: var(--gold-dark);
         font-size: 0.7rem; font-weight: 600;
         padding: 2px 8px; border-radius: 10px;
         letter-spacing: 0.3px;
         font-family: 'DM Sans', sans-serif;
     }
 
-    /* Tournament section header */
+    /* Tournament section title */
     .tournament-section-title {
         font-family: 'Playfair Display', serif;
         font-size: 1.4rem;
         font-weight: 700;
-        color: var(--gold);
+        color: var(--gold-dark);
         text-align: center;
         margin: 2.5rem 0 1.2rem;
         position: relative;
@@ -766,7 +725,6 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         position: absolute;
         top: 50%; transform: translateY(-50%);
         height: 1px; width: 15%;
-        background: linear-gradient(to right, transparent, var(--gold));
         opacity: 0.4;
     }
     .tournament-section-title::before { left: 10%; background: linear-gradient(to right, transparent, var(--gold)); }
@@ -780,7 +738,7 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
         color: var(--muted);
         font-size: 0.9rem;
     }
-    .empty-state i { font-size: 2rem; color: rgba(201,168,76,0.3); display: block; margin-bottom: 0.75rem; }
+    .empty-state i { font-size: 2rem; color: rgba(201,168,76,0.4); display: block; margin-bottom: 0.75rem; }
 </style>
 
 <div class="main-content">
@@ -988,12 +946,12 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
                                         $playerLink = 'player_profile.php?player_id=' . $p['id'];
                                         $status     = $p['status'] ?? '';
                                         $statusColors = [
-                                            'Active'    => 'background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);color:#4ade80;',
-                                            'Inactive'  => 'background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:#f87171;',
-                                            'Injured'   => 'background:rgba(234,179,8,0.15);border:1px solid rgba(234,179,8,0.4);color:#fbbf24;',
-                                            'Suspended' => 'background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:#f87171;',
+                                            'Active'    => 'background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.35);color:#15803d;',
+                                            'Inactive'  => 'background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:#dc2626;',
+                                            'Injured'   => 'background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.35);color:#b45309;',
+                                            'Suspended' => 'background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:#dc2626;',
                                         ];
-                                        $badgeStyle = $statusColors[$status] ?? 'background:rgba(100,100,100,0.2);border:1px solid rgba(100,100,100,0.3);color:#aaa;';
+                                        $badgeStyle = $statusColors[$status] ?? 'background:rgba(100,100,100,0.1);border:1px solid rgba(100,100,100,0.25);color:#6b7280;';
                                     ?>
                                     <tr style="cursor:pointer;" onclick="window.location='<?= $playerLink ?>'">
                                         <td style="color:var(--muted);"><?= $i + 1 ?></td>
@@ -1003,7 +961,7 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     class="rounded-circle" width="30" height="30"
                                                     style="object-fit:cover;border:1px solid rgba(201,168,76,0.3);">
                                                 <div>
-                                                    <div style="font-weight:600;color:var(--cream);font-size:0.84rem;line-height:1.2;">
+                                                    <div style="font-weight:600;color:var(--text-main);font-size:0.84rem;line-height:1.2;">
                                                         <?= htmlspecialchars($p['name']) ?>
                                                     </div>
                                                     <?php if ($status): ?>
@@ -1015,11 +973,11 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
                                             </a>
                                         </td>
                                         <td style="color:var(--muted);"><?= $p['age'] ?? '—' ?></td>
-                                        <td style="color:var(--gold);font-weight:700;"><?= $p['goals']       ?? 0 ?></td>
-                                        <td><?= $p['assists']      ?? 0 ?></td>
-                                        <td style="color:#fbbf24;"><?= $p['yellow_cards'] ?? 0 ?></td>
-                                        <td style="color:#f87171;"><?= $p['red_cards']    ?? 0 ?></td>
-                                        <td><?= $p['clean_sheets'] ?? 0 ?></td>
+                                        <td style="color:var(--gold-dark);font-weight:700;"><?= $p['goals']       ?? 0 ?></td>
+                                        <td style="color:var(--text-soft);"><?= $p['assists']      ?? 0 ?></td>
+                                        <td style="color:#b45309;"><?= $p['yellow_cards'] ?? 0 ?></td>
+                                        <td style="color:#dc2626;"><?= $p['red_cards']    ?? 0 ?></td>
+                                        <td style="color:var(--text-soft);"><?= $p['clean_sheets'] ?? 0 ?></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -1057,7 +1015,7 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
                                                      style="object-fit:cover;border:1px solid rgba(201,168,76,0.3);"
                                                      alt="<?= htmlspecialchars($m['full_name']) ?>">
                                             </td>
-                                            <td style="font-weight:600;color:var(--cream);">
+                                            <td style="font-weight:600;color:var(--text-main);">
                                                 <?= htmlspecialchars($m['full_name']) ?>
                                             </td>
                                             <td><span class="badge-role"><?= htmlspecialchars($m['role']) ?></span></td>
@@ -1204,7 +1162,6 @@ $management = $management_stmt->fetchAll(PDO::FETCH_ASSOC);
 </div><!-- /.main-content -->
 
 <script>
-// Tab switching (scoped to each panel)
 document.querySelectorAll('.panel-tabs a[data-tab]').forEach(link => {
     link.addEventListener('click', function (e) {
         e.preventDefault();
@@ -1218,7 +1175,6 @@ document.querySelectorAll('.panel-tabs a[data-tab]').forEach(link => {
     });
 });
 
-// Accordion collapse (only one open at a time per grid)
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.match-toggle[data-bs-toggle="collapse"]').forEach(toggle => {
         toggle.addEventListener('click', function () {

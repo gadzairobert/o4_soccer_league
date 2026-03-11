@@ -8,30 +8,34 @@ include 'includes/properties.php';
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    /* ── Design Tokens ── */
     :root {
-        --ink:        #1a1a2e;
-        --gold:       #c9a84c;
-        --gold-light: #f0d080;
-        --cream:      #fdf8ef;
-        --muted:      rgba(255,255,255,0.45);
-        --border:     rgba(201,168,76,0.2);
-        --card-bg:    rgba(255,255,255,0.04);
+        --gold:        #c9a84c;
+        --gold-light:  #f0d080;
+        --gold-dark:   #9a6f1e;
+        --cream:       #fdf8ef;
+        --dark-panel:  #1a1a2e;
+        --dark-tab:    #16152b;
+        --dark-deeper: #0f0e22;
+        --border:      rgba(201,168,76,0.22);
+        --muted:       #6b7280;
+        --text-main:   #1a1a2e;
+        --text-soft:   #4b5563;
     }
 
+    /* ── PAGE BACKGROUND: LIGHT ── */
     html, body {
-        background-color: #1a1a2e !important;
+        background-color: #f0ede8 !important;
         background-image:
-            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(180,160,120,0.05) 0%, transparent 50%);
         background-attachment: fixed;
-        color: #eee;
+        color: var(--text-main);
         overflow-x: hidden;
     }
     body { display: flex; flex-direction: column; min-height: 100vh; }
     footer { flex-shrink: 0; }
 
-    /* ── Page Wrapper ── matches original margin/padding ── */
+    /* ── Page Wrapper ── */
     .results-page-wrapper {
         max-width: 100%;
         margin: -38px auto 0;
@@ -45,13 +49,13 @@ include 'includes/properties.php';
         }
     }
 
-    /* ── Result Card ── */
+    /* ── Result Card — LIGHT ── */
     .result-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
         margin-bottom: 2rem;
     }
     @media (max-width: 767px) {
@@ -63,9 +67,9 @@ include 'includes/properties.php';
         }
     }
 
-    /* ── Result Header ── */
+    /* ── Result Header — DARK ── */
     .result-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         padding: 1rem 1.6rem;
         display: flex;
@@ -101,7 +105,7 @@ include 'includes/properties.php';
         white-space: nowrap;
     }
 
-    /* Year dropdown */
+    /* Year dropdown — dark to match header */
     .year-select {
         background: rgba(255,255,255,0.08);
         border: 1px solid rgba(201,168,76,0.3);
@@ -132,10 +136,10 @@ include 'includes/properties.php';
         .results-grid { grid-template-columns: 1fr; }
     }
 
-    /* ── Result Item ── */
+    /* ── Result Item — LIGHT ── */
     .result-item {
         background: transparent;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
+        border-bottom: 1px solid #f3f4f6;
         transition: background 0.25s ease;
         position: relative;
     }
@@ -144,13 +148,13 @@ include 'includes/properties.php';
         position: absolute;
         right: 0; top: 16px; bottom: 16px;
         width: 1px;
-        background: rgba(255,255,255,0.06);
+        background: #f3f4f6;
         display: none;
     }
     @media (min-width: 993px) {
         .result-item:nth-child(odd)::after { display: block; }
     }
-    .result-item:hover { background: rgba(201,168,76,0.04); }
+    .result-item:hover { background: #fdf9f0; }
     .result-item:last-child { border-bottom: none; }
 
     /* ── Match Row ── */
@@ -177,7 +181,7 @@ include 'includes/properties.php';
         right: 0; top: 50%;
         transform: translateY(-50%);
         width: 1px; height: 56px;
-        background: rgba(255,255,255,0.12);
+        background: #d1d5db;
     }
     .team-item {
         display: flex;
@@ -194,7 +198,7 @@ include 'includes/properties.php';
         padding: 3px;
         border-radius: 50%;
         border: 2px solid rgba(201,168,76,0.25);
-        box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         flex-shrink: 0;
         transition: border-color 0.2s;
     }
@@ -205,15 +209,15 @@ include 'includes/properties.php';
         font-family: 'DM Sans', sans-serif;
         font-weight: 600;
         font-size: 0.95rem;
-        color: rgba(255,255,255,0.8);
+        color: var(--text-soft);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         text-decoration: none;
         transition: color 0.2s;
     }
-    .team-name:hover { color: var(--gold-light); }
-    .winner { color: #4ade80 !important; font-weight: 700 !important; }
+    .team-name:hover { color: var(--gold-dark); }
+    .winner { color: #15803d !important; font-weight: 700 !important; }
 
     /* ── Score Stack ── */
     .score-stack {
@@ -228,24 +232,24 @@ include 'includes/properties.php';
         font-family: 'Playfair Display', serif;
         font-size: 1.9rem;
         font-weight: 900;
-        color: var(--cream);
+        color: var(--text-main);
     }
 
-    /* ── Result Toggle (date bar) ── */
+    /* ── Result Toggle — DARK ── */
     .result-toggle {
         padding: 0.5rem 1.6rem;
-        background: rgba(0,0,0,0.2);
-        border-top: 1px solid rgba(255,255,255,0.06);
+        background: linear-gradient(135deg, var(--dark-deeper), var(--dark-tab));
+        border-top: 1px solid rgba(201,168,76,0.15);
         font-family: 'DM Sans', sans-serif;
         font-size: 0.82rem;
-        color: var(--muted);
+        color: rgba(255,255,255,0.5);
         cursor: pointer;
         display: flex;
         justify-content: space-between;
         align-items: center;
         transition: background 0.2s;
     }
-    .result-toggle:hover { background: rgba(255,255,255,0.05); }
+    .result-toggle:hover { background: linear-gradient(135deg, #1a1830, #2a2650); }
     .result-toggle .date {
         font-weight: 700;
         font-size: 0.88rem;
@@ -258,14 +262,14 @@ include 'includes/properties.php';
     }
     .result-toggle[aria-expanded="true"] i { transform: rotate(180deg); }
 
-    /* ── Event List ── */
+    /* ── Event List — slightly off-white ── */
     .event-list {
-        background: rgba(0,0,0,0.25);
+        background: #f3f1ec;
         padding: 0.75rem 1.6rem;
         font-size: 0.84rem;
         max-height: 340px;
         overflow-y: auto;
-        border-top: 1px solid rgba(255,255,255,0.06);
+        border-top: 1px solid #e5e7eb;
     }
     .event-row {
         display: flex;
@@ -278,7 +282,7 @@ include 'includes/properties.php';
     .event-minutes {
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
-        color: var(--cream);
+        color: var(--text-main);
         min-width: 38px;
         font-size: 0.82em;
     }
@@ -305,10 +309,10 @@ include 'includes/properties.php';
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        color: rgba(255,255,255,0.75);
+        color: var(--text-soft);
         display: block;
     }
-    .event-penalty { font-size: 0.8em; color: #f87171; }
+    .event-penalty { font-size: 0.8em; color: #dc2626; }
 
     /* ── Empty State ── */
     .results-empty {
@@ -318,7 +322,7 @@ include 'includes/properties.php';
     }
     .results-empty i {
         font-size: 3.5rem;
-        color: rgba(201,168,76,0.3);
+        color: rgba(154,111,30,0.35);
         display: block;
         margin-bottom: 1rem;
     }
@@ -394,7 +398,6 @@ if (empty($allResults)): ?>
                     $dateStr  = (new DateTime($r['match_date']))->format('D, j M Y');
                     $matchId  = $r['match_id'];
 
-                    // === FULL EVENT BUILDING CODE (unchanged) ===
                     $eventHtml = '';
                     $goalsStmt = $pdo->prepare("SELECT g.minute, g.is_penalty, p.name AS scorer, p.club_id, ap.name AS assist FROM goals g JOIN players p ON g.player_id = p.id LEFT JOIN assists a ON g.id = a.goal_id LEFT JOIN players ap ON a.player_id = ap.id WHERE g.match_id = ? ORDER BY g.minute");
                     $goalsStmt->execute([$matchId]);
@@ -466,9 +469,8 @@ if (empty($allResults)): ?>
                             $eventHtml .= "</div>";
                         }
                     } else {
-                        $eventHtml = '<div class="text-center py-3" style="font-family:\'DM Sans\',sans-serif;font-size:0.8rem;color:rgba(255,255,255,0.3);">No events recorded</div>';
+                        $eventHtml = '<div class="text-center py-3" style="font-family:\'DM Sans\',sans-serif;font-size:0.8rem;color:var(--muted);">No events recorded</div>';
                     }
-                    // === END EVENT CODE ===
                 ?>
                     <div class="result-item">
                         <div class="match-row">
@@ -513,7 +515,6 @@ if (empty($allResults)): ?>
 <?php endforeach; endif; ?>
 </div>
 
-<!-- ONLY ONE DROPDOWN OPEN AT A TIME -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const toggles = document.querySelectorAll('.result-toggle[data-bs-toggle="collapse"]');

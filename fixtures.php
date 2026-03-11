@@ -8,25 +8,28 @@ include 'includes/properties.php';
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    /* ── Design Tokens ── */
     :root {
-        --ink:        #1a1a2e;
-        --ink-light:  #2c3e50;
-        --gold:       #c9a84c;
-        --gold-light: #f0d080;
-        --cream:      #fdf8ef;
-        --muted:      rgba(255,255,255,0.45);
-        --border:     rgba(201,168,76,0.2);
-        --card-bg:    rgba(255,255,255,0.04);
+        --gold:        #c9a84c;
+        --gold-light:  #f0d080;
+        --gold-dark:   #9a6f1e;
+        --cream:       #fdf8ef;
+        --dark-panel:  #1a1a2e;
+        --dark-tab:    #16152b;
+        --dark-deeper: #0f0e22;
+        --border:      rgba(201,168,76,0.22);
+        --muted:       #6b7280;
+        --text-main:   #1a1a2e;
+        --text-soft:   #4b5563;
     }
 
+    /* ── PAGE BACKGROUND: LIGHT ── */
     html, body {
-        background-color: #1a1a2e !important;
+        background-color: #f0ede8 !important;
         background-image:
-            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(180,160,120,0.05) 0%, transparent 50%);
         background-attachment: fixed;
-        color: #eee;
+        color: var(--text-main);
         overflow-x: hidden;
     }
     body { display: flex; flex-direction: column; min-height: 100vh; }
@@ -35,7 +38,7 @@ include 'includes/properties.php';
     /* ── Page Wrapper ── */
     .fixtures-page-wrapper {
         max-width: 1400px;
-        margin: -38px auto 0;   /* matches original container margin-top after slideshow */
+        margin: -38px auto 0;
         padding: 6px 1.5rem 4rem;
     }
     @media (max-width: 767px) {
@@ -47,13 +50,13 @@ include 'includes/properties.php';
         }
     }
 
-    /* ── Matchday Card ── */
+    /* ── Matchday Card — LIGHT body ── */
     .matchday-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
         margin-bottom: 2rem;
     }
     @media (max-width: 767px) {
@@ -65,9 +68,9 @@ include 'includes/properties.php';
         }
     }
 
-    /* ── Matchday Header ── */
+    /* ── Matchday Header — DARK ── */
     .matchday-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         padding: 1rem 1.6rem;
         display: flex;
@@ -106,7 +109,7 @@ include 'includes/properties.php';
         .fixtures-grid { grid-template-columns: 1fr; }
     }
 
-    /* ── Fixture Card ── */
+    /* ── Fixture Card — LIGHT ── */
     .fixture-card {
         background: transparent;
         padding: 1rem 1.6rem;
@@ -114,25 +117,23 @@ include 'includes/properties.php';
         align-items: center;
         justify-content: space-between;
         min-height: 96px;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
+        border-bottom: 1px solid #f3f4f6;
         transition: background 0.25s ease;
         position: relative;
     }
     .fixture-card::after {
-        /* vertical divider between grid columns */
         content: '';
         position: absolute;
         right: 0; top: 16px; bottom: 16px;
         width: 1px;
-        background: rgba(255,255,255,0.06);
+        background: #f3f4f6;
         display: none;
     }
     @media (min-width: 993px) {
-        /* show right-side divider only when two-column grid is active */
         .fixture-card:nth-child(odd)::after { display: block; }
     }
     .fixture-card:hover {
-        background: rgba(201,168,76,0.04);
+        background: #fdf9f0;
     }
     .fixture-card:last-child { border-bottom: none; }
 
@@ -151,7 +152,7 @@ include 'includes/properties.php';
         right: 0; top: 50%;
         transform: translateY(-50%);
         width: 1px; height: 60px;
-        background: rgba(255,255,255,0.12);
+        background: #d1d5db;
     }
     .team-item {
         display: flex;
@@ -164,11 +165,11 @@ include 'includes/properties.php';
     .team-logo {
         width: 44px; height: 44px;
         object-fit: contain;
-        background: #ffffff;           /* solid white circle background */
+        background: #ffffff;
         padding: 4px;
         border-radius: 50%;
         border: 2px solid rgba(201,168,76,0.25);
-        box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         flex-shrink: 0;
         transition: border-color 0.2s;
     }
@@ -181,16 +182,16 @@ include 'includes/properties.php';
         font-family: 'DM Sans', sans-serif;
         font-weight: 600;
         font-size: 0.95rem;
-        color: rgba(255,255,255,0.8);
+        color: var(--text-soft);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         text-decoration: none;
         transition: color 0.2s;
     }
-    .team-name:hover { color: var(--gold-light); }
+    .team-name:hover { color: var(--gold-dark); }
 
-    /* ── Fixture Details (date + venue) ── */
+    /* ── Fixture Details ── */
     .fixture-details {
         padding-left: 22px;
         text-align: right;
@@ -202,14 +203,14 @@ include 'includes/properties.php';
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
         font-size: 0.9rem;
-        color: var(--cream);
+        color: var(--text-main);
         display: block;
         margin-bottom: 3px;
     }
     .fixture-details .time {
         font-family: 'DM Sans', sans-serif;
         font-size: 0.82rem;
-        color: var(--gold);
+        color: var(--gold-dark);
         display: block;
         margin-bottom: 2px;
     }
@@ -228,7 +229,7 @@ include 'includes/properties.php';
     }
     .fixtures-empty i {
         font-size: 3.5rem;
-        color: rgba(201,168,76,0.3);
+        color: rgba(154,111,30,0.35);
         display: block;
         margin-bottom: 1rem;
     }

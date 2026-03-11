@@ -2,29 +2,34 @@
 ob_start();
 require 'config.php';
 include 'includes/header.php';
+include 'includes/gif_slideshow.php';
 include 'includes/properties.php';
 ?>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    /* ── Design Tokens ── */
     :root {
-        --ink:        #1a1a2e;
-        --gold:       #c9a84c;
-        --gold-light: #f0d080;
-        --cream:      #fdf8ef;
-        --muted:      rgba(255,255,255,0.45);
-        --border:     rgba(201,168,76,0.2);
-        --card-bg:    rgba(255,255,255,0.04);
+        --gold:        #c9a84c;
+        --gold-light:  #f0d080;
+        --gold-dark:   #9a6f1e;
+        --cream:       #fdf8ef;
+        --dark-panel:  #1a1a2e;
+        --dark-tab:    #16152b;
+        --dark-deeper: #0f0e22;
+        --border:      rgba(201,168,76,0.22);
+        --muted:       #6b7280;
+        --text-main:   #1a1a2e;
+        --text-soft:   #4b5563;
     }
 
+    /* ── PAGE BACKGROUND: LIGHT ── */
     html, body {
-        background-color: #1a1a2e !important;
+        background-color: #f0ede8 !important;
         background-image:
-            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(180,160,120,0.05) 0%, transparent 50%);
         background-attachment: fixed;
-        color: #eee;
+        color: var(--text-main);
         overflow-x: hidden;
     }
     body { display: flex; flex-direction: column; min-height: 100vh; }
@@ -36,21 +41,21 @@ include 'includes/properties.php';
         padding-top: 6px !important;
     }
 
-    /* ── Gallery Card ── */
+    /* ── Gallery Card — LIGHT ── */
     .gallery-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
     }
     @media (max-width: 575.98px) {
         .gallery-card { border-radius: 0; border-left: none; border-right: none; }
     }
 
-    /* ── Gallery Header ── */
+    /* ── Gallery Header — DARK ── */
     .gallery-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         color: var(--cream);
         padding: 1rem 1.8rem;
@@ -63,10 +68,10 @@ include 'includes/properties.php';
         .gallery-header { font-size: 1.2rem; padding: 1rem; }
     }
 
-    /* ── Gallery Body ── */
+    /* ── Gallery Body — LIGHT ── */
     .gallery-body {
         padding: 2rem;
-        background: transparent;
+        background: #ffffff;
     }
     @media (max-width: 575.98px) {
         .gallery-body { padding: 1.2rem; }
@@ -84,22 +89,22 @@ include 'includes/properties.php';
     @media (max-width: 767.98px)  { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 575.98px)  { .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 0.85rem; } }
 
-    /* ── Gallery Item ── */
+    /* ── Gallery Item — LIGHT ── */
     .gallery-item {
         position: relative;
         border-radius: 10px;
         overflow: hidden;
-        border: 1px solid var(--border);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
         transition: all 0.35s ease;
         cursor: pointer;
         aspect-ratio: 1 / 1;
-        background: rgba(255,255,255,0.03);
+        background: #f9f7f2;
     }
     .gallery-item:hover {
         transform: translateY(-8px);
         border-color: rgba(201,168,76,0.5);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.2);
+        box-shadow: 0 16px 36px rgba(0,0,0,0.12), 0 0 0 1px rgba(201,168,76,0.2);
     }
     @media (max-width: 575.98px) {
         .gallery-item { border-radius: 8px; }
@@ -118,7 +123,7 @@ include 'includes/properties.php';
     .gallery-caption {
         position: absolute;
         bottom: 0; left: 0; right: 0;
-        background: linear-gradient(transparent, rgba(0,0,0,0.88));
+        background: linear-gradient(transparent, rgba(0,0,0,0.75));
         color: white;
         padding: 2rem 0.8rem 0.75rem;
         font-family: 'DM Sans', sans-serif;
@@ -134,7 +139,7 @@ include 'includes/properties.php';
     .gallery-date {
         position: absolute;
         top: 8px; right: 8px;
-        background: rgba(0,0,0,0.65);
+        background: rgba(0,0,0,0.55);
         border: 1px solid rgba(201,168,76,0.3);
         color: var(--gold);
         font-family: 'DM Sans', sans-serif;
@@ -157,7 +162,7 @@ include 'includes/properties.php';
     }
     .gallery-empty i {
         font-size: 3.5rem;
-        color: rgba(201,168,76,0.3);
+        color: rgba(154,111,30,0.3);
         display: block;
         margin-bottom: 1rem;
     }
@@ -189,17 +194,17 @@ include 'includes/properties.php';
     }
     .modal-title-text {
         font-family: 'Playfair Display', serif;
-        color: var(--cream);
+        color: #ffffff;
         font-size: 1.2rem;
         font-weight: 700;
         margin-bottom: 0.4rem;
     }
     .modal-desc-text {
         font-family: 'DM Sans', sans-serif;
-        color: rgba(255,255,255,0.65);
+        color: rgba(255,255,255,0.75);
         font-size: 0.9rem;
-        background: rgba(0,0,0,0.5);
-        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.55);
+        border: 1px solid rgba(201,168,76,0.25);
         border-radius: 8px;
         display: inline-block;
         padding: 0.5rem 1.2rem;
@@ -209,7 +214,7 @@ include 'includes/properties.php';
         color: var(--gold);
         font-size: 0.82rem;
         margin-top: 0.5rem;
-        opacity: 0.8;
+        opacity: 0.85;
     }
 </style>
 

@@ -37,23 +37,28 @@ $endDate     = "$currentYear-12-31";
     /* ── Design Tokens ── */
     :root {
         --ink:        #1a1a2e;
-        --gold:       #c9a84c;
-        --gold-light: #f0d080;
-        --cream:      #fdf8ef;
-        --muted:      rgba(255,255,255,0.45);
-        --border:     rgba(201,168,76,0.2);
-        --card-bg:    rgba(255,255,255,0.04);
-        --card-hover: rgba(255,255,255,0.07);
-        --panel-dark: linear-gradient(135deg, #16152b, #24224a);
+        --gold:       #b8922a;
+        --gold-light: #d4a843;
+        --gold-pale:  #f5e9cc;
+        --cream:      #1a1a2e;
+        --muted:      rgba(30,30,50,0.5);
+        --border:     rgba(184,146,42,0.25);
+        --card-bg:    #ffffff;
+        --card-hover: #f8f4ed;
+        --panel-dark: linear-gradient(135deg, #1a1a2e, #2d2b52);
+        --page-bg:    #f2ede4;
+        --section-bg: #ffffff;
+        --text-main:  #1a1a2e;
+        --text-sub:   rgba(26,26,46,0.65);
     }
 
     html, body {
-        background-color: #1a1a2e !important;
+        background-color: var(--page-bg) !important;
         background-image:
-            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 10% 0%, rgba(184,146,42,0.08) 0%, transparent 45%),
+            radial-gradient(ellipse at 90% 100%, rgba(184,146,42,0.06) 0%, transparent 45%);
         background-attachment: fixed;
-        color: #eee;
+        color: var(--text-main);
         overflow-x: hidden;
     }
     body { display: flex; flex-direction: column; min-height: 100vh; }
@@ -72,11 +77,11 @@ $endDate     = "$currentYear-12-31";
 
     /* ── Section Card ── */
     .section-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        background: var(--section-bg);
+        border: 1px solid rgba(184,146,42,0.18);
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 20px rgba(26,26,46,0.08), 0 1px 4px rgba(26,26,46,0.05);
         margin-bottom: 1.2rem;
         height: 100%;
         display: flex;
@@ -87,7 +92,7 @@ $endDate     = "$currentYear-12-31";
     .section-header {
         background: var(--panel-dark);
         border-bottom: 2px solid var(--gold);
-        color: var(--cream);
+        color: #fdf8ef;
         padding: 0.7rem 1.1rem;
         font-family: 'DM Sans', sans-serif;
         font-size: 1rem;
@@ -102,16 +107,12 @@ $endDate     = "$currentYear-12-31";
     .section-header .tournament-header-title {
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
-        color: var(--cream);
+        color: #fdf8ef;
     }
     .news-header { border-bottom-color: #e74c3c !important; }
-    .news-header::before {
-        /* keep the red accent visible */
-        background: linear-gradient(135deg, #2a0a0a, #4a1010) !important;
-    }
     .section-header .btn-outline-light {
         border-color: rgba(201,168,76,0.5);
-        color: var(--gold);
+        color: #c9a84c;
         font-family: 'DM Sans', sans-serif;
         font-size: 0.75rem;
         font-weight: 600;
@@ -121,17 +122,17 @@ $endDate     = "$currentYear-12-31";
         transition: all 0.2s;
     }
     .section-header .btn-outline-light:hover {
-        background: rgba(201,168,76,0.15);
-        border-color: var(--gold);
-        color: var(--gold-light);
+        background: rgba(201,168,76,0.2);
+        border-color: #c9a84c;
+        color: #f0d080;
     }
 
     .section-body { padding: 0.8rem; flex-grow: 1; }
 
-    /* ── Mini Matches (fixtures + results) ── */
+    /* ── Mini Matches ── */
     .mini-match {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.07);
+        background: #faf8f3;
+        border: 1px solid rgba(184,146,42,0.15);
         border-radius: 8px;
         overflow: hidden;
         margin-bottom: 0.45rem;
@@ -139,9 +140,9 @@ $endDate     = "$currentYear-12-31";
     }
     .mini-match:hover {
         transform: translateY(-2px);
-        border-color: rgba(201,168,76,0.3);
-        background: rgba(255,255,255,0.06);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        border-color: rgba(184,146,42,0.4);
+        background: #fff8ec;
+        box-shadow: 0 6px 20px rgba(184,146,42,0.12);
     }
     .mini-match:last-child { margin-bottom: 0; }
     .mini-match-row {
@@ -160,17 +161,17 @@ $endDate     = "$currentYear-12-31";
         background: #ffffff;
         padding: 3px;
         border-radius: 50%;
-        border: 2px solid rgba(201,168,76,0.2);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        border: 2px solid rgba(184,146,42,0.2);
+        box-shadow: 0 2px 6px rgba(26,26,46,0.1);
         flex-shrink: 0;
         transition: border-color 0.2s;
     }
-    .mini-match:hover .mini-logo { border-color: rgba(201,168,76,0.4); }
+    .mini-match:hover .mini-logo { border-color: rgba(184,146,42,0.45); }
     .mini-name {
         font-family: 'DM Sans', sans-serif;
         font-weight: 600;
         font-size: 0.88rem;
-        color: rgba(255,255,255,0.8);
+        color: var(--text-main);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -178,8 +179,8 @@ $endDate     = "$currentYear-12-31";
         text-decoration: none;
         transition: color 0.2s;
     }
-    a .mini-name:hover, .mini-name:hover { color: var(--gold-light); }
-    .mini-winner { color: #4ade80 !important; font-weight: 700 !important; }
+    a .mini-name:hover, .mini-name:hover { color: var(--gold); }
+    .mini-winner { color: #16a34a !important; font-weight: 700 !important; }
     .mini-score {
         display: flex;
         flex-direction: column;
@@ -193,7 +194,7 @@ $endDate     = "$currentYear-12-31";
         font-size: 1.5rem;
         font-weight: 900;
         line-height: 1;
-        color: var(--cream);
+        color: var(--text-main);
     }
     .mini-info {
         font-family: 'DM Sans', sans-serif;
@@ -215,7 +216,7 @@ $endDate     = "$currentYear-12-31";
 
     /* ── Top Performers Tabs ── */
     #topPerformersTabs .nav-link {
-        background: rgba(255,255,255,0.04) !important;
+        background: #f5f3ee !important;
         color: var(--muted) !important;
         border: none !important;
         border-radius: 0 !important;
@@ -226,16 +227,16 @@ $endDate     = "$currentYear-12-31";
         transition: all 0.2s;
     }
     #topPerformersTabs .nav-link:hover {
-        color: var(--cream) !important;
-        background: rgba(255,255,255,0.08) !important;
+        color: var(--text-main) !important;
+        background: #ede9df !important;
     }
     #topPerformersTabs .nav-link.active {
-        background: rgba(201,168,76,0.12) !important;
+        background: #fff8ec !important;
         color: var(--gold) !important;
         font-weight: 700;
         border-bottom: 2px solid var(--gold) !important;
     }
-    .tab-content { border-top: 1px solid rgba(255,255,255,0.07); }
+    .tab-content { border-top: 1px solid rgba(184,146,42,0.15); }
 
     /* ── League / Tournament Tables ── */
     .league-table .table,
@@ -246,12 +247,12 @@ $endDate     = "$currentYear-12-31";
         table-layout: fixed;
         width: 100%;
         background: transparent;
-        color: rgba(255,255,255,0.8);
+        color: var(--text-main);
     }
     .league-table .table thead th,
     .tournament-table .table thead th {
         background: var(--panel-dark);
-        color: var(--gold);
+        color: #c9a84c;
         font-weight: 700;
         font-size: 0.7rem;
         text-transform: uppercase;
@@ -266,15 +267,15 @@ $endDate     = "$currentYear-12-31";
         vertical-align: middle;
         text-align: center;
         font-size: 0.86rem;
-        color: rgba(255,255,255,0.8);
-        border-top: 1px solid rgba(255,255,255,0.05);
+        color: var(--text-main);
+        border-top: 1px solid rgba(184,146,42,0.1);
         border-bottom: none;
+        background: transparent;
     }
-    /* Fix Bootstrap table-hover dark bg */
     .league-table .table-hover > tbody > tr:hover > *,
     .tournament-table .table-hover > tbody > tr:hover > * {
-        background-color: rgba(201,168,76,0.07) !important;
-        color: rgba(255,255,255,0.95) !important;
+        background-color: #fff8ec !important;
+        color: var(--text-main) !important;
         --bs-table-accent-bg: transparent;
     }
     .league-table .pos, .tournament-table .pos {
@@ -288,7 +289,7 @@ $endDate     = "$currentYear-12-31";
     .league-table .club-name, .tournament-table .club-name {
         font-family: 'DM Sans', sans-serif;
         font-weight: 600;
-        color: rgba(255,255,255,0.85);
+        color: var(--text-main);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -297,9 +298,8 @@ $endDate     = "$currentYear-12-31";
         text-decoration: none;
         transition: color 0.2s;
     }
-    .league-table .club-name:hover, .tournament-table .club-name:hover { color: var(--gold-light); }
+    .league-table .club-name:hover, .tournament-table .club-name:hover { color: var(--gold); }
 
-    /* Club logos — solid white circle */
     .club-logo, .mini-logo, .club-thumb {
         object-fit: contain;
         background: #ffffff;
@@ -309,13 +309,13 @@ $endDate     = "$currentYear-12-31";
     .club-logo {
         width: 32px; height: 32px;
         padding: 3px;
-        border: 2px solid rgba(201,168,76,0.2);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        border: 2px solid rgba(184,146,42,0.2);
+        box-shadow: 0 2px 6px rgba(26,26,46,0.1);
     }
     .club-thumb {
         width: 26px; height: 26px;
         padding: 2px;
-        border: 1px solid rgba(201,168,76,0.2);
+        border: 1px solid rgba(184,146,42,0.2);
     }
     .league-table .narrow, .tournament-table .narrow { width: 11%; font-weight: 600; }
     .league-table .points, .tournament-table .points {
@@ -332,12 +332,12 @@ $endDate     = "$currentYear-12-31";
         font-size: 0.82rem;
         margin: 0;
         background: transparent;
-        color: rgba(255,255,255,0.8);
+        color: var(--text-main);
         width: 100%;
     }
     .player-stats-table thead th {
         background: var(--panel-dark);
-        color: var(--gold);
+        color: #c9a84c;
         font-size: 0.7rem;
         padding: 0.45rem 0.3rem;
         text-transform: uppercase;
@@ -352,42 +352,43 @@ $endDate     = "$currentYear-12-31";
         cursor: pointer;
     }
     .player-stats-table .table-hover > tbody > tr:hover > * {
-        background-color: rgba(201,168,76,0.07) !important;
-        color: rgba(255,255,255,0.95) !important;
+        background-color: #fff8ec !important;
+        color: var(--text-main) !important;
         --bs-table-accent-bg: transparent;
     }
     .player-stats-table td {
         padding: 0.35rem 0.5rem;
         vertical-align: middle;
-        color: rgba(255,255,255,0.8);
-        border-top: 1px solid rgba(255,255,255,0.05);
+        color: var(--text-main);
+        border-top: 1px solid rgba(184,146,42,0.1);
         border-bottom: none;
     }
     .player-stats-table .player-thumb {
         width: 30px; height: 30px;
         object-fit: cover;
-        border: 2px solid rgba(201,168,76,0.3);
+        border: 2px solid rgba(184,146,42,0.3);
         border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 4px rgba(26,26,46,0.1);
     }
     .player-stats-table a {
-        color: rgba(255,255,255,0.8) !important;
+        color: var(--text-main) !important;
         font-weight: 600;
         text-decoration: none;
         transition: color 0.2s;
     }
-    .player-stats-table a:hover { color: var(--gold-light) !important; }
+    .player-stats-table a:hover { color: var(--gold) !important; }
+    .player-stats-table tbody tr:hover { background: #fff8ec !important; }
 
     /* ── News ── */
     .news-item {
         display: flex;
         background: transparent;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
+        border-bottom: 1px solid rgba(184,146,42,0.1);
         padding: 0.9rem 0;
         transition: all 0.25s ease;
     }
     .news-item:hover {
-        background: rgba(255,255,255,0.04);
+        background: #faf7f0;
         transform: translateY(-1px);
     }
     .news-item:last-child { border-bottom: none; }
@@ -401,8 +402,8 @@ $endDate     = "$currentYear-12-31";
     }
     .news-category {
         display: inline-block;
-        background: rgba(201,168,76,0.15);
-        border: 1px solid rgba(201,168,76,0.3);
+        background: rgba(184,146,42,0.12);
+        border: 1px solid rgba(184,146,42,0.3);
         color: var(--gold);
         font-family: 'DM Sans', sans-serif;
         font-size: 0.7rem;
@@ -418,20 +419,20 @@ $endDate     = "$currentYear-12-31";
         font-family: 'DM Sans', sans-serif;
         font-size: 0.95rem;
         font-weight: 700;
-        color: var(--cream);
+        color: var(--text-main);
         margin: 0.4rem 0;
         line-height: 1.3;
         text-align: center;
     }
     .news-title a { color: inherit; text-decoration: none; transition: color 0.2s; }
-    .news-title a:hover { color: var(--gold-light); }
+    .news-title a:hover { color: var(--gold); }
     .news-image-wrapper {
         flex-shrink: 0;
         width: 160px; height: 110px;
         overflow: hidden;
         border-radius: 8px;
-        border: 1px solid var(--border);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        border: 1px solid rgba(184,146,42,0.2);
+        box-shadow: 0 4px 12px rgba(26,26,46,0.1);
     }
     .news-image { width: 100%; height: 100%; object-fit: cover; }
     @media (max-width: 768px) {
@@ -452,8 +453,8 @@ $endDate     = "$currentYear-12-31";
     .tournament-controls .form-select {
         flex: 1;
         min-width: 130px;
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(201,168,76,0.3);
+        background: rgba(255,255,255,0.9);
+        border: 1px solid rgba(184,146,42,0.35);
         color: var(--gold);
         font-family: 'DM Sans', sans-serif;
         font-weight: 600;
@@ -462,14 +463,14 @@ $endDate     = "$currentYear-12-31";
         -webkit-appearance: none;
         appearance: none;
         padding: 0.35rem 1.8rem 0.35rem 0.6rem;
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c9a84c'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23b8922a'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
         background-repeat: no-repeat;
         background-position: right 0.4rem center;
         background-size: 11px;
         cursor: pointer;
     }
     .tournament-controls .form-select:focus { outline: none; border-color: var(--gold); }
-    .tournament-controls .form-select option { background: #1a1a2e; color: #eee; }
+    .tournament-controls .form-select option { background: #fff; color: #1a1a2e; }
     @media (max-width: 576px) {
         .tournament-controls { gap: 6px; }
         .tournament-controls .form-select { font-size: 0.76rem; }
@@ -478,16 +479,16 @@ $endDate     = "$currentYear-12-31";
     /* ── GIF Banner ── */
     .gif-banner-section {
         margin: 1.2rem 0;
-        border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
-        background: rgba(255,255,255,0.02);
+        border-top: 1px solid rgba(184,146,42,0.2);
+        border-bottom: 1px solid rgba(184,146,42,0.2);
+        background: rgba(255,255,255,0.5);
         padding: 10px 0;
         border-radius: 8px;
     }
     .gif-banner { width: 100%; height: auto; max-height: 180px; object-fit: cover; display: block; border-radius: 8px; }
     @media (max-width: 768px) { .gif-banner { max-height: 120px; } }
 
-    /* ── Gallery (home section) ── */
+    /* ── Gallery ── */
     .gallery-grid {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
@@ -502,17 +503,17 @@ $endDate     = "$currentYear-12-31";
     .gallery-item {
         overflow: hidden;
         border-radius: 8px;
-        border: 1px solid var(--border);
-        box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        border: 1px solid rgba(184,146,42,0.2);
+        box-shadow: 0 4px 12px rgba(26,26,46,0.08);
         transition: all 0.3s ease;
         aspect-ratio: 1 / 1;
         cursor: pointer;
-        background: rgba(255,255,255,0.03);
+        background: #f5f0e8;
     }
     .gallery-item:hover {
         transform: translateY(-6px) scale(1.02);
-        border-color: rgba(201,168,76,0.5);
-        box-shadow: 0 16px 36px rgba(0,0,0,0.5);
+        border-color: rgba(184,146,42,0.5);
+        box-shadow: 0 16px 36px rgba(26,26,46,0.18);
     }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; display: block; }
     .gallery-item:hover img { transform: scale(1.1); }
@@ -521,8 +522,8 @@ $endDate     = "$currentYear-12-31";
     .gallery-modal-close {
         position: absolute; top: 12px; right: 12px;
         width: 38px; height: 38px;
-        background: rgba(0,0,0,0.7);
-        border: 1px solid rgba(201,168,76,0.4);
+        background: rgba(255,255,255,0.9);
+        border: 1px solid rgba(184,146,42,0.4);
         border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         cursor: pointer;
@@ -532,17 +533,17 @@ $endDate     = "$currentYear-12-31";
         transition: all 0.2s;
         line-height: 1;
     }
-    .gallery-modal-close:hover { background: rgba(201,168,76,0.2); border-color: var(--gold); }
+    .gallery-modal-close:hover { background: #fff8ec; border-color: var(--gold); }
 
     /* Spinner */
     .spinner-border { color: var(--gold) !important; }
 
     /* Text helpers */
     .text-muted   { color: var(--muted) !important; }
-    .text-success { color: #4ade80 !important; }
-    .text-info    { color: #67e8f9 !important; }
-    .text-warning { color: #fbbf24 !important; }
-    .text-danger  { color: #f87171 !important; }
+    .text-success { color: #16a34a !important; }
+    .text-info    { color: #0891b2 !important; }
+    .text-warning { color: #d97706 !important; }
+    .text-danger  { color: #dc2626 !important; }
     .text-primary { color: var(--gold) !important; }
 </style>
 
@@ -616,7 +617,7 @@ $endDate     = "$currentYear-12-31";
                                 $videoId = $match[1] ?? '';
                                 if ($videoId):
                         ?>
-                                <div class="ratio ratio-16x9 mb-3" style="border-radius:8px;overflow:hidden;border:1px solid var(--border);">
+                                <div class="ratio ratio-16x9 mb-3" style="border-radius:8px;overflow:hidden;border:1px solid rgba(184,146,42,0.2);">
                                     <iframe src="https://www.youtube.com/embed/<?= htmlspecialchars($videoId) ?>?rel=0&modestbranding=1"
                                             title="YouTube video" allowfullscreen loading="lazy"></iframe>
                                 </div>
@@ -951,14 +952,14 @@ $endDate     = "$currentYear-12-31";
         function updateBlock(blockId, cs_id) {
             const target = document.getElementById(blockId);
             if (!target) return;
-            target.innerHTML = '<p class="text-center py-4" style="color:rgba(255,255,255,0.3);font-family:\'DM Sans\',sans-serif;"><span class="spinner-border spinner-border-sm"></span> Loading...</p>';
+            target.innerHTML = '<p class="text-center py-4" style="color:var(--muted);font-family:\'DM Sans\',sans-serif;"><span class="spinner-border spinner-border-sm"></span> Loading...</p>';
             fetch(`ajax_tournament_home.php?type=${blockId.includes('Fixtures') ? 'fixtures' : blockId.includes('Results') ? 'results' : 'table'}&cs_id=${cs_id}&t=${Date.now()}`)
                 .then(r => r.text())
                 .then(html => {
-                    target.innerHTML = html.trim() || '<p class="text-center py-4" style="color:rgba(255,255,255,0.3);font-family:\'DM Sans\',sans-serif;">No data</p>';
+                    target.innerHTML = html.trim() || '<p class="text-center py-4" style="color:var(--muted);font-family:\'DM Sans\',sans-serif;">No data</p>';
                 })
                 .catch(() => {
-                    target.innerHTML = '<p class="text-center py-4" style="color:#f87171;font-family:\'DM Sans\',sans-serif;">Error loading data</p>';
+                    target.innerHTML = '<p class="text-center py-4" style="color:#dc2626;font-family:\'DM Sans\',sans-serif;">Error loading data</p>';
                 });
         }
         function updateTitle(headerId, name) {

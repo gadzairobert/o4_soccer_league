@@ -8,24 +8,28 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    /* ── Design Tokens ── */
     :root {
-        --ink:        #1a1a2e;
-        --gold:       #c9a84c;
-        --gold-light: #f0d080;
-        --cream:      #fdf8ef;
-        --muted:      rgba(255,255,255,0.45);
-        --border:     rgba(201,168,76,0.2);
-        --card-bg:    rgba(255,255,255,0.04);
+        --gold:        #c9a84c;
+        --gold-light:  #f0d080;
+        --gold-dark:   #9a6f1e;
+        --cream:       #fdf8ef;
+        --dark-panel:  #1a1a2e;
+        --dark-tab:    #16152b;
+        --dark-deeper: #0f0e22;
+        --border:      rgba(201,168,76,0.22);
+        --muted:       #6b7280;
+        --text-main:   #1a1a2e;
+        --text-soft:   #4b5563;
     }
 
+    /* ── PAGE BACKGROUND: LIGHT ── */
     html, body {
-        background-color: #1a1a2e !important;
+        background-color: #f0ede8 !important;
         background-image:
-            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(180,160,120,0.05) 0%, transparent 50%);
         background-attachment: fixed;
-        color: #eee;
+        color: var(--text-main);
         overflow-x: hidden;
     }
     body { display: flex; flex-direction: column; min-height: 100vh; }
@@ -42,13 +46,13 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
         .tournament-page-wrapper { margin-top: 0; padding: 1rem 0 3rem; width: 100%; }
     }
 
-    /* ── Tournament Header ── */
+    /* ── Tournament Header — DARK ── */
     .tournament-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         padding: 1.4rem 1.8rem;
         text-align: center;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
         margin-bottom: 1.8rem;
         border-radius: 14px 14px 0 0;
     }
@@ -59,7 +63,7 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
         font-weight: 900;
         color: var(--cream);
         letter-spacing: 1px;
-        text-shadow: 0 3px 10px rgba(0,0,0,0.5);
+        text-shadow: 0 3px 10px rgba(0,0,0,0.4);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -84,20 +88,20 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
     @media (max-width: 1100px) { .tournament-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 700px)  { .tournament-grid { grid-template-columns: 1fr; } }
 
-    /* ── Section Card ── */
+    /* ── Section Card — LIGHT ── */
     .section-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         display: flex;
         flex-direction: column;
     }
 
-    /* ── Section Header ── */
+    /* ── Section Header — DARK ── */
     .section-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 1px solid var(--border);
         padding: 0.85rem 1.4rem;
         font-family: 'Playfair Display', serif;
@@ -106,10 +110,10 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
         color: var(--cream);
     }
 
-    /* ── Tabs ── */
+    /* ── Tabs — DARK ── */
     .tab {
         overflow: hidden;
-        background: rgba(0,0,0,0.25);
+        background: linear-gradient(135deg, var(--dark-deeper), var(--dark-tab));
         display: flex;
         flex-wrap: nowrap;
         border-bottom: 1px solid var(--border);
@@ -117,7 +121,7 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
     .tab button {
         background: transparent;
         border: none;
-        color: var(--muted);
+        color: rgba(255,255,255,0.45);
         padding: 12px 18px;
         font-family: 'DM Sans', sans-serif;
         font-size: 0.88rem;
@@ -143,20 +147,16 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
     }
 
     /* ── Tab Content ── */
-    .tabcontent {
-        display: none;
-        flex-grow: 1;
-        overflow-y: auto;
-    }
+    .tabcontent { display: none; flex-grow: 1; overflow-y: auto; }
     .tabcontent.active { display: block; }
 
-    /* ── Match Item ── */
+    /* ── Match Item — LIGHT ── */
     .match-item {
         background: transparent;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
+        border-bottom: 1px solid #f3f4f6;
         transition: background 0.2s ease;
     }
-    .match-item:hover { background: rgba(201,168,76,0.04); }
+    .match-item:hover { background: #fdf9f0; }
     .match-item:last-child { border-bottom: none; }
 
     .match-row {
@@ -178,7 +178,7 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
     }
     .teams-stack::after {
         content: ''; position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-        width: 1px; height: 48px; background: rgba(255,255,255,0.12);
+        width: 1px; height: 48px; background: #d1d5db;
     }
     .team-item { display: flex; align-items: center; gap: 10px; }
 
@@ -186,7 +186,7 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
         width: 36px; height: 36px; object-fit: contain;
         background: #fff; padding: 3px; border-radius: 50%;
         border: 2px solid rgba(201,168,76,0.25);
-        box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         flex-shrink: 0; transition: border-color 0.2s;
     }
     .match-item:hover .team-logo { border-color: rgba(201,168,76,0.5); }
@@ -194,12 +194,12 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
     .team-name {
         font-family: 'DM Sans', sans-serif;
         font-weight: 600; font-size: 0.9rem;
-        color: rgba(255,255,255,0.8);
+        color: var(--text-soft);
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         text-decoration: none; transition: color 0.2s;
     }
-    .team-name:hover { color: var(--gold-light); }
-    .winner { color: #4ade80 !important; font-weight: 700 !important; }
+    .team-name:hover { color: var(--gold-dark); }
+    .winner { color: #15803d !important; font-weight: 700 !important; }
 
     /* ── Fixture Info ── */
     .fixture-info-stack {
@@ -211,7 +211,7 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
         font-family: 'DM Sans', sans-serif;
         font-size: 0.82rem;
         font-weight: 700;
-        color: var(--gold);
+        color: var(--gold-dark);
         line-height: 1.3;
     }
 
@@ -228,36 +228,36 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
         font-family: 'Playfair Display', serif;
         font-size: 1.75rem;
         font-weight: 900;
-        color: var(--cream);
+        color: var(--text-main);
     }
 
-    /* ── Match Toggle ── */
+    /* ── Match Toggle — DARK ── */
     .match-toggle {
         padding: 0.45rem 1.2rem;
-        background: rgba(0,0,0,0.2);
-        border-top: 1px solid rgba(255,255,255,0.06);
+        background: linear-gradient(135deg, var(--dark-deeper), var(--dark-tab));
+        border-top: 1px solid rgba(201,168,76,0.15);
         font-family: 'DM Sans', sans-serif;
         font-size: 0.8rem;
-        color: var(--muted);
+        color: rgba(255,255,255,0.5);
         cursor: pointer;
         display: flex;
         justify-content: space-between;
         align-items: center;
         transition: background 0.2s;
     }
-    .match-toggle:hover { background: rgba(255,255,255,0.05); }
+    .match-toggle:hover { background: linear-gradient(135deg, #1a1830, #2a2650); }
     .match-toggle span { font-weight: 700; font-size: 0.84rem; color: var(--cream); }
     .match-toggle i { color: rgba(201,168,76,0.6); transition: transform 0.25s; }
     .match-toggle[aria-expanded="true"] i { transform: rotate(180deg); }
 
-    /* ── Event List ── */
+    /* ── Event List — LIGHT ── */
     .event-list {
-        background: rgba(0,0,0,0.25);
+        background: #f3f1ec;
         padding: 0.7rem 1.2rem;
         font-size: 0.82rem;
         max-height: 280px;
         overflow-y: auto;
-        border-top: 1px solid rgba(255,255,255,0.06);
+        border-top: 1px solid #e5e7eb;
     }
     .event-row {
         display: flex;
@@ -281,18 +281,19 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
         font-family: 'DM Sans', sans-serif;
         font-weight: 600;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        color: rgba(255,255,255,0.75);
+        color: var(--text-soft);
     }
 
-    /* ── Tables ── */
+    /* ── Tables — LIGHT ── */
     .table {
-        color: rgba(255,255,255,0.82) !important;
+        color: var(--text-main) !important;
         margin: 0;
         font-family: 'DM Sans', sans-serif;
         font-size: 0.87rem;
+        background: #ffffff;
     }
     .table thead th {
-        background: rgba(0,0,0,0.35) !important;
+        background: linear-gradient(135deg, var(--dark-deeper), var(--dark-tab)) !important;
         color: var(--gold) !important;
         border-bottom: 1px solid var(--border) !important;
         font-weight: 700;
@@ -303,41 +304,41 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
         white-space: nowrap;
     }
     .table tbody td {
-        color: rgba(255,255,255,0.8) !important;
-        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+        color: var(--text-main) !important;
+        border-bottom: 1px solid #f3f4f6 !important;
         padding: 0.6rem 0.6rem;
         vertical-align: middle;
     }
-    .table tbody tr { background: transparent !important; transition: background 0.2s; }
-    .table tbody tr:hover { background: rgba(201,168,76,0.05) !important; }
-    .table a { color: rgba(255,255,255,0.8) !important; text-decoration: none; transition: color 0.2s; }
-    .table a:hover { color: var(--gold-light) !important; }
+    .table tbody tr { background: #ffffff !important; transition: background 0.2s; }
+    .table tbody tr:hover { background: #fdf9f0 !important; }
+    .table a { color: var(--text-soft) !important; text-decoration: none; transition: color 0.2s; }
+    .table a:hover { color: var(--gold-dark) !important; }
 
     .player-thumb, .club-logo {
         width: 30px; height: 30px; object-fit: cover;
-        border-radius: 50%; border: 2px solid var(--border);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        border-radius: 50%; border: 2px solid rgba(201,168,76,0.25);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
     .club-logo { border-radius: 6px; object-fit: contain; background: #fff; padding: 2px; }
 
     /* Stat badges */
-    .text-success { color: #4ade80 !important; }
-    .text-info    { color: #67e8f9 !important; }
-    .text-warning { color: #fbbf24 !important; }
-    .text-danger  { color: #f87171 !important; }
-    .text-primary { color: var(--gold) !important; }
+    .text-success { color: #15803d !important; }
+    .text-info    { color: #0e7490 !important; }
+    .text-warning { color: #b45309 !important; }
+    .text-danger  { color: #dc2626 !important; }
+    .text-primary { color: var(--gold-dark) !important; }
 
-    /* ── Gallery ── */
+    /* ── Gallery — LIGHT ── */
     .gallery-section {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         margin-top: 0.5rem;
     }
     .gallery-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         padding: 0.9rem 1.6rem;
     }
@@ -357,16 +358,16 @@ echo '<style>.navbar-brand img { width: 50px !important; height: 50px !important
     .gallery-item {
         overflow: hidden;
         border-radius: 10px;
-        border: 1px solid var(--border);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
         transition: all 0.35s ease;
         aspect-ratio: 1/1;
         cursor: pointer;
     }
     .gallery-item:hover {
         transform: translateY(-6px) scale(1.03);
-        box-shadow: 0 20px 44px rgba(0,0,0,0.45);
-        border-color: rgba(201,168,76,0.5);
+        box-shadow: 0 16px 36px rgba(0,0,0,0.12);
+        border-color: rgba(201,168,76,0.45);
     }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
     .gallery-item:hover img { transform: scale(1.12); }
@@ -397,7 +398,7 @@ if ($selectedCupId) {
     $stmt = $pdo->prepare("SELECT id, name, short_name, competition_name, season, logo, is_current FROM competition_seasons WHERE id = ? AND type = 'cup'");
     $stmt->execute([$selectedCupId]);
     $tournaments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if (empty($tournaments)) die('<div class="container py-5 text-center"><h3 style="color:var(--cream);">Tournament not found.</h3></div>');
+    if (empty($tournaments)) die('<div class="container py-5 text-center"><h3 style="color:var(--text-main);">Tournament not found.</h3></div>');
 } else {
     $stmt = $pdo->query("SELECT id, name, short_name, competition_name, season, logo, is_current FROM competition_seasons WHERE type = 'cup' ORDER BY is_current DESC, season DESC");
     $tournaments = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -437,8 +438,8 @@ foreach ($tournaments as $cup):
             $stmt->execute([$cupId]); $fixtures = $stmt->fetchAll();
             if (empty($fixtures)) echo '<p class="text-center text-muted py-4">No upcoming fixtures</p>';
             else foreach ($fixtures as $f):
-                $homeLogo = $f['home_logo'] ? "uploads/clubs/".$f['home_logo'] : "https://via.placeholder.com/48/1a1a2e/c9a84c?text=".urlencode(substr($f['home_name'],0,2));
-                $awayLogo = $f['away_logo'] ? "uploads/clubs/".$f['away_logo'] : "https://via.placeholder.com/48/1a1a2e/c9a84c?text=".urlencode(substr($f['away_name'],0,2));
+                $homeLogo = $f['home_logo'] ? "uploads/clubs/".$f['home_logo'] : "https://via.placeholder.com/48/f0ede8/9a6f1e?text=".urlencode(substr($f['home_name'],0,2));
+                $awayLogo = $f['away_logo'] ? "uploads/clubs/".$f['away_logo'] : "https://via.placeholder.com/48/f0ede8/9a6f1e?text=".urlencode(substr($f['away_name'],0,2));
                 $dt = new DateTime($f['tournament_date']);
             ?>
             <div class="match-item">
@@ -463,8 +464,8 @@ foreach ($tournaments as $cup):
             else foreach ($results as $r):
                 $homeWin  = $r['home_score'] > $r['away_score'];
                 $awayWin  = $r['away_score'] > $r['home_score'];
-                $homeLogo = $r['home_logo'] ? "uploads/clubs/".$r['home_logo'] : "https://via.placeholder.com/48/1a1a2e/c9a84c?text=".urlencode(substr($r['home_name'],0,2));
-                $awayLogo = $r['away_logo'] ? "uploads/clubs/".$r['away_logo'] : "https://via.placeholder.com/48/1a1a2e/c9a84c?text=".urlencode(substr($r['away_name'],0,2));
+                $homeLogo = $r['home_logo'] ? "uploads/clubs/".$r['home_logo'] : "https://via.placeholder.com/48/f0ede8/9a6f1e?text=".urlencode(substr($r['home_name'],0,2));
+                $awayLogo = $r['away_logo'] ? "uploads/clubs/".$r['away_logo'] : "https://via.placeholder.com/48/f0ede8/9a6f1e?text=".urlencode(substr($r['away_name'],0,2));
                 $dateStr  = (new DateTime($r['match_date']))->format('j M');
                 $matchId  = $r['match_id'];
                 $eventHtml = ''; $events = [];
@@ -545,7 +546,7 @@ foreach ($tournaments as $cup):
                 <thead><tr><th>#</th><th>Player</th><th>G</th><th>A</th><th>YC</th><th>RC</th><th>CS</th></tr></thead>
                 <tbody>
                     <?php foreach ($topPlayers as $i => $p):
-                        $photo = $p['photo'] ? "uploads/players/".$p['photo'] : "https://via.placeholder.com/60/1a1a2e/c9a84c?text=".urlencode(substr($p['name'],0,1));
+                        $photo = $p['photo'] ? "uploads/players/".$p['photo'] : "https://via.placeholder.com/60/f0ede8/9a6f1e?text=".urlencode(substr($p['name'],0,1));
                     ?>
                     <tr>
                         <td class="text-center fw-bold" style="color:var(--muted);"><?= $i+1 ?></td>
@@ -601,7 +602,7 @@ foreach ($tournaments as $cup):
                 <thead><tr><th>#</th><th>Club</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>PTS</th></tr></thead>
                 <tbody>
                     <?php foreach ($standings as $i => $row):
-                        $logo = $row['logo'] ? 'uploads/clubs/'.$row['logo'] : 'https://via.placeholder.com/40/1a1a2e/c9a84c?text=C';
+                        $logo = $row['logo'] ? 'uploads/clubs/'.$row['logo'] : 'https://via.placeholder.com/40/f0ede8/9a6f1e?text=C';
                     ?>
                     <tr>
                         <td class="fw-bold" style="color:var(--muted);"><?= $i+1 ?></td>

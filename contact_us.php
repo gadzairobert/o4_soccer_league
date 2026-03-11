@@ -48,24 +48,28 @@ function getContactClass($platform_name) {
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    /* ── Design Tokens ── */
     :root {
-        --ink:        #1a1a2e;
-        --gold:       #c9a84c;
-        --gold-light: #f0d080;
-        --cream:      #fdf8ef;
-        --muted:      rgba(255,255,255,0.45);
-        --border:     rgba(201,168,76,0.2);
-        --card-bg:    rgba(255,255,255,0.04);
+        --gold:        #c9a84c;
+        --gold-light:  #f0d080;
+        --gold-dark:   #9a6f1e;
+        --cream:       #fdf8ef;
+        --dark-panel:  #1a1a2e;
+        --dark-tab:    #16152b;
+        --dark-deeper: #0f0e22;
+        --border:      rgba(201,168,76,0.22);
+        --muted:       #6b7280;
+        --text-main:   #1a1a2e;
+        --text-soft:   #4b5563;
     }
 
+    /* ── PAGE BACKGROUND: LIGHT ── */
     html, body {
-        background-color: #1a1a2e !important;
+        background-color: #f0ede8 !important;
         background-image:
-            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(180,160,120,0.05) 0%, transparent 50%);
         background-attachment: fixed;
-        color: #eee;
+        color: var(--text-main);
         overflow-x: hidden;
     }
     body { display: flex; flex-direction: column; min-height: 100vh; }
@@ -82,21 +86,21 @@ function getContactClass($platform_name) {
         .contact-page-wrapper { margin-top: 0; padding: 1rem 0 3rem; width: 100%; }
     }
 
-    /* ── Outer Card ── */
+    /* ── Outer Card — LIGHT ── */
     .contact-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
     }
     @media (max-width: 767px) {
         .contact-card { border-radius: 0; border-left: none; border-right: none; }
     }
 
-    /* ── Page Header ── */
+    /* ── Page Header — DARK ── */
     .contact-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         padding: 1rem 1.6rem;
         font-family: 'Playfair Display', serif;
@@ -109,6 +113,7 @@ function getContactClass($platform_name) {
     /* ── Body ── */
     .contact-body {
         padding: 2rem 2.5rem;
+        background: #ffffff;
     }
     @media (max-width: 576px) {
         .contact-body { padding: 1.4rem 1rem; }
@@ -138,15 +143,15 @@ function getContactClass($platform_name) {
     .map-container {
         overflow: hidden;
         border-radius: 10px;
-        box-shadow: 0 10px 32px rgba(0,0,0,0.4);
-        border: 2px solid var(--border);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        border: 2px solid #e5e7eb;
         height: 490px;
         margin-top: auto;
     }
     .map-container iframe { display: block; }
     @media (max-width: 576px) { .map-container { height: 340px; } }
 
-    /* ── Social Icons Column ── */
+    /* ── Social Icons Column — LIGHT ── */
     .social-vertical {
         display: flex;
         flex-direction: column;
@@ -166,38 +171,33 @@ function getContactClass($platform_name) {
     }
     .social-vertical a:hover {
         transform: translateY(-5px);
-        color: var(--cream);
+        color: var(--text-main);
     }
     .contact-icon {
         width: 64px; height: 64px;
-        background: rgba(255,255,255,0.07);
-        border: 1px solid var(--border);
-        color: var(--gold);
+        background: #f9f7f2;
+        border: 1px solid #e5e7eb;
+        color: var(--gold-dark);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 1.9rem;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
         margin-bottom: 0.45rem;
         transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
     .social-vertical a:hover .contact-icon {
-        background: rgba(201,168,76,0.15);
+        background: #fdf9f0;
         border-color: var(--gold);
-        box-shadow: 0 10px 28px rgba(201,168,76,0.2);
+        box-shadow: 0 6px 18px rgba(201,168,76,0.15);
     }
     /* Platform-specific accent colours on hover */
-    .whatsapp  a:hover .contact-icon,
-    a.whatsapp:hover  .contact-icon  { background: rgba(37,211,102,0.15) !important; border-color: #25D366 !important; color: #25D366 !important; }
-    .facebook  a:hover .contact-icon,
-    a.facebook:hover  .contact-icon  { background: rgba(24,119,242,0.15) !important; border-color: #1877F2 !important; color: #1877F2 !important; }
-    .instagram a:hover .contact-icon,
-    a.instagram:hover .contact-icon  { background: rgba(238,42,123,0.15) !important; border-color: #ee2a7b !important; color: #ee2a7b !important; }
-    .youtube   a:hover .contact-icon,
-    a.youtube:hover   .contact-icon  { background: rgba(255,0,0,0.15)   !important; border-color: #FF0000 !important; color: #FF0000 !important; }
-    .tiktok    a:hover .contact-icon,
-    a.tiktok:hover    .contact-icon  { background: rgba(105,201,208,0.15) !important; border-color: #69c9d0 !important; color: #69c9d0 !important; }
+    a.whatsapp:hover  .contact-icon  { background: rgba(37,211,102,0.1)  !important; border-color: #25D366 !important; color: #25D366 !important; }
+    a.facebook:hover  .contact-icon  { background: rgba(24,119,242,0.1)  !important; border-color: #1877F2 !important; color: #1877F2 !important; }
+    a.instagram:hover .contact-icon  { background: rgba(238,42,123,0.1)  !important; border-color: #ee2a7b !important; color: #ee2a7b !important; }
+    a.youtube:hover   .contact-icon  { background: rgba(255,0,0,0.1)     !important; border-color: #FF0000 !important; color: #FF0000 !important; }
+    a.tiktok:hover    .contact-icon  { background: rgba(105,201,208,0.1)  !important; border-color: #69c9d0 !important; color: #69c9d0 !important; }
 
     .social-vertical .title {
         font-family: 'DM Sans', sans-serif;
@@ -207,7 +207,7 @@ function getContactClass($platform_name) {
         color: var(--muted);
         transition: color 0.2s;
     }
-    .social-vertical a:hover .title { color: var(--cream); }
+    .social-vertical a:hover .title { color: var(--text-main); }
 
     @media (max-width: 992px) {
         .social-vertical {
@@ -218,10 +218,10 @@ function getContactClass($platform_name) {
         }
     }
 
-    /* ── Contact Form ── */
+    /* ── Contact Form — LIGHT ── */
     .form-card {
-        background: rgba(0,0,0,0.2);
-        border: 1px solid var(--border);
+        background: #f9f7f2;
+        border: 1px solid #e5e7eb;
         border-radius: 12px;
         padding: 1.8rem;
         margin-top: auto;
@@ -230,27 +230,27 @@ function getContactClass($platform_name) {
         font-family: 'Playfair Display', serif;
         font-size: 1.1rem;
         font-weight: 700;
-        color: var(--cream);
+        color: var(--text-main);
         margin-bottom: 1.4rem;
         text-align: center;
     }
 
-    /* Inputs */
+    /* Inputs — LIGHT ── */
     .form-control {
-        background: rgba(255,255,255,0.06) !important;
-        border: 1px solid var(--border) !important;
-        color: var(--cream) !important;
+        background: #ffffff !important;
+        border: 1px solid #d1d5db !important;
+        color: var(--text-main) !important;
         font-family: 'DM Sans', sans-serif;
         border-radius: 8px !important;
         padding: 0.65rem 0.9rem;
-        transition: border-color 0.2s ease, background 0.2s ease;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .form-control::placeholder { color: var(--muted) !important; }
+    .form-control::placeholder { color: #9ca3af !important; }
     .form-control:focus {
-        background: rgba(255,255,255,0.09) !important;
+        background: #ffffff !important;
         border-color: var(--gold) !important;
         box-shadow: 0 0 0 3px rgba(201,168,76,0.12) !important;
-        color: var(--cream) !important;
+        color: var(--text-main) !important;
         outline: none;
     }
     textarea.form-control { resize: vertical; min-height: 140px; }
@@ -262,34 +262,34 @@ function getContactClass($platform_name) {
         font-weight: 700;
         letter-spacing: 1px;
         text-transform: uppercase;
-        color: var(--ink);
-        background: var(--gold);
+        color: #ffffff;
+        background: var(--dark-panel);
         border: none;
         border-radius: 50px;
         padding: 0.75rem 3rem;
         transition: all 0.25s ease;
-        box-shadow: 0 6px 20px rgba(201,168,76,0.3);
+        box-shadow: 0 4px 14px rgba(26,26,46,0.2);
     }
     .btn-send:hover {
-        background: var(--gold-light);
+        background: var(--dark-tab);
         transform: translateY(-2px);
-        box-shadow: 0 10px 28px rgba(201,168,76,0.4);
-        color: var(--ink);
+        box-shadow: 0 8px 20px rgba(26,26,46,0.25);
+        color: var(--gold);
     }
 
     /* Alerts */
     .alert-success {
-        background: rgba(74,222,128,0.1);
-        border: 1px solid rgba(74,222,128,0.3);
-        color: #4ade80;
+        background: rgba(21,128,61,0.08);
+        border: 1px solid rgba(21,128,61,0.25);
+        color: #15803d;
         border-radius: 8px;
         font-family: 'DM Sans', sans-serif;
         font-size: 0.9rem;
     }
     .alert-danger {
-        background: rgba(248,113,113,0.1);
-        border: 1px solid rgba(248,113,113,0.3);
-        color: #f87171;
+        background: rgba(220,38,38,0.08);
+        border: 1px solid rgba(220,38,38,0.25);
+        color: #dc2626;
         border-radius: 8px;
         font-family: 'DM Sans', sans-serif;
         font-size: 0.9rem;

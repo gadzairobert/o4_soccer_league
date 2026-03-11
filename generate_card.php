@@ -1,4 +1,16 @@
 <?php
+/**
+ * generate_card.php
+ *
+ * URL parameters:
+ *   player_id  – required
+ *   format     – pdf (default) | png
+ *   blur       – 1 = blur/hide the ID number (used for public preview)
+ *                omitted or 0 = show real ID (requires valid admin token)
+ *   token      – admin token from verify_admin.php (required when blur=0)
+ *   download   – 1 = force binary output (skips Google Viewer wrapper)
+ */
+session_start();
 require_once 'config.php';
 include 'includes/properties.php';
 require_once 'vendor/autoload.php';
@@ -7,10 +19,29 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 
 $player_id = (int)($_GET['player_id'] ?? 0);
-$format = strtolower($_GET['format'] ?? 'pdf');
+$format    = strtolower($_GET['format'] ?? 'pdf');
+$blurId    = (isset($_GET['blur']) && (int)$_GET['blur'] === 1);
+$token     = $_GET['token'] ?? '';
 
-// If accessed directly in browser without format=png, and likely on mobile, show friendly viewer
-$isDirectView = !isset($_GET['format']) || $format === 'pdf';
+// ── Token validation ──────────────────────────────────────────────────────────
+// If blur is NOT requested (i.e. real download/share), a valid admin token is required.
+if (!$blurId) {
+    $sessionToken = $_SESSION['admin_card_token'] ?? '';
+    $tokenTs      = $_SESSION['admin_card_token_ts'] ?? 0;
+    $tokenValid   = ($sessionToken !== '' && $token !== '' &&
+                     hash_equals($sessionToken, $token) &&
+                     (time() - $tokenTs) < 300); // 5-minute window
+
+    if (!$tokenValid) {
+        header('Content-Type: text/plain', true, 403);
+        die('Access denied: valid admin credentials required to download this card.');
+    }
+    // Invalidate token after single use (optional: comment out to allow multi-download in window)
+    // unset($_SESSION['admin_card_token'], $_SESSION['admin_card_token_ts']);
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+$isDirectView = ($format === 'pdf' && !isset($_GET['download']));
 
 if ($player_id <= 0) {
     header('Content-Type: text/plain', true, 400);
@@ -81,6 +112,19 @@ $dob = (!empty($player['date_of_birth']) && $player['date_of_birth'] !== '0000-0
     : 'N/A';
 
 $sequence = $createdDate . ' / ' . $player_id;
+
+// ── ID display: blurred placeholder vs real value ─────────────────────────────
+if ($blurId) {
+    // Build a masked string the same visual length as the real ID
+    $idLen     = mb_strlen($idNumber);
+    $maskedId  = ($idNumber === 'N/A') ? '██████' : str_repeat('█', min($idLen, 13));
+    $idDisplay = $maskedId;
+    $idStyle   = 'color:#bbb; letter-spacing:4px;'; // greyed out for the blurred version
+} else {
+    $idDisplay = htmlspecialchars($idNumber);
+    $idStyle   = '';
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 /* ===============================
    CARD HTML
@@ -191,6 +235,7 @@ body { margin: 0; padding: 0; }
     font-size: 75px;
     font-weight: bold;
     text-align: center;
+    ' . $idStyle . '
 }
 
 .dob {
@@ -252,7 +297,7 @@ body { margin: 0; padding: 0; }
 
     <div class="player-name">' . htmlspecialchars($player['name']) . '</div>
     <div class="club-name">' . htmlspecialchars($player['club_name'] ?? 'Free Agent') . '</div>
-    <div class="id-number">' . htmlspecialchars($idNumber) . '</div>
+    <div class="id-number">' . $idDisplay . '</div>
     <div class="dob">' . $dob . '</div>
 
     <div class="club-logo-bottom">
@@ -288,8 +333,7 @@ $currentUrl = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
    OUTPUT
 ================================ */
 if ($format === 'pdf') {
-    // If viewed directly in browser (not download), show mobile-friendly Google viewer
-    if ($isDirectView && !isset($_GET['download']) && strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'text/html') !== false) {
+    if ($isDirectView && strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'text/html') !== false) {
         echo '<!DOCTYPE html>
 <html>
 <head>
@@ -298,7 +342,7 @@ if ($format === 'pdf') {
     <style>body,html{margin:0;padding:0;height:100%;overflow:hidden;background:#000;}</style>
 </head>
 <body>
-    <iframe src="https://docs.google.com/viewer?url=' . urlencode($currentUrl . '&download=1') . '&embedded=true" 
+    <iframe src="https://docs.google.com/viewer?url=' . urlencode($currentUrl . '&download=1') . '&embedded=true"
             width="100%" height="100%" style="border:none;"></iframe>
 </body>
 </html>';
@@ -324,7 +368,6 @@ if ($format === 'png') {
         $imagick = new Imagick();
         $imagick->setResolution(300, 300);
         $imagick->readImageBlob($output . '[0]');
-
         $imagick->setImageFormat('png');
         $imagick->setImageCompressionQuality(100);
 
@@ -342,6 +385,5 @@ if ($format === 'png') {
     }
 }
 
-// Invalid format
 header('Content-Type: text/html');
 echo '<h3>Invalid Request</h3><p>Unsupported format.</p>';

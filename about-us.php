@@ -7,7 +7,7 @@ $stmt = $pdo->query("SELECT * FROM about_us WHERE is_active = 1 AND category = '
 $sections = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if (empty($sections)) {
-    echo '<div class="container py-5 text-center"><h2 style="color:rgba(255,255,255,0.5);">About Us content coming soon...</h2></div>';
+    echo '<div class="container py-5 text-center"><h2 style="color:var(--text-main);">About Us content coming soon...</h2></div>';
     require_once 'includes/footer.php';
     exit;
 }
@@ -15,24 +15,28 @@ if (empty($sections)) {
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-    /* ── Design Tokens ── */
     :root {
-        --ink:        #1a1a2e;
-        --gold:       #c9a84c;
-        --gold-light: #f0d080;
-        --cream:      #fdf8ef;
-        --muted:      rgba(255,255,255,0.45);
-        --border:     rgba(201,168,76,0.2);
-        --card-bg:    rgba(255,255,255,0.04);
+        --gold:        #c9a84c;
+        --gold-light:  #f0d080;
+        --gold-dark:   #9a6f1e;
+        --cream:       #fdf8ef;
+        --dark-panel:  #1a1a2e;
+        --dark-tab:    #16152b;
+        --dark-deeper: #0f0e22;
+        --border:      rgba(201,168,76,0.22);
+        --muted:       #6b7280;
+        --text-main:   #1a1a2e;
+        --text-soft:   #4b5563;
     }
 
+    /* ── PAGE BACKGROUND: LIGHT ── */
     html, body {
-        background-color: #1a1a2e !important;
+        background-color: #f0ede8 !important;
         background-image:
-            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 90%, rgba(123,45,139,0.05) 0%, transparent 50%);
+            radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 90%, rgba(180,160,120,0.05) 0%, transparent 50%);
         background-attachment: fixed;
-        color: #eee;
+        color: var(--text-main);
         overflow-x: hidden;
     }
     body { display: flex; flex-direction: column; min-height: 100vh; }
@@ -49,21 +53,21 @@ if (empty($sections)) {
         .about-page-wrapper { margin-top: 0; padding: 1rem 0 3rem; width: 100%; }
     }
 
-    /* ── Outer Card ── */
+    /* ── Outer Card — LIGHT ── */
     .about-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
     }
     @media (max-width: 767px) {
         .about-card { border-radius: 0; border-left: none; border-right: none; }
     }
 
-    /* ── Page Header ── */
+    /* ── Page Header — DARK ── */
     .about-header {
-        background: linear-gradient(135deg, #16152b, #24224a);
+        background: linear-gradient(135deg, var(--dark-tab), #24224a);
         border-bottom: 2px solid var(--gold);
         padding: 1rem 1.6rem;
         font-family: 'Playfair Display', serif;
@@ -73,11 +77,11 @@ if (empty($sections)) {
         text-align: center;
     }
 
-    /* ── Tabs ── */
+    /* ── Tabs — DARK ── */
     .tab {
         overflow: hidden;
         overflow-x: auto;
-        background: rgba(0,0,0,0.25);
+        background: linear-gradient(135deg, var(--dark-deeper), var(--dark-tab));
         display: flex;
         flex-wrap: nowrap;
         border-bottom: 1px solid var(--border);
@@ -88,7 +92,7 @@ if (empty($sections)) {
     .tab button {
         background: transparent;
         border: none;
-        color: var(--muted);
+        color: rgba(255,255,255,0.45);
         padding: 14px 22px;
         font-family: 'DM Sans', sans-serif;
         font-size: 0.9rem;
@@ -114,11 +118,12 @@ if (empty($sections)) {
         font-weight: 700;
     }
 
-    /* ── Tab Content ── */
+    /* ── Tab Content — LIGHT ── */
     .tabcontent {
         display: none;
         padding: 2.8rem 2.5rem;
         animation: fadeIn 0.4s ease;
+        background: #ffffff;
     }
     .tabcontent.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -128,7 +133,7 @@ if (empty($sections)) {
         font-family: 'Playfair Display', serif;
         font-size: 2.1rem;
         font-weight: 900;
-        color: var(--cream);
+        color: var(--text-main);
         margin-bottom: 1.4rem;
         position: relative;
         padding-bottom: 14px;
@@ -147,23 +152,23 @@ if (empty($sections)) {
         width: 100%;
         max-width: 400px;
         height: auto;
-        border: 3px solid var(--border);
+        border: 3px solid #e5e7eb;
         border-radius: 12px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+        box-shadow: 0 8px 28px rgba(0,0,0,0.1);
         object-fit: cover;
         transition: transform 0.4s ease, box-shadow 0.4s ease;
     }
     .section-image:hover {
         transform: scale(1.03);
-        box-shadow: 0 28px 60px rgba(0,0,0,0.55);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.15);
     }
 
-    /* ── Section Description — checkmark bullets ── */
+    /* ── Section Description — checkmark bullets — LIGHT ── */
     .section-desc {
         font-family: 'DM Sans', sans-serif;
         font-size: 1.02rem;
         line-height: 1.7;
-        color: rgba(255,255,255,0.78);
+        color: var(--text-soft);
     }
     .section-desc p {
         margin-bottom: 0.8rem !important;
@@ -177,9 +182,9 @@ if (empty($sections)) {
         content: "✓";
         position: absolute;
         left: 0; top: 2px;
-        background: rgba(201,168,76,0.18);
-        border: 1px solid var(--gold);
-        color: var(--gold);
+        background: rgba(201,168,76,0.12);
+        border: 1px solid rgba(201,168,76,0.4);
+        color: var(--gold-dark);
         font-weight: bold;
         font-size: 1.1rem;
         width: 30px; height: 30px;
@@ -188,7 +193,7 @@ if (empty($sections)) {
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        box-shadow: 0 4px 12px rgba(201,168,76,0.2);
+        box-shadow: 0 2px 8px rgba(201,168,76,0.15);
     }
 
     /* Responsive */
@@ -231,7 +236,7 @@ if (empty($sections)) {
                 $isFirst   = $index === 0;
                 $imagePath = !empty($section['image'])
                     ? 'uploads/admin/about_us/' . htmlspecialchars($section['image'])
-                    : 'https://via.placeholder.com/800x600/1a1a2e/c9a84c?text=No+Image';
+                    : 'https://via.placeholder.com/800x600/f0ede8/9a6f1e?text=No+Image';
             ?>
                 <div class="tabcontent <?= $isFirst ? 'active' : '' ?>" id="<?= $tabId ?>">
                     <div class="row align-items-center g-5">
